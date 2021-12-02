@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block headtitle %}
+{{gettext('Historial de transacciones')}}
+{% endblock %}
+{% block body %}
+<h2 class="h2 content-title">{{gettext('Historial de transacciones')}}</h2>
+<div class="view">
+    <div class="bg-light card px-5 py-5 mb-5">
+        {% if user.role == "Collaborator" %}
+        <h2>{{gettext('Historial de transacciones de')}} {{ name }}</h2>
+        {% elif user.role == "Promoter" %}
+        <h2>{{gettext('Historial de transacciones de')}} {{ user.organization }}</h2>
+        {% else %}
+        <h2>{{gettext('Historial de transacciones de DeustoCoin')}}</h2>
+        {% endif %}
+    </div>
+</div>
+<div id="transacciones" style="width:100%;">
+    {% if transactions|length >= 1 %}
+    <table class="table" id="tabletrans">
+        <thead>
+            <tr>
+                <th scope="col" class="fecha">{{gettext('Fecha')}}</th>
+                <th scope="col" class="rem">{{gettext('Remitente')}}</th>
+                <th scope="col" class="dest">{{gettext('Destinatario')}}</th>
+                <th scope="col" class="camp">{{gettext('Asunto')}}</th>
+                <th scope="col" class="cantidad">{{gettext('Cantidad')}}</th>
+                <th scope="col" class="img">{{gettext('Imagen')}}</th>
+                <th scope="col" class="proof">{{gettext('Link de verificación')}} (<i>{{gettext('Opcional')}}</i>)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transactions %}
+            <tr>
+                <th scope="row" class="fecha">{{t.date}}</th>
+                <td class="rem">{{t.sender}}</td>
+                <td class="dest">{{t.receiver}}</td>
+                {% if t.campaign != None %}
+                <td class="camp">
+                    <a href="{{ url_for('company', company=t.sender)}}" target="_blank">
+                        <b>{{gettext(t.campaign)}}</b>
+                    </a>
+                </td>
+                {% else %}
+                <td class="camp">Transfer, offer payment</td>
+                {% endif %}
+                <td class="cantidad">{{t.quantity}} UDC</td>
+                {% if t.img_hash != "" %}
+                <td class="img">
+                    <a href="http://ipfs.io/ipfs/{{t.img_hash}}" target="_blank">
+                        <b>{{gettext('Ver imagen')}}</b>
+                    </a>
+                </td>
+                {% else %}
+                <td class="img">{{gettext('No hay imagen')}}</td>
+                {% endif %}
+                {% if t.proof != "" %}
+                <td class="proof">
+                    <a href="{{t.proof}}" target="_blank">
+                        <b>{{gettext('Ver verificación')}}</b>
+                    </a>
+                </td>
+                {% else %}
+                <td class="proof">{{gettext('No hay URL adicional')}}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h4>{{gettext('No hay transacciones para mostrar')}}</h4>
+    <p>{{gettext('El usuario no ha estado involucrado en ninguna transacción.')}}</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %} 
+{% block headtitle %}
+{{gettext('Editor de campañas')}}
+{% endblock %}
+{% block body %}
+<h2 class="h2 content-title">{{gettext('Editor de campañas')}}</h2>
+<div class="view">
+    <div class="bg-light card px-5 py-5 mb-5">
+        <h2>{{campaign.name}}</h2>
+    </div>
+    <form id="editorcamp" action="{{ url_for('campaign_editor',campaign_id=campaign.id) }}" method="POST">
+        <div class="form-group">
+            <p>
+                <label for="name">Campaign name</label>
+                <input type="text" class="form-control" placeholder="{{gettext('Nombre')}}" name="name" id="name"
+                    value='{{campaign.name}}' required>
+            </p>
+        </div>
+        <div class="form-group">
+            <p>
+                <label for="description">Campaign description</label>
+                <input type="text" class="form-control" placeholder="{{gettext('Descripción')}}" name="description"
+                    id="description" value="{{campaign.description}}" required>
+            </p>
+        </div>
+        <p>
+            <input type="button" formmethod="POST" value="{{gettext('Actualizar')}}" class="btn btn-primary btn-large"
+                id="update-button">
+        </p>
+    </form>
+</div>
+<div class="modal fade" id="update-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirm action</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Do you want to update the campaign?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" id="update-submit" href="/action">Update</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#update-button').click(function (e) {
+        if ($('#editorcamp').valid()) {
+            $('#update-modal').modal('show');
+        }
+    });
+</script>
+<script>
+    $('#update-submit').click(function (e) {
+        e.preventDefault();
+        $('#editorcamp').submit();
+    });
+</script>
+{% endblock %}

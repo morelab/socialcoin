@@ -1,0 +1,89 @@
+{% extends "base.html" %} 
+{% block headtitle %}
+{{gettext('Acciones')}}
+{% endblock %}
+{% block body %}
+<h2 class="h2 content-title">{{gettext('Acciones')}}</h2>
+<div class="view">
+    <div class="bg-light card px-5 py-5 mb-5">
+        <h2>{{action.name}}</h2>
+    </div>
+    <form id="editorcamp" action="{{ url_for('action_editor' ,action_id=action.id) }}" method="POST">
+        <div class="form-group">
+            <p>
+                <label for="name">Deed name</label>
+                <input type="text" class="form-control" placeholder="{{gettext('Nombre')}}" name="name" id="name"
+                    value='{{action.name}}' required></input>
+            </p>
+        </div>
+        <div class="form-group">
+            <p>
+                <label for="description">Deed description</label>
+                <input type="text" class="form-control" placeholder="{{gettext('Descripción')}}" name="description"
+                    id="description" value="{{action.description}}" required></input>
+            </p>
+        </div>
+        <div class="form-group">
+            <p>
+                <label for="reward">Deed reward</label>
+                <input type="text" placeholder="{{gettext('Recompensa por KPI (en UDC)')}}" class="form-control"
+                    name="reward" id="reward" value="{{action.reward}}" required></input>
+            </p>
+        </div>
+        <div class="form-group">
+            <p>
+                <label for="kpi-indicator">KPI indicator</label>
+                <input type="text" placeholder="{{gettext('Indicador')}}" class="form-control" name="kpi_indicator"
+                    id="kpi-indicator" value="{{action.kpi_indicator}}" required></input>
+            </p>
+        </div>
+        <div class="form-group">
+            <p>
+                <label for="kpi-target">KPI target</label>
+                <input type="text" placeholder="{{gettext('Objetivo')}}" class="form-control" name="kpi_target"
+                    id="kpi-target" value="{{action.kpi_target}}" required></input>
+            </p>
+        </div>
+        <p>
+            <input type="button" formmethod="POST" value="{{gettext('Actualizar')}}" name="update_action"
+                class="btn btn-primary btn-large" id="update-button">
+            </input>
+        </p>
+    </form>
+</div>
+<div class="modal fade" id="update-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirm action</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Do you want to update the action?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" id="update-submit" href="/action">Update</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#update-button').click(function (e) {
+        if ($('#editorcamp').valid()) {
+            $('#update-modal').modal('show');
+        }
+    });
+</script>
+<script>
+    $('#update-submit').click(function (e) {
+        e.preventDefault();
+        let input = $('<input>')
+            .attr("type", "hidden")
+            .attr('name', 'update_action');
+        $('#editorcamp').append(input);
+        $('#editorcamp').submit();
+    });
+</script>
+{% endblock %}

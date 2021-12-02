@@ -1,0 +1,21 @@
+{% extends "base.html" %} 
+{% block headtitle %}
+{{gettext('Campañas')}}
+{% endblock %}
+{% block body %}
+<h2 class="h2 content-title">{{gettext('Campañas')}}</h2>
+<div id="empresas">
+  <p>{{gettext('La Universidad de Deusto colabora con varias compañías que buscan fomentar la sostenibilidad.
+    Dichas compañías organizan campañas, que puedes visualizar con más detalle aquí.')}}
+  </p>
+  {% if companies|length >= 1 %}
+  {% for e in companies %}
+  <a href="{{url_for('.company', company = e) }}">
+    <h4 class="empresa" value="{{e}}">{{e}}</h4>
+  </a>
+  {% endfor %}
+  {% else %}
+  <h4>{{gettext('No hay compañías para mostrar.')}}</h4>
+  {% endif %}
+</div>
+{% endblock %}

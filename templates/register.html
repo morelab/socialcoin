@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="icon" href="{{ url_for('static', filename='icon/deustoCoin.ico') }}" />
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <title>DeustoCoin - {{gettext('Registro')}}</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <meta name="google-signin-scope" content="profile email" />
+  <meta name="google-signin-client_id"
+    content="543251693947-uuomjheqpj6piup81pvbahrc3nu25o9m.apps.googleusercontent.com" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+
+<body class="p-0">
+  <div class="my-5">
+    <form class="form-signin">
+      <div class="text-center mb-4">
+        <img class="mb-4" src="{{ url_for('static', filename='icon/deustoCoin.ico') }}" alt="" width="72" height="72" />
+        <h1 class="h3 mb-3 font-weight-normal">DeustoCoin</h1>
+        <p>
+          {{gettext('DeustoCoin pretende sacar el máximo partido de la tecnología Blockchain y llevarla al ámbito
+          universitario, promoviendo un estilo de vida sostenible y respetuoso con el medio ambiente.')}}
+        </p>
+        <form id="registerform" action="/register" method="POST">
+          <div class="form-group d-flex flex-column align-items-start">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" placeholder="{{gettext('Nombre y apellidos')}}" name="name"
+              id="name" value='{{name}}' required>
+          </div>
+          <div class="form-group d-flex flex-column align-items-start">
+            <label for="email">University email</label>
+            <input type="email" class="form-control" placeholder="{{gettext('Correo electrónico')}}" name="email"
+              id="email" value="{{email}}" required>
+          </div>
+          <div class="form-group d-flex flex-column align-items-start">
+            <label for="organizacion">Organization</label>
+            <input type="text" class="form-control" placeholder="{{gettext('Organización')}}" name="organization"
+              id="organizacion" value="Universidad de Deusto" required>
+          </div>
+          <div class="form-group">
+            <select class="form-control" name="role" id="userrole">
+              <option value="Collaborator">{{gettext('Colaborador')}}</option>
+              <option value="Promoter">{{gettext('Promotor')}}</option>
+            </select>
+          </div>
+
+          <input type="submit" formmethod="POST" value="{{gettext('Regístrate')}}" class="btn btn-primary btn-large">
+        </form>
+      </div>
+    </form>
+    <footer class="page-footer">
+      <p class="mt-5 mb-3 text-muted text-center">&copy; 2020-2021 - MORELab</p>
+    </footer>
+  </div>
+  <script>
+    $("#userrole").on("change", function () {
+      var value = $(this).val();
+      console.log(value);
+      if (value == "Promotor") {
+        $('#organizacion').val("");
+      } else {
+        $('#organizacion').val("Universidad de Deusto");
+      };
+    });
+  </script>
+  <script>
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log("ID: " + profile.getId());
+      console.log("Full Name: " + profile.getName());
+      console.log("Given Name: " + profile.getGivenName());
+      console.log("Family Name: " + profile.getFamilyName());
+      console.log("Image URL: " + profile.getImageUrl());
+      console.log("Email: " + profile.getEmail());
+
+      var id_token = googleUser.getAuthResponse().id_token;
+      console.log("ID Token: " + id_token);
+    }
+  </script>
+</body>
+
+</html>
