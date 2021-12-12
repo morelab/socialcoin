@@ -163,24 +163,6 @@ class DeustocoinContract extends Contract {
     }
 
     /**
-     * Set optional infomation for a token.
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} name The name of the token
-     * @param {String} symbol The symbol of the token
-     * @param {String} decimals The decimals of the token
-     * @param {String} totalSupply The totalSupply of the token
-     */
-    async SetOption(ctx, name, symbol, decimals) {
-        await ctx.stub.putState(nameKey, Buffer.from(name));
-        await ctx.stub.putState(symbolKey, Buffer.from(symbol));
-        await ctx.stub.putState(decimalsKey, Buffer.from(decimals));
-
-        console.log(`name: ${name}, symbol: ${symbol}, decimals: ${decimals}`);
-        return true;
-    }
-
-    /**
      * Mint creates new tokens and adds them to minter's account balance
      *
      * @param {Context} ctx the transaction context
