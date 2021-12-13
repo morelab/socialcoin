@@ -12,9 +12,9 @@ const decimalsKey = '2';
 const totalSupplyKey = 'totalSupply';
 
 // Define other constants
-const adminMSP = 'udMSP';
+const adminMSP = 'centralbankMSP';
 
-class DeustocoinContract extends Contract {
+class SocialcoinContract extends Contract {
 
     /**
      * Return the name of the token.
@@ -307,4 +307,4 @@ class DeustocoinContract extends Contract {
     }
 }
 
-module.exports = DeustocoinContract;
+module.exports = SocialcoinContract;
