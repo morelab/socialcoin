@@ -154,7 +154,7 @@
       </div>
     </div>
     <div class="tables-container menu-container">
-      <div id="campanyas" class="table-container">
+      <div id="campaigns" class="table-container">
         {% if campaigns|length >= 1 %}
         <table class="table">
           <thead>
@@ -183,7 +183,7 @@
         <h4>{{gettext('No hay campañas para mostrar')}}</h4>
         {% endif %}
       </div>
-      <div id="acciones" class="table-container">
+      <div id="actions" class="table-container">
         {% if actions|length >= 1 %}
         <table class="table">
           <thead>
@@ -224,7 +224,7 @@
         <h4>{{gettext('No hay acciones para mostrar')}}</h4>
         {% endif %}
       </div>
-      <div id="ofertas" class="table-container">
+      <div id="offers" class="table-container">
         {% if offers|length >= 1 %}
         <table class="table">
           <thead>
@@ -322,112 +322,5 @@
   </div>
 </div>
 
-<script>
-  $('#create-action-button').click(function (e) {
-    if ($('#create-action-form').valid()) {
-      $('#action-modal').modal('show');
-    }
-  });
-</script>
-<script>
-  $('#create-campaign-button').click(function (e) {
-    if ($('#create-campaign-form').valid()) {
-      $('#campaign-modal').modal('show');
-    }
-  });
-</script>
-<script>
-  $('#create-offer-button').click(function (e) {
-    if ($('#create-offer-form').valid()) {
-      $('#offer-modal').modal('show');
-    }
-  });
-</script>
-<script>
-  $('#action-submit').click(function (e) {
-    e.preventDefault();
-    let input = $('<input>')
-      .attr("type", "hidden")
-      .attr('name', 'create_action');
-    $('#create-action-form').append(input);
-    $('#create-action-form').submit();
-  });
-</script>
-<script>
-  $('#campaign-submit').click(function (e) {
-    e.preventDefault();
-    let input = $('<input>')
-      .attr("type", "hidden")
-      .attr('name', 'create_campaign');
-    $('#create-campaign-form').append(input);
-    $('#create-campaign-form').submit();
-  })
-</script>
-<script>
-  $('#offer-submit').click(function (e) {
-    e.preventDefault();
-    let input = $('<input>')
-      .attr("type", "hidden")
-      .attr('name', 'create_offer');
-    $('#create-offer-form').append(input);
-    $('#create-offer-form').submit();
-  })
-</script>
-
-<script>
-  $("#create-campaign").show();
-  $("#create-action").hide();
-  $("#create-offer").hide();
-  $("#campanyas").show();
-  $("#acciones").hide();
-  $("#ofertas").hide();
-  $("#select-campaigns").addClass('selected');
-  $("#select-actions").removeClass('selected');
-  $("#select-offers").removeClass('selected');
-</script>
-<script>
-  $(document).ready(function () {
-    $("#select-campaigns").click(function () {
-      $("#create-campaign").show();
-      $("#create-action").hide();
-      $("#create-offer").hide();
-      $("#campanyas").show();
-      $("#acciones").hide();
-      $("#ofertas").hide();
-      $("#select-campaigns").addClass('selected');
-      $("#select-actions").removeClass('selected');
-      $("#select-offers").removeClass('selected');
-    });
-  });
-</script>
-<script>
-  $(document).ready(function () {
-    $("#select-actions").click(function () {
-      $("#create-campaign").hide();
-      $("#create-action").show();
-      $("#create-offer").hide();
-      $("#campanyas").hide();
-      $("#acciones").show();
-      $("#ofertas").hide();
-      $("#select-campaigns").removeClass('selected');
-      $("#select-actions").addClass('selected');
-      $("#select-offers").removeClass('selected');
-    });
-  });
-</script>
-<script>
-  $(document).ready(function () {
-    $("#select-offers").click(function () {
-      $("#create-action").hide();
-      $("#create-campaign").hide();
-      $("#create-offer").show();
-      $("#campanyas").hide();
-      $("#acciones").hide();
-      $("#ofertas").show();
-      $("#select-campaigns").removeClass('selected');
-      $("#select-actions").removeClass('selected');
-      $("#select-offers").addClass('selected');
-    });
-  });
-</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

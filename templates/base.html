@@ -38,48 +38,6 @@
     <meta name="google-signin-client_id"
         content="543251693947-uuomjheqpj6piup81pvbahrc3nu25o9m.apps.googleusercontent.com" />
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script>
-        var $homeIcon = $('#sidebar');
-        $(window).resize(function () {
-            if (window.innerWidth >= 1024) $homeIcon.removeClass('active');
-        });
-
-    </script>
-    <script>
-        function sidebarChange() {
-            var win = $(this);
-            if (win.width() >= 1024 && !$('sidebar').hasClass('active')) {
-                $('#sidebar').removeClass('active');
-                $('#sidebarCollapse').removeClass('active');
-                $('main').removeClass('marginless');
-            } else if (win.width() < 1024 && !$('sidebar').hasClass('active')) {
-                $('#sidebar').addClass('active');
-                $('#sidebarCollapse').addClass('active');
-                $('main').addClass('marginless');
-            }
-        }
-        $(document).ready(function () {
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-                $('#sidebarCollapse').toggleClass('active');
-                $('main').toggleClass('marginless');
-            });
-        });
-        $(window).on('resize', sidebarChange);
-        $(window).on('scroll', sidebarChange);
-        $(document).on('click', function (e) {
-            if(
-                $(e.target).closest('#sidebar').length == 0 &&
-                $(e.target).closest('#sidebarCollapse').length == 0 &&
-                !$('#sidebar').hasClass('active') &&
-                $(this).width() < 1024
-            ) {
-                $('#sidebar').toggleClass('active');
-                $('#sidebarCollapse').toggleClass('active');
-                $('main').toggleClass('marginless');
-            }
-        });
-    </script>
 </head>
 
 <body>
@@ -282,14 +240,9 @@
     </div>
     {% endif %}
 
-    <!-- Icons -->
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script>
-        feather.replace();
-    </script>
-
-    </div>
 </body>
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>feather.replace();</script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </html>
