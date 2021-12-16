@@ -42,22 +42,22 @@
       <div class="forms-container menu-container">
         <div class="form-box" id="create-campaign">
           <form id="create-campaign-form" method="POST">
-            {{ form.csrf_token }}
+            {{ campaign_form.csrf_token }}
             <div class="form-group">
               <p>
                 <label for="campaign_name">{{ gettext('Nombre de la campaña') }}</label>
-                {{form.campaign_name(class="form-control", required="")}}
+                {{campaign_form.campaign_name(class="form-control", required="")}}
               </p>
             </div>
             {% if user.role == "Administrator" %}
             <div class="form-group">
               <label for="company">{{ gettext('Empresa') }}</label>
-              {{form.company(class="form-control", required="")}}
+              {{campaign_form.company(class="form-control", required="")}}
             </div>
             {% endif %}
             <div class="form-group">
               <label for="description">{{gettext('Descripción')}}</label>
-              {{form.description(class="form-control", required="")}}
+              {{campaign_form.description(class="form-control", required="")}}
             </div>
             <div class="d-flex w-100 align-items-center justify-content-center">
               <input type="button" name="create_campaign" value="Create campaign" id="create-campaign-button"
@@ -123,26 +123,26 @@
 
         <div class="form-box" id="create-offer">
           <form id="create-offer-form" method="POST">
-            {{ form2.csrf_token }}
+            {{ offer_form.csrf_token }}
             <div class="form-group">
               <p>
                 <label for="offer_name">{{gettext('Nombre de la oferta')}}</label>
-                {{form2.offer_name(class="form-control", required="")}}
+                {{offer_form.offer_name(class="form-control", required="")}}
               </p>
             </div>
             {% if user.role == "Administrator" %}
             <div class="form-group">
               <label for="offer-company">{{gettext('Organización')}}</label>
-              {{form2.company(class="form-control", required="", id="offer-company")}}
+              {{offer_form.company(class="form-control", required="", id="offer-company")}}
             </div>
             {% endif %}
             <div class="form-group">
               <label for="offer-description">{{gettext('Descripción')}}</label>
-              {{form2.description(class="form-control", required="", id="offer-description")}}
+              {{offer_form.description(class="form-control", required="", id="offer-description")}}
             </div>
             <div class="form-group">
               <label for="offer-price">{{gettext('Precio')}}</label>
-              {{form2.price(class="form-control", required="", id="offer-price", type="number", oninput="this.value =
+              {{offer_form.price(class="form-control", required="", id="offer-price", type="number", oninput="this.value =
               !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null", step="0.01")}}
             </div>
             <div class="d-flex w-100 align-items-center justify-content-center">
