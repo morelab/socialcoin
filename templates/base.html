@@ -88,7 +88,7 @@
         <nav id="sidebar" style="flex-shrink:0;">
             <div class="sidebar-header">
                 {% if user.role == "Collaborator" %}
-                <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('about') }}">
+                <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('actions') }}">
                     <img src="{{ url_for('static', filename='icon/deustoCoin-144.png') }}" alt="logo">
                     DeustoCoin
                 </a>

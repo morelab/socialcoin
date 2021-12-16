@@ -8,7 +8,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from models import User, Transaction, Action, Campaign, KPIByDates, Offer
 from datetime import datetime, time
-from forms import SendUDCForm, CreateCampaignForm, CreateOfferForm
+from forms import CreateCampaignForm, CreateOfferForm
 from googletrans import Translator
 from flask.cli import with_appcontext
 from blockchain import *
@@ -21,7 +21,7 @@ import time
 
 admin_address = os.environ.get('ADMIN_ADDRESS')
 admin_key = os.environ.get('PRIVATE_KEY')
-blockchain_manager = BlockchainManager()
+blockchain_manager = getBlockchainManager('ethereum')
 
 app = Flask(__name__)
 app.secret_key = admin_key
@@ -238,7 +238,7 @@ def authorize():
             return render_template('uploadimage.html', name=session['name'], c_reward=c_reward, email=session['email'],
                                    session=session, user=user, action_id=c_reward)
         else:
-            return redirect('/wallet')
+            return redirect('/actions')
     if 'offer_id' in session and user is not None:
         offer = Offer.get_offer_by_id(session['offer_id'])
         if offer is not None:
@@ -251,11 +251,11 @@ def authorize():
             return render_template('payment.html', name=session['name'], offer=offer, email=session['email'],
                                    session=session, user=user)
         else:
-            return redirect('/wallet')
+            return redirect('/actions')
     else:
         if user is not None:
             if user.role == 'Collaborator':
-                return redirect('/wallet')
+                return redirect('/actions')
             else:
                 return redirect('/dashboard')
 
@@ -284,7 +284,7 @@ def register():
         s.commit()
         add_account_to_allowlist(blockchain_address)   # Allows the new registered user to use the permissioned blockchain
         if role == 'Collaborator':
-            return redirect('/wallet')
+            return redirect('/actions')
         if role == 'Promoter':
             return redirect('/dashboard')
     else:

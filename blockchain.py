@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 from coincurve import PublicKey
 from secrets import token_bytes
 from sha3 import keccak_256
@@ -14,92 +14,33 @@ def generate_keys():
     return {'address': '0x' + address.hex(), 'key': private_key.hex()}
 
 
-class BlockchainManagerAbstract(ABC):
+class BlockchainManager(metaclass=ABCMeta):
     @abstractmethod
     def balance_of(self, address):
         pass
 
 
-    @abstractmethod(callable)
+    @abstractmethod
     def mint(self, caller, caller_key, to, value):
         pass
 
 
-    @abstractmethod(callable)
+    @abstractmethod
     def burn(self, caller, caller_key, from_acc, value):
         pass
 
 
-    @abstractmethod(callable)
+    @abstractmethod
     def processAction(self, caller, caller_key, promoter, to, action_id, reward, time, ipfs_hash):
         pass
 
 
-class BlockchainManager():
+class EthereumManager(BlockchainManager):
     def __init__(self) -> None:
         self.w3 = Web3(Web3.HTTPProvider(os.environ.get('BLOCKCHAIN_URL')))
         
         abi = open('contractABI.txt').read()
         self.contract = self.w3.eth.contract(address=Web3.toChecksumAddress(os.environ.get('CONTRACT_ADDRESS')), abi=abi)
-        
-        transfer_filter = self.contract.events.Transfer.build_filter()
-        transfer_filter.fromBlock = 0
-        self.transfer_filter_instance = transfer_filter.deploy(self.w3)
-
-        action_filter = self.contract.events.Action.build_filter()
-        action_filter.fromBlock = 0
-        self.action_filter_instance = action_filter.deploy(self.w3)
-
-
-    def get_all_transfers(self) -> list:
-        """Returns all transfer logs saved in the blockchain."""
-        return self.transfer_filter_instance.get_all_entries()
-
-
-    def get_all_transfer_events(self) -> list:
-        """Returns all the filtered tranfer events, showing only the event values."""
-        new_list = []
-        for i in self.get_all_transfers():
-            new_list.append(i.args)
-        return new_list
-
-
-    def get_all_actions(self) -> list:
-        """Returns all action logs saved in the blockchain."""
-        return self.action_filter_instance.get_all_entries()
-
-
-    def get_all_action_events(self) -> list:
-        """Returns all the filtered action events, showing only the event values."""
-        new_list = []
-        for i in self.get_all_actions():
-            new_list.append(i.args)
-        return new_list
-
-
-    def owner(self):
-        """Get the addres of the contract owner/administrator."""
-        return self.contract.functions.owner().call()
-
-
-    def name(self):
-        """Get the name of the coin."""
-        return self.contract.functions.name().call()
-
-
-    def symbol(self):
-        """Get the symbol of the coin."""
-        return self.contract.functions.symbol().call()
-
-
-    def decimals(self):
-        """Get in how many decimals the coin is divided. Deustocoin has 2 decimals, to resemble the Euro."""
-        return self.contract.functions.decimals().call()
-
-
-    def total_supply(self):
-        """Returns the total supply of the coin."""
-        return self.contract.functions.totalSupply().call()
 
 
     def balance_of(self, address):
@@ -147,3 +88,32 @@ class BlockchainManager():
         })
         signed_tx = self.w3.eth.account.signTransaction(transaction, private_key=caller_key)
         return self.w3.eth.sendRawTransaction(signed_tx.rawTransaction)
+
+
+class FabricManager(BlockchainManager):
+    # TODO: API calls
+    def __init__(self) -> None:
+        super().__init__()
+
+
+    def balance_of(self, address):
+        pass
+
+
+    def mint(self, caller, caller_key, to, value):
+        pass
+
+
+    def burn(self, caller, caller_key, from_acc, value):
+        pass
+
+
+    def processAction(self, caller, caller_key, promoter, to, action_id, reward, time, ipfs_hash):
+        pass
+
+
+def getBlockchainManager(network):
+    if network == 'fabric':
+        return FabricManager()
+    if network == 'ethereum':
+        return EthereumManager()

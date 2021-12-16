@@ -18,12 +18,6 @@ class CustomFloatField(FloatField):
                 raise ValueError(self.gettext('Not a valid float value'))
 
 
-class SendUDCForm(FlaskForm):
-    destiny = StringField('Correo electrónico del destinatario')
-    quantity = CustomFloatField('Cantidad de UDCs a enviar')
-    submit = SubmitField('Enviar')
-
-
 class CreateCampaignForm(FlaskForm):
     campaign_name = StringField('Nombre de la campaña')
     company = StringField('Empresa proveedora')
