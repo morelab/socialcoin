@@ -1,5 +1,6 @@
-from secrets import token_bytes
+from abc import ABC, abstractmethod
 from coincurve import PublicKey
+from secrets import token_bytes
 from sha3 import keccak_256
 from web3 import Web3
 import os
@@ -11,6 +12,27 @@ def generate_keys():
     public_key = PublicKey.from_valid_secret(private_key).format(compressed=False)[1:]
     address = keccak_256(public_key).digest()[-20:]
     return {'address': '0x' + address.hex(), 'key': private_key.hex()}
+
+
+class BlockchainManagerAbstract(ABC):
+    @abstractmethod
+    def balance_of(self, address):
+        pass
+
+
+    @abstractmethod(callable)
+    def mint(self, caller, caller_key, to, value):
+        pass
+
+
+    @abstractmethod(callable)
+    def burn(self, caller, caller_key, from_acc, value):
+        pass
+
+
+    @abstractmethod(callable)
+    def processAction(self, caller, caller_key, promoter, to, action_id, reward, time, ipfs_hash):
+        pass
 
 
 class BlockchainManager():
@@ -83,20 +105,6 @@ class BlockchainManager():
     def balance_of(self, address):
         """Returns the balance of the input address."""
         return self.contract.functions.balanceOf(address).call()
-
-
-    def transfer(self, caller, caller_key, to, value):
-        """Allows a user to transfer their balance to another user."""
-        transaction = self.contract.functions.transfer(
-            to, int(value)
-        ).buildTransaction({
-            'gas': 10000000,
-            'gasPrice': self.w3.toWei(self.w3.eth.gas_price, 'gwei'),
-            'from': caller,
-            'nonce': self.w3.eth.getTransactionCount(caller, 'pending')
-        })
-        signed_tx = self.w3.eth.account.signTransaction(transaction, private_key=caller_key)
-        return self.w3.eth.sendRawTransaction(signed_tx.rawTransaction)
 
 
     def mint(self, caller, caller_key, to, value):

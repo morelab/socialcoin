@@ -11,7 +11,7 @@ from datetime import datetime, time
 from forms import SendUDCForm, CreateCampaignForm, CreateOfferForm
 from googletrans import Translator
 from flask.cli import with_appcontext
-from contracts import *
+from blockchain import *
 import base58
 import io
 import qrcode
@@ -118,22 +118,6 @@ def offer_transaction(sender, dest, offer):
     s.add(t)
     s.commit()
     s.close()
-
-
-def transfer_coins(sender, dest, amount, email, dest_email):
-    """Transfer coins to another user."""
-    owner_address = sender.block_addr
-    dest_address = dest.block_addr
-    value=int(float(amount)*100)
-
-    tx_hash = blockchain_manager.transfer(caller=owner_address, caller_key=sender.pk, to=dest_address, value=value)
-
-    s = Session()
-    datetime_obj = datetime.now()
-    timestamp_str = datetime_obj.strftime("%d-%b-%Y (%H:%M:%S.%f)")
-    t = Transaction(timestamp_str, tx_hash, email, dest_email, None, amount, "", "")
-    s.add(t)
-    s.commit()
 
 
 def create_figure(id):
@@ -305,36 +289,6 @@ def register():
             return redirect('/dashboard')
     else:
         return render_template('register.html', email=email, name=name)
-
-
-@app.route('/wallet', methods=['GET', 'POST'])
-def wallet():
-    form = SendUDCForm()
-    email = dict(session).get('email', None)
-    user = User.get_by_email(email)
-    salary = get_balance(user.block_addr)
-    if form.validate_on_submit():
-        destination = User.get_by_email(request.form['destiny'])
-        if destination != None:
-            transfer_coins(sender=user, dest=destination, amount=request.form['quantity'], 
-                email=email, dest_email=request.form['destiny'])
-        else:
-            given_name = dict(session).get('given_name', None)
-            try:
-                del session['action_id']
-                del session['offer_id']
-            except:
-                pass
-            return render_template('wallet.html', title='Cartera', wallet=salary, email=email, name=given_name, 
-                w3=blockchain_manager.w3, form=form, user=user, nouser=1)
-    given_name = dict(session).get('given_name', None)
-    try:
-        del session['action_id']
-        del session['offer_id']
-    except:
-        pass
-    return render_template('wallet.html', title='Cartera', wallet=salary, email=email, name=given_name, w3=blockchain_manager.w3,
-                           form=form, user=user, nouser=0)
 
 
 @app.route('/redeem-offer/<int:offer_id>')

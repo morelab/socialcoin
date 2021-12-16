@@ -79,29 +79,6 @@ class SocialcoinContract extends Contract {
         return balance;
     }
 
-    /**
-     *  Transfer transfers tokens from client account to recipient account.
-     *  recipient account must be a valid clientID as returned by the ClientAccountID() function.
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} to The recipient
-     * @param {Integer} value The amount of token to be transferred
-     * @returns {Boolean} Return whether the transfer was successful or not
-     */
-    async transfer(ctx, to, value) {
-        const from = ctx.clientIdentity.getID();
-
-        const transferResp = await this._transfer(ctx, from, to, value);
-        if (!transferResp) {
-            throw new Error('Failed to transfer');
-        }
-
-        // Emit the Transfer event
-        const transferEvent = { from, to, value: parseInt(value) };
-        ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
-
-        return true;
-    }
 
     /**
      *  Internal helper function to carry out transactions
