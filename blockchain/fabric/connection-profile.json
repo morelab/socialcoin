@@ -1,0 +1,80 @@
+{
+    "name": "socialcoin",
+    "version": "1.0.0",
+    "client": {
+        "tlsEnable": true,
+        "enableAuthentication": false,
+        "adminCredential": {
+            "id": "explorer-admin",
+            "password": "explorer-admin-pw"
+        },
+        "caCredential": {
+            "id": "admin",
+            "password": "adminpw"
+        },
+        "organization": "centralbankMSP",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                },
+                "orderer": "300"
+            }
+        }
+    },
+    "organizations": {
+        "centralbankMSP": {
+            "mspid": "centralbankMSP",
+            "peers": [
+                "peer0-centralbank"
+            ],
+            "certificateAuthorities": [
+                "ca-centralbank"
+            ],
+            "orderers": [
+                "orderer-centralbank"
+            ],
+            "adminPrivateKey": {
+                "path": "/credentials/vscode-IBM/centralbank"
+            },
+            "signedCert": {
+                "path": "/credentials/vscode-IBM/centralbank"
+            }
+        }
+    },
+    "peers": {
+        "peer0-centralbank": {
+            "url": "grpcs://peer0.centralbank-peer0.socialcoin.svc.cluster.local:6051",
+            "tlsCACerts": {
+                "path": "/credentials/tls/tls-ca-cert.pem"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca-centralbank": {
+            "url": "https://ca-centralbank.socialcoin.deusto.apps.deustotech.eu:443",
+            "caName": "ca-centralbank",
+            "tlsCACerts": {
+                "path": "/credentials/tls/tls-chain-ca-cert.pem"
+            }
+        }
+    },
+    "orderers": {
+        "orderer-centralbank": {
+            "url": "grpcs://orderer.centralbank-orderer.socialcoin.svc.cluster.local:6050",
+            "tlsCACerts": {
+                "path": "/credentials/tls/tls-ca-cert.pem"
+            }
+        }
+    },
+    "channels": {
+        "mainchannel": {
+            "orderers": [
+                "orderer-centralbank"
+            ],
+            "peers": [
+                "peer0-centralbank"
+            ]
+        }
+    }
+}

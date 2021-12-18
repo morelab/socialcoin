@@ -6,49 +6,12 @@ const { Contract } = require('fabric-contract-api');
 const balancePrefix = 'balance';
 
 // Define key names for options
-const nameKey = 'Deustocoin';
-const symbolKey = 'UDC';
-const decimalsKey = '2';
 const totalSupplyKey = 'totalSupply';
 
 // Define other constants
 const adminMSP = 'centralbankMSP';
 
 class SocialcoinContract extends Contract {
-
-    /**
-     * Return the name of the token.
-     *
-     * @param {Context} ctx the transaction context
-     * @returns {String} Returns the name of the token
-    */
-    async tokenName(ctx) {
-        const nameBytes = await ctx.stub.getState(nameKey);
-        return nameBytes.toString();
-    }
-
-    /**
-     * Return the symbol of the token.
-     *
-     * @param {Context} ctx the transaction context
-     * @returns {String} Returns the symbol of the token
-    */
-    async symbol(ctx) {
-        const symbolBytes = await ctx.stub.getState(symbolKey);
-        return symbolBytes.toString();
-    }
-
-    /**
-     * Return the number of decimals the token uses.
-     *
-     * @param {Context} ctx the transaction context
-     * @returns {Number} Returns the number of decimals
-    */
-    async decimals(ctx) {
-        const decimalsBytes = await ctx.stub.getState(decimalsKey);
-        return parseInt(decimalsBytes.toString());
-    }
-
     /**
      * Return the total token supply.
      *
@@ -204,7 +167,7 @@ class SocialcoinContract extends Contract {
         // Check minter authorization - this sample assumes 'ud'' is the central banker with privilege to burn tokens
         const clientMSPID = ctx.clientIdentity.getMSPID();
         if (clientMSPID !== adminMSP) {
-            throw new Error('client is not authorized to mint new tokens');
+            throw new Error('client is not authorized to burn tokens');
         }
 
         const minter = ctx.clientIdentity.getID();
@@ -239,18 +202,6 @@ class SocialcoinContract extends Contract {
     }
 
     /**
-     * Returns the client ID of whoever calls the function
-     * 
-     * @param {Context} ctx the transaction context
-     * @returns {Integer} client ID of caller
-     */
-    async ClientAccountID(ctx) {
-        // Get ID of submitting client identity
-        const clientAccountID = ctx.clientIdentity.getID();
-        return clientAccountID;
-    }
-
-    /**
      * Registers a collaborator's good action in the blockchain and rewards them
      * 
      * @param {Context} ctx the transaction context
@@ -266,7 +217,7 @@ class SocialcoinContract extends Contract {
         // Check minter authorization - this sample assumes 'ud' is the central banker with privilege to mint new tokens
         const clientMSPID = ctx.clientIdentity.getMSPID();
         if (clientMSPID !== adminMSP) {
-            throw new Error('client is not authorized to mint new tokens');
+            throw new Error('client is not authorized to process an action');
         }
 
         const from = ctx.clientIdentity.getID();
