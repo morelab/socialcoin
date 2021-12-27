@@ -7,3 +7,5 @@ todos.txt
 db.sql
 .vscode
 package-lock.json
+connection-profile.json.swp
+connection-profile.json

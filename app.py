@@ -22,7 +22,7 @@ import time
 
 admin_address = os.environ.get('ADMIN_ADDRESS')
 admin_key = os.environ.get('PRIVATE_KEY')
-blockchain_manager = getBlockchainManager('ethereum')
+blockchain_manager = getBlockchainManager(os.environ.get('NETWORK'))
 
 app = Flask(__name__)
 app.secret_key = admin_key
