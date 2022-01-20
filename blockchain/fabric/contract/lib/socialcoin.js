@@ -220,8 +220,6 @@ class SocialcoinContract extends Contract {
             throw new Error('client is not authorized to process an action');
         }
 
-        const from = ctx.clientIdentity.getID();
-
         const transferResp = await this._transfer(ctx, from, to, value);
         if (!transferResp) {
             throw new Error('Failed to transfer');
