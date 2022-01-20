@@ -91,14 +91,14 @@ class EthereumManager(BlockchainManager):
 
 
 class FabricManager(BlockchainManager):
-    # TODO: API calls
     def __init__(self):
-        client = Client(net_profile="test/fixtures/network.json")
+        # TODO: add 'credentialStore', 'orderers' keys in connection profile
+        client = Client(net_profile="./blockchain/fabric/connection-profile.json")
 
-        print(client.organizations)  # orgs in the network
-        print(client.peers)  # peers in the network
-        print(client.orderers)  # orderers in the network
-        print(client.CAs)  # ca nodes in the network
+        print(f'Organizations: {client.organizations}')  # orgs in the network
+        print(f'Peers: {client.peers}')  # peers in the network
+        print(f'Orderers: {client.orderers}')  # orderers in the network
+        print(f'CAs: {client.CAs}')  # ca nodes in the network
 
         # Prepare User Id? => https://github.com/hyperledger/fabric-sdk-py/blob/main/docs/source/tutorial.md#12-prepare-user-id-optionally
         loop = asyncio.get_event_loop()
