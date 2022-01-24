@@ -134,7 +134,7 @@ class SocialcoinContract extends Contract {
         }
         const toUpdatedBalance = toCurrentBalance + amountInt;
 
-        await ctx.stub.putState(balanceKey, Buffer.from(toUpdatedBalance.toString()));
+        await ctx.stub.putState(toBalanceKey, Buffer.from(toUpdatedBalance.toString()));
 
         // Increase totalSupply
         const totalSupplyBytes = await ctx.stub.getState(totalSupplyKey);
