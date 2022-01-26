@@ -1,11 +1,14 @@
 from abc import ABCMeta, abstractmethod
 from coincurve import PublicKey
-from hfc.fabric import Client
 from secrets import token_bytes
+from httpx import head
 from sha3 import keccak_256
 from web3 import Web3
-import asyncio
 import os
+import requests
+
+
+s = requests.Session()
 
 
 def generate_keys():
@@ -15,6 +18,45 @@ def generate_keys():
         private_key).format(compressed=False)[1:]
     address = keccak_256(public_key).digest()[-20:]
     return {'address': '0x' + address.hex(), 'key': private_key.hex()}
+
+
+def fabric_login():
+    headers = {
+        "Content-Type": "application/json; charset=utf-8"
+    }
+    data = {
+        "userID": os.environ.get('FABRIC_ADMIN_USER'),
+        "password": os.environ.get('FABRIC_ADMIN_PWD')
+    }
+    response = s.post(
+        'https://api.hyperledger.socialcoin.deusto.apps.deustotech.eu/login',
+        headers=headers,
+        json=data
+    )
+
+
+def fabric_send_transaction(method, *params):
+    headers = {
+        "Content-Type": "application/json; charset=utf-8"
+    }
+    data = {
+        "fn": method,
+        "args": [*params]
+    }
+    if method == 'balanceOf':
+        response = s.post(
+            'https://api.hyperledger.socialcoin.deusto.apps.deustotech.eu/channels/mainchannel/socialcoin-contract/evaluate',
+            headers=headers,
+            json=data
+        )
+        return int(response.content.decode("utf-8"))
+    else:
+        response = s.post(
+            'https://api.hyperledger.socialcoin.deusto.apps.deustotech.eu/channels/mainchannel/socialcoin-contract/submit',
+            headers=headers,
+            json=data
+        )
+        return response.content.decode("utf-8")
 
 
 class BlockchainManager(metaclass=ABCMeta):
@@ -92,72 +134,40 @@ class EthereumManager(BlockchainManager):
 
 class FabricManager(BlockchainManager):
     def __init__(self):
-        # TODO: add 'credentialStore', 'orderers' keys in connection profile
-        client = Client(net_profile="./blockchain/fabric/connection-profile.json")
-
-        print(f'Organizations: {client.organizations}')  # orgs in the network
-        print(f'Peers: {client.peers}')  # peers in the network
-        print(f'Orderers: {client.orderers}')  # orderers in the network
-        print(f'CAs: {client.CAs}')  # ca nodes in the network
-
-        # Prepare User Id? => https://github.com/hyperledger/fabric-sdk-py/blob/main/docs/source/tutorial.md#12-prepare-user-id-optionally
-        loop = asyncio.get_event_loop()
-        centralbank_admin = client.get_user('URL', 'Admin')
-        client.new_channel('mainchannel')
+        # self.connect_sid = fabric_login()
+        fabric_login()
 
     def balance_of(self, address):
-        args = [address]
-        response = self.loop.run_until_complete(self.client.chaincode_query(
-            requestor=self.centralbank_admin,
-            channel_name='mainchannel',
-            peers=['peer0.org1.example.com'],
-            args=args,
-            cc_name='socialcoin'
-        ))
+        try:
+            balance = fabric_send_transaction('balanceOf', address)
+            return balance
+        except:
+            return 0
 
     def mint(self, caller, caller_key, to, value):
-        args = [to, value]
-        response = self.loop.run_until_complete(self.client.chaincode_invoke(
-            requestor=self.centralbank_admin,
-            channel_name='mainchannel',
-            peers=['peer0.org1.example.com'],
-            args=args,
-            cc_name='socialcoin',
-            # for being sure chaincode invocation has been commited in the ledger, default is on tx event
-            wait_for_event=True,
-            # cc_pattern='^invoked*' # if you want to wait for chaincode event and you have a `stub.SetEvent("invoked", value)` in your chaincode
-        ))
+        try:
+            fabric_send_transaction('mint', to, value)
+        except:
+            return 0
 
     def burn(self, caller, caller_key, from_acc, value):
-        args = [from_acc, value]
-        response = self.loop.run_until_complete(self.client.chaincode_invoke(
-            requestor=self.centralbank_admin,
-            channel_name='mainchannel',
-            peers=['peer0.org1.example.com'],
-            args=args,
-            cc_name='socialcoin',
-            # for being sure chaincode invocation has been commited in the ledger, default is on tx event
-            wait_for_event=True,
-            # cc_pattern='^invoked*' # if you want to wait for chaincode event and you have a `stub.SetEvent("invoked", value)` in your chaincode
-        ))
+        try:
+            fabric_send_transaction('burn', from_acc, value)
+        except:
+            return 0
 
     def processAction(self, caller, caller_key, promoter, to, action_id, reward, time, ipfs_hash):
-        args = [promoter, to, action_id, reward, time, ipfs_hash]
-        response = self.loop.run_until_complete(self.client.chaincode_invoke(
-            requestor=self.centralbank_admin,
-            channel_name='mainchannel',
-            peers=['peer0.org1.example.com'],
-            args=args,
-            cc_name='socialcoin',
-            # for being sure chaincode invocation has been commited in the ledger, default is on tx event
-            wait_for_event=True,
-            # cc_pattern='^invoked*' # if you want to wait for chaincode event and you have a `stub.SetEvent("invoked", value)` in your chaincode
-        ))
+        try:
+            fabric_send_transaction('processAction', promoter, to, action_id, reward, time, ipfs_hash)
+        except:
+            return 0
 
 
 def getBlockchainManager(network):
     """Blockchain Manager Factory"""
     if network == 'fabric':
         return FabricManager()
-    if network == 'ethereum':
+    elif network == 'ethereum':
         return EthereumManager()
+    else:
+        return None
