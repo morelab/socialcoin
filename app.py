@@ -101,21 +101,19 @@ def reward_coins(dest, promoter, action_id, amount, img_hash, url_proof):
     s.close()
 
 
-def offer_transaction(sender, dest, offer):
+def buy_offer(buyer, dest, offer):
     """Pay to a company in exchange for an offer."""
     dest_user = User.get_by_email(dest)
-    dest_address = dest_user.block_addr
-    sender_user = User.get_by_email(sender)
-    sender_address = sender_user.block_addr
-    sender_key = sender_user.pk
+    buyer_user = User.get_by_email(buyer)
+    buyer_address = buyer_user.block_addr
     value = int(float(offer.price)*100)
 
-    tx_hash = blockchain_manager.burn(caller=admin_address, caller_key=admin_key, from_acc=sender_address, value=value)
+    tx_hash = blockchain_manager.burn(caller=admin_address, caller_key=admin_key, from_acc=buyer_address, value=value)
 
     s = Session()
     datetime_obj = datetime.now()
     timestamp_str = datetime_obj.strftime("%d-%m-%Y (%H:%M:%S.%f)")
-    t = Transaction(timestamp_str, tx_hash, sender, dest_user.organization, None, offer.price, "", "")
+    t = Transaction(timestamp_str, tx_hash, buyer, dest_user.organization, None, offer.price, "", "")
     s.add(t)
     s.commit()
     s.close()
@@ -254,7 +252,7 @@ def authorize():
         offer = Offer.get_offer_by_id(session['offer_id'])
         if offer is not None:
             dest = User.get_company_block_addr(offer.company).email
-            offer_transaction(session['email'], dest, offer)
+            buy_offer(session['email'], dest, offer)
             try:
                 offer.name = translator.translate(offer.name, dest=session['lang']).text
             except:
@@ -315,7 +313,7 @@ def redeem_offer(offer_id):
     offer = Offer.get_offer_by_id(offer_id)
     user = User.get_by_email(session['email'])
     dest = User.get_company_block_addr(offer.company).email
-    offer_transaction(session['email'], dest, offer)
+    buy_offer(session['email'], dest, offer)
     try:
         offer.name = translator.translate(offer.name, dest=session['lang']).text
     except:

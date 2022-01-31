@@ -435,6 +435,19 @@ td {
     color: hsl(242, 47%, 34%);
 }
 
+.company-card {
+    width: 100%;
+    max-width: 900px;
+}
+
+.company-card h4 {
+    margin: 0;
+}
+
+.company-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 6px 8px 0px !important;
+}
+
 @media handheld {
     #sidebar {
         margin-left: -250px;
