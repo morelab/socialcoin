@@ -137,3 +137,6 @@ config.py
 /requests
 *.crt
 *.key
+
+# node
+node_modules
