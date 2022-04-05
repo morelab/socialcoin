@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
-import ContentModal from '../../overlay/ContentModal';
-import SlideOver from '../../overlay/SlideOver';
-import EditCampaignForm from '../forms/EditCampaignForm';
-import { useDashboard } from '../../../context/DashboardContext';
-import { useUser } from '../../../context/UserContext';
+import React from 'react';
+
+import { ContentModal } from '../../../../components/Overlay/ContentModal';
 import { EditCampaignMenu } from '../Menus/EditCampaignMenu';
 
-const CampaignModal = ({ open, setOpen, content }) => {
+import { Campaign } from '../../../../types';
+import { useDashboard } from '../../../../context/DashboardContext';
+import { useUser } from '../../../../context/UserContext';
+
+
+type CampaignModalProps = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  content: string;
+};
+
+type SeeAllLinksProps = {
+  campaign: Campaign;
+};
+
+
+const CampaignModal = ({ open, setOpen, content }: CampaignModalProps) => {
   return (
     <ContentModal open={open} setOpen={setOpen}>
       <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
@@ -33,11 +46,11 @@ const CampaignModal = ({ open, setOpen, content }) => {
   );
 };
 
-const SeeAllLink = ({ campaign }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+const SeeAllLink = ({ campaign }: SeeAllLinksProps) => {
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalContent, setModalContent] = React.useState('');
 
-  const handleOpenModal = (content) => {
+  const handleOpenModal = (content: string) => {
     setModalContent(content);
     setModalOpen(true);
   };
@@ -45,7 +58,6 @@ const SeeAllLink = ({ campaign }) => {
   return (
     <>
       <span
-        href={`/${campaign.id}`}
         className="cursor-pointer text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200"
         onClick={() => handleOpenModal(campaign.description)}
       >
@@ -60,14 +72,14 @@ const SeeAllLink = ({ campaign }) => {
   );
 };
 
-const CampaignsTable = () => {
-  const [openSlide, setOpenSlide] = useState(false);
-  const [slideCampaign, setSlideCampaign] = useState({});
+export const CampaignsTable = () => {
+  const [openSlide, setOpenSlide] = React.useState(false);
+  const [slideCampaign, setSlideCampaign] = React.useState<Campaign>({} as Campaign);
   const { state } = useDashboard();
   const { user } = useUser();
 
-  const handleEdit = (campaign, e) => {
-    e.preventDefault();
+  const handleEdit = (campaign: Campaign, event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
     setSlideCampaign(campaign);
     setOpenSlide(true);
   };
@@ -132,5 +144,3 @@ const CampaignsTable = () => {
     </>
   );
 };
-
-export default CampaignsTable;
