@@ -7,7 +7,7 @@ from database.db import init_db, db_session
 from resources import *
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 app.secret_key = APP_SECRET
 api = Api(app)
 
