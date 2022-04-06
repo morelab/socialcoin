@@ -8,7 +8,7 @@ import { ContentModal } from '../../../../components/Overlay/ContentModal';
 import { useDashboard } from '../../../../context/DashboardContext';
 import { notifyError, notifyWarning } from '../../../../utils/notifications';
 import { useUser } from '../../../../context/UserContext';
-import actionService from '../../../services/actions';
+import { createAction } from '../../api/createAction';
 
 
 type FormProps = {
@@ -20,7 +20,7 @@ type MenuProps = {
   setOpen: (open: boolean) => void;
 };
 
-type FormContent = {
+export type NewActionFormContent = {
   name: string;
   description: string;
   reward: number;
@@ -31,7 +31,7 @@ type FormContent = {
 
 
 const NewActionForm = ({ close }: FormProps) => {
-  const [formState, setFormState] = React.useState<FormContent>({
+  const [formState, setFormState] = React.useState<NewActionFormContent>({
     name: '',
     description: '',
     reward: 0,
@@ -78,13 +78,15 @@ const NewActionForm = ({ close }: FormProps) => {
       return;
     }
 
-    const createdAction = await actionService.createNew(newAction);
+    const createdAction = await createAction(newAction);
     dispatch({
       type: 'addAction',
       payload: createdAction
     });
     close();
   };
+
+  if (!user) return null;
 
   const getOwnCampaigns = () => {
     return user.role === 'AD'

@@ -7,7 +7,7 @@ import {
 
 import { useUser } from '../../context/UserContext';
 import useClickOutside from '../../hooks/useClickOutside';
-import logo from '../../../assets/deustoCoin-256.png';
+import logo from '../../assets/logo.png';
 
 
 type LinkInfo = {
@@ -92,7 +92,7 @@ const Sidebar = ({ open, setOpen }: SidebarProps) => {
   return (
     <>
       <OpenButton open={open} handler={openHandler} />
-      <div ref={sidebarRef} className={`h-screen w-72 fixed bg-white dark:bg-gray-800 lg:border-0 border-r border-gray-300 dark:border-r-gray-700 shadow transition-all duration-300 ease-out z-10 lg:ml-0 ${open ? '' : '-ml-72'}`}>
+      <div ref={sidebarRef.current} className={`h-screen w-72 fixed bg-white dark:bg-gray-800 lg:border-0 border-r border-gray-300 dark:border-r-gray-700 shadow transition-all duration-300 ease-out z-10 lg:ml-0 ${open ? '' : '-ml-72'}`}>
         <SidebarHead />
         {user &&
           <ul className='flex flex-col p-2'>

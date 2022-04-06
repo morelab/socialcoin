@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import Spinner from './Elements/Spinner/Spinner';
+import { Spinner } from './Elements/Spinner';
 import Sidebar from './Layout/Sidebar';
 import { TopBar } from './Layout';
 

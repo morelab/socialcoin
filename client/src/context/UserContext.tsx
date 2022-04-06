@@ -7,14 +7,14 @@ type ProviderProps = {
 };
 
 type ContextValue = {
-  user: User;
-  setUser: (user: User) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
 };
 
 const UserContext = React.createContext<ContextValue>({} as ContextValue);
 
 const UserProvider = ({ children }: ProviderProps) => {
-  const [user, setUser] = React.useState<User>({} as User);
+  const [user, setUser] = React.useState<User | null>({} as User);
   const value = { user, setUser };
 
   return (

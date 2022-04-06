@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { Button } from '../../../components/Elements/Button';
-import { InputField } from '../../../components/Form/InputField';
-import { TextareaField } from '../../../components/Form/TextareaField';
-import { ContentModal } from '../../../components/Overlay/ContentModal';
+import { Button } from '../../../../components/Elements/Button';
+import { InputField } from '../../../../components/Form/InputField';
+import { TextareaField } from '../../../../components/Form/TextareaField';
+import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
-import { useDashboard } from '../../../context/DashboardContext';
-import { notifyWarning } from '../../../utils/notifications';
-import offerService from '../../../services/offers';
+import { useDashboard } from '../../../../context/DashboardContext';
+import { notifyWarning } from '../../../../utils/notifications';
+import { createOffer } from '../../api/createOffer';
 
 
 type FormProps = {
@@ -19,7 +19,7 @@ type MenuProps = {
   setOpen: (open: boolean) => void;
 };
 
-type FormContent = {
+export type NewOfferFormContent = {
   name: string;
   description: string;
   price: number;
@@ -27,7 +27,7 @@ type FormContent = {
 
 
 const NewOfferForm = ({ close }: FormProps) => {
-  const [formState, setFormState] = React.useState<FormContent>({
+  const [formState, setFormState] = React.useState<NewOfferFormContent>({
     name: '',
     description: '',
     price: 0
@@ -59,7 +59,7 @@ const NewOfferForm = ({ close }: FormProps) => {
       return;
     }
 
-    const createdOffer = await offerService.createNew(newOffer);
+    const createdOffer = await createOffer(newOffer);
     dispatch({
       type: 'addOffer',
       payload: createdOffer
@@ -118,12 +118,10 @@ const NewOfferForm = ({ close }: FormProps) => {
   );
 };
 
-const NewOfferMenu = ({ open, setOpen }: MenuProps) => {
+export const NewOfferMenu = ({ open, setOpen }: MenuProps) => {
   return (
     <ContentModal open={open} setOpen={setOpen}>
       <NewOfferForm close={() => setOpen(false)} />
     </ContentModal>
   );
 };
-
-export default NewOfferMenu;

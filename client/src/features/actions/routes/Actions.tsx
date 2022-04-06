@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import actionService from '../../../services/actions';
+
 import { useUser } from '../../../context/UserContext';
 import { Action } from '../../../types';
+import { getActions } from '../api/getActions';
 
 type ActionProps = {
   action: Action;
 };
 
-const Action = ({ action }: ActionProps) => {
+const ActionCard = ({ action }: ActionProps) => {
   return (
     <div className='flex flex-col rounded-lg shadow-md w-96 overflow-hidden'>
       <div className='flex-grow divide-y-2 divide-gray-200 dark:divide-gray-500 bg-white dark:bg-gray-800'>
@@ -31,13 +32,13 @@ export const Actions = () => {
   const [actions, setActions] = React.useState<Action[]>([]);
   const { user } = useUser();
 
-  if (user.role === 'PM') {
+  if (user?.role === 'PM') {
     return <Redirect to="/dashboard/campaigns" />;
   }
 
   React.useEffect(() => {
     const loadActions = async () => {
-      const actions = await actionService.getAll();
+      const actions = await getActions();
       setActions(actions);
     };
     loadActions();
@@ -48,7 +49,7 @@ export const Actions = () => {
       <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Actions</h1>
       <div className='flex flex-wrap gap-6'>
         {actions.filter(action => action.kpi < action.kpi_target).map(action =>
-          <Action key={action.id} action={action} />
+          <ActionCard key={action.id} action={action} />
         )}
       </div>
     </div>

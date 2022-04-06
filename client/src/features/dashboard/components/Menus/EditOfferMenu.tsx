@@ -9,7 +9,8 @@ import { DeletionModal } from '../DeletionModal';
 import { Offer } from '../../../../types';
 import { useDashboard } from '../../../../context/DashboardContext';
 import { notifyWarning } from '../../../../utils/notifications';
-import offerService from '../../../services/offers';
+import { updateOffer } from '../../api/updateOffer';
+import { deleteOffer } from '../../api/deleteOffer';
 
 
 type FormProps = {
@@ -23,7 +24,7 @@ type MenuProps = {
   setOpen: (open: boolean) => void;
 };
 
-type FormContent = {
+export type FormContent = {
   name: string;
   description: string;
   price: number;
@@ -64,7 +65,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
       return;
     }
 
-    const editedOffer = await offerService.updateOne(offer.id, formOffer);
+    const editedOffer = await updateOffer(offer.id, formOffer);
     dispatch({
       type: 'editOffer',
       payload: editedOffer
@@ -73,7 +74,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
   };
 
   const handleDelete = async () => {
-    await offerService.deleteOne(offer.id);
+    await deleteOffer(offer.id);
     dispatch({
       type: 'removeOffer',
       payload: offer.id

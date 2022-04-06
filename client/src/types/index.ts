@@ -8,6 +8,7 @@ export type User = {
   role: RoleKey;
   blockchain_public: string;
   picture_url: string;
+  balance: number;
 };
 
 export type Campaign = {
@@ -45,7 +46,11 @@ export type Transaction = {
   date: string;
   transaction_hash: string;
   sender_address: string;
+  sender_email: string;
+  sender_name: string;
   receiver_address: string;
+  receiver_email: string;
+  receiver_name: string;
   quantity: number;
   transaction_info: string;
   img_ipfs_hash: string;

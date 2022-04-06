@@ -1,17 +1,23 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { PencilIcon } from '@heroicons/react/solid';
-import { useUser } from '../../../context/UserContext';
-import userService from '../../../services/users';
-import ConfirmationModal from '../../../components/overlay/ConfirmationModal';
+
+import ConfirmationModal from '../../dashboard/components/ConfirmationModal';
+
 import { RoleKey } from '../../../types';
+import { useUser } from '../../../context/UserContext';
+import { updateUserSelf } from '../api/updateUserSelf';
 
 export const Profile = () => {
   const { user, setUser } = useUser();
-  const [formName, setFormName] = React.useState(user.name);
+  const [formName, setFormName] = React.useState(user?.name);
   const [openModal, setOpenModal] = React.useState(false);
+  const history = useHistory();
+
+  if (!user) history.push('/');
 
   const handleFormChange = (e: React.FormEvent<HTMLInputElement>) => setFormName(e.currentTarget.value);
-  const reduceAddress = (address: string) => address.slice(0, 7) + '...' + address.slice(address.length - 5);
+  const reduceAddress = (address: string | undefined) => address && address.slice(0, 7) + '...' + address.slice(address.length - 5);
 
   const handleOpenModal = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,11 +25,17 @@ export const Profile = () => {
   };
 
   const handleProfileEdit = async () => {
-    await userService.updateSelf(formName);
-    setUser({ ...user, name: formName });
+    if (formName && user) {
+      updateUserSelf(formName);
+      setUser({
+        ...user,
+        name: formName
+      });
+    }
   };
 
-  const getRoleText = (role: RoleKey) => {
+  const getRoleText = (role: RoleKey | undefined) => {
+    if (!role) return 'Collaborator';
     if (role === 'AD') return 'Administrator';
     else if (role === 'PM') return 'Promoter';
     else return 'Collaborator';
@@ -35,7 +47,7 @@ export const Profile = () => {
         open={openModal}
         setOpen={setOpenModal}
         title="Confirm name change"
-        content={`Are you sure you want to change your name from '${user.name}' to '${formName}'?`}
+        content={`Are you sure you want to change your name from '${user?.name}' to '${formName}'?`}
         confirmHandler={handleProfileEdit}
       />
       <div className='flex items-center justify-center w-full p-3'>
@@ -73,19 +85,19 @@ export const Profile = () => {
             <div className='mt-7'>
               <span className='block text-md font-medium text-indigo-600 dark:text-indigo-300'>Email</span>
               <div className='py-2 border-2 border-b-gray-300 border-x-transparent border-t-transparent block w-full dark:text-gray-100'>
-                {user.email}
+                {user?.email}
               </div>
             </div>
             <div className='mt-6'>
               <span className='block text-md font-medium text-indigo-600 dark:text-indigo-300'>Role</span>
               <div className='py-2 border-2 border-b-gray-300 border-x-transparent border-t-transparent block w-full dark:text-gray-100'>
-                {getRoleText(user.role)}
+                {getRoleText(user?.role)}
               </div>
             </div>
             <div className='mt-6'>
               <span className='block text-md font-medium text-indigo-600 dark:text-indigo-300'>Blockchain address</span>
               <div className='py-2 border-2 border-b-gray-300 border-x-transparent border-t-transparent block w-full dark:text-gray-100'>
-                {reduceAddress(user.blockchain_public)}
+                {reduceAddress(user?.blockchain_public)}
               </div>
             </div>
           </div>

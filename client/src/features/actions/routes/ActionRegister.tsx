@@ -1,24 +1,37 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { useParams, Redirect, useHistory } from 'react-router-dom';
-import LoadingIcon from '../../../components/common/LoadingIcon';
-import InputGroup from '../../../components/common/forms/InputGroup';
-import SubmitButton from '../../../components/common/forms/SubmitButton';
-import actionService from '../../../services/actions';
+
+import { Spinner } from '../../../components/Elements/Spinner';
+import { Button } from '../../../components/Elements/Button';
+import { InputField } from '../../../components/Form/InputField';
+
+import { Action } from '../../../types';
 import { useUser } from '../../../context/UserContext';
 import { notifyWarning } from '../../../utils/notifications';
-import { Action } from '../../../types';
+import { getAction } from '../api/getAction';
+import { registerAction } from '../api/registerAction';
 
 type RegisterStates = 'initial' | 'registering' | 'registered';
 
 type RegisterFormProps = {
   action: Action;
-  setState: (state: string) => void; // TODO limit states
+  setState: (state: 'initial' | 'registering' | 'registered') => void;
+};
+
+type FormState = {
+  kpi_value: number;
+  verificationUrl: string;
+  files: File[];
 };
 
 const RegisterForm = ({ action, setState }: RegisterFormProps) => {
-  const [formState, setFormState] = React.useState({});
+  const [formState, setFormState] = React.useState<FormState>({
+    kpi_value: 0,
+    verificationUrl: '',
+    files: []
+  });
   const [fileName, setFileName] = React.useState('');
-  const fileInputRef = React.useRef();
+  const fileInputRef = React.createRef<HTMLInputElement>();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
     const target = event.currentTarget;
@@ -32,19 +45,24 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
   };
 
   const handleFileInputClick = () => {
-    fileInputRef.current.click();
+    if (fileInputRef.current) fileInputRef.current.click();
   };
 
   const handleFileUpload = () => {
-    setFileName(fileInputRef.current.files[0].name);
+    if (fileInputRef.current) {
+      const files = fileInputRef.current.files;
+      if (files) setFileName(files[0].name);
+    }
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleRegister = async (event: FormEvent) => {
+    event.preventDefault();
 
-    const kpi_value = formState.kpiIndicator;
-    const verificationURL = formState.verificationURL;
-    const files = fileInputRef.current.files;
+    const kpi_value = formState.kpi_value;
+    const verificationURL = formState.verificationUrl;
+    const files = fileInputRef?.current?.files;
+
+    if (!files) return;
 
     if (kpi_value <= 0) {
       notifyWarning('Please enter a KPI greater than 0.');
@@ -56,11 +74,11 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
     }
 
     let formData = new FormData();
-    formData.append('kpi', kpi_value);
+    formData.append('kpi', kpi_value.toString());
     formData.append('verification_url', verificationURL);
     formData.append('image_proof', files[0]);
     setState('registering');
-    await actionService.registerAction(action.id, formData);
+    await registerAction(action.id, formData);
     setState('registered');
   };
 
@@ -69,12 +87,12 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
       <form action="#" method="POST" onSubmit={handleRegister}>
         <div className="bg-white dark:bg-gray-800">
           <div className="grid grid-cols-6 gap-6">
-            <InputGroup
+            <InputField
               label={action.kpi_indicator}
-              forName="kpiIndicator"
+              name="kpi_value"
               type="number"
-              value={formState.kpiIndicator || ''}
-              handleInputChange={handleInputChange}
+              value={formState.kpi_value}
+              onChange={handleInputChange}
               required
             />
             <div className='col-span-6'>
@@ -110,17 +128,17 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
                 </div>
               </div>
             </div>
-            <InputGroup
+            <InputField
               label="Verification URL (not mandatory)"
-              forName="verificationURL"
+              name="verificationUrl"
               type="text"
-              value={formState.verificationURL || ''}
-              handleInputChange={handleInputChange}
+              value={formState.verificationUrl}
+              onChange={handleInputChange}
             />
           </div>
         </div>
         <div className="px-4 py-3 text-right sm:px-6">
-          <SubmitButton content="Register action" />
+          <Button type='submit' variant='submit'>Register action</Button>
         </div>
       </form>
     </div>
@@ -128,24 +146,24 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
 };
 
 export const ActionRegister = () => {
-  const actionID = useParams<{ id?: string }>().id;
-  const [action, setAction] = React.useState<Action>(null);
+  const actionID = useParams<{ id: string }>().id;
+  const [action, setAction] = React.useState<Action>({} as Action);
   const [registerState, setRegisterState] = React.useState<RegisterStates>('initial');
   const { user } = useUser();
   const history = useHistory();
 
-  if (user.role === 'PM') {
+  if (user?.role === 'PM') {
     return <Redirect to="/dashboard/campaigns" />;
   }
 
   React.useEffect(() => {
-    actionService.getOne(actionID).then(action => setAction(action));
+    getAction(actionID).then(action => setAction(action));
   }, []);
 
   if (!action) {
     return (
       <div className='px-5 flex items-center justify-center'>
-        <LoadingIcon />
+        <Spinner />
       </div>
     );
   }
@@ -155,7 +173,7 @@ export const ActionRegister = () => {
       return (
         <div className='flex flex-col items-center justify-center py-16'>
           <h2 className='text-xl dark:text-gray-200'>Please wait...</h2>
-          <LoadingIcon />
+          <Spinner />
         </div>
       );
     } else if (registerState === 'registered') {

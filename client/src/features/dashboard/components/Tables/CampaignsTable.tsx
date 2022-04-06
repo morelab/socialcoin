@@ -84,6 +84,8 @@ export const CampaignsTable = () => {
     setOpenSlide(true);
   };
 
+  if (!user) return null;
+
   const getOwnCampaigns = () => {
     return user.role === 'AD'
       ? state.campaigns

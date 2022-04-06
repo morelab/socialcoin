@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Redirect } from 'react-router-dom';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
-import logo from '../../../assets/deustoCoin-256.png';
+import logo from '../../../assets/logo.png';
 import GoogleButton from 'react-google-button';
 
 import { useUser } from '../../../context/UserContext';

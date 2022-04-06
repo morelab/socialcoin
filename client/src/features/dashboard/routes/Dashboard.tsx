@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { PlusIcon } from '@heroicons/react/solid';
 
-import NewCampaignMenu from '../../../components/common/menus/NewCampaignMenu';
-import NewActionMenu from '../../../components/common/menus/NewActionMenu';
-import NewOfferMenu from '../../../components/common/menus/NewOfferMenu';
+import { NewCampaignMenu } from '../components/Menus/NewCampaignMenu';
+import { NewActionMenu } from '../components/Menus/NewActionMenu';
+import { NewOfferMenu } from '../components/Menus/NewOfferMenu';
 
-import CampaignsTable from '../../../components/common/tables/CampaignsTable';
-import ActionsTable from '../../../components/common/tables/ActionsTable';
-import OffersTable from '../components/Tables/OffersTable';
+import { CampaignsTable } from '../components/Tables/CampaignsTable';
+import { ActionsTable } from '../components/Tables/ActionsTable';
+import { OffersTable } from '../components/Tables/OffersTable';
 
 import { DashboardProvider } from '../../../context/DashboardContext';
 import { useUser } from '../../../context/UserContext';
 import { useDashboard } from '../../../context/DashboardContext';
+import { getActions } from '../api/getActions';
+import { getOffers } from '../api/getOffers';
+import { getSelfUserBalance } from '../api/getSelfUserBalance';
+import { getCampaigns } from '../api/getCampaigns';
 
-import campaignService from '../../../services/campaigns';
-import actionService from '../../../services/actions';
-import offerService from '../../../services/offers';
-import userService from '../../../services/users';
 
 type HeaderProps = {
   type: 'campaign' | 'action' | 'offer';
 };
 
 const DashboardHeader = ({ type }: HeaderProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   let menu;
   if (type === 'campaign') {
@@ -60,17 +60,19 @@ const DashboardContent = () => {
   const { dispatch } = useDashboard();
   const { user, setUser } = useUser();
 
+  if (!user) return null;
+
   if (user.role === 'CB') {
     return <Redirect to="/campaigns" />;
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     let isMounted = true;
-    campaignService.getAll().then(campaigns => {
+    getCampaigns().then(campaigns => {
       if (isMounted) {
         dispatch({
           type: 'loadCampaigns',
-          payload: { campaigns }
+          payload: campaigns
         });
       }
     });
@@ -78,13 +80,13 @@ const DashboardContent = () => {
     return () => { isMounted = false; };
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let isMounted = true;
-    actionService.getAll().then(actions => {
+    getActions().then(actions => {
       if (isMounted) {
         dispatch({
           type: 'loadActions',
-          payload: { actions }
+          payload: actions
         });
       }
     });
@@ -92,13 +94,13 @@ const DashboardContent = () => {
     return () => { isMounted = false; };
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let isMounted = true;
-    offerService.getAll().then(offers => {
+    getOffers().then(offers => {
       if (isMounted) {
         dispatch({
           type: 'loadOffers',
-          payload: { offers }
+          payload: offers
         });
       }
     });
@@ -106,13 +108,13 @@ const DashboardContent = () => {
     return () => { isMounted = false; };
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (user.balance === null || user.balance === undefined) {
-      userService.getSelfBalance()
-        .then(result => {
+      getSelfUserBalance()
+        .then(balance => {
           const newUser = {
             ...user,
-            balance: result.balance
+            balance: balance
           };
           setUser(newUser);
         });

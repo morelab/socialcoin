@@ -7,7 +7,7 @@ import { Action } from '../../../../types';
 import { useDashboard } from '../../../../context/DashboardContext';
 import { useUser } from '../../../../context/UserContext';
 
-const ActionsTable = () => {
+export const ActionsTable = () => {
   const [openSlide, setOpenSlide] = React.useState(false);
   const [openQR, setOpenQR] = React.useState(false);
   const [activeID, setActiveID] = React.useState(0);
@@ -24,6 +24,8 @@ const ActionsTable = () => {
     setSlideAction(action);
     setOpenSlide(true);
   };
+
+  if (!user) return null;
 
   const getOwnActions = () => {
     return user.role === 'AD'
@@ -121,5 +123,3 @@ const ActionsTable = () => {
     </>
   );
 };
-
-export default ActionsTable;

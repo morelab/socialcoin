@@ -8,7 +8,8 @@ import { DeletionModal } from '../DeletionModal';
 
 import { Campaign } from '../../../../types';
 import { useDashboard } from '../../../../context/DashboardContext';
-import campaignService from '../../../services/campaigns';
+import { updateCampaign } from '../../api/updateCampaign';
+import { deleteCampagin } from '../../api/deleteCampaign';
 
 
 type FormProps = {
@@ -22,7 +23,7 @@ type MenuProps = {
   setOpen: (open: boolean) => void;
 };
 
-type FormContent = {
+export type FormContent = {
   name: string;
   description: string;
 };
@@ -55,7 +56,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
       description: formState.description,
     };
 
-    const editedCampaign = await campaignService.updateOne(campaign.id, formCampaign);
+    const editedCampaign = await updateCampaign(campaign.id, formCampaign);
     dispatch({
       type: 'editCampaign',
       payload: editedCampaign
@@ -64,7 +65,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
   };
 
   const handleDelete = async () => {
-    await campaignService.deleteOne(campaign.id);
+    await deleteCampagin(campaign.id);
     dispatch({
       type: 'removeCampaign',
       payload: campaign.id

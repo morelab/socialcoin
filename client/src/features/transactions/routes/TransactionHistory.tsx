@@ -1,10 +1,26 @@
 import React from 'react';
 import { FlagIcon, ShoppingBagIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
-import LoadingIcon from '../../../components/common/LoadingIcon';
-import ContentModal from '../../../components/overlay/ContentModal';
-import transactionService from '../../../services/transactions';
 
-const TransactionModal = ({ transaction, open, setOpen }) => {
+import { Spinner } from '../../../components/Elements/Spinner';
+import { ContentModal } from '../../../components/Overlay/ContentModal';
+
+import { Transaction } from '../../../types';
+import { getTransactions } from '../api/getTransactions';
+
+
+type TransactionModalProps = {
+  transaction: Transaction;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+type TransactionProps = {
+  transaction: Transaction;
+  clickHandler: () => void;
+};
+
+
+const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps) => {
   if (!transaction) {
     return null;
   }
@@ -77,7 +93,7 @@ const TransactionModal = ({ transaction, open, setOpen }) => {
   );
 };
 
-const Transaction = ({ transaction, clickHandler }) => {
+const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
   const getTransactionType = () => transaction.transaction_info.split(' ')[0];
 
   const getTransactionTitle = () => {
@@ -134,12 +150,12 @@ const Transaction = ({ transaction, clickHandler }) => {
 };
 
 export const TransactionHistory = () => {
-  const [transactions, setTransactions] = React.useState(null);
-  const [selectedTransaction, setSelectedTransaction] = React.useState(null);
+  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+  const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction>({} as Transaction);
   const [openModal, setOpenModal] = React.useState(false);
 
   React.useEffect(() => {
-    transactionService.getAll().then(result => {
+    getTransactions().then(result => {
       setTransactions(result);
       console.log(result);
     });
@@ -148,12 +164,12 @@ export const TransactionHistory = () => {
   if (!transactions) {
     return (
       <div className='px-5 flex items-center justify-center'>
-        <LoadingIcon />
+        <Spinner />
       </div>
     );
   }
 
-  const handleOpenTransaction = (transaction) => {
+  const handleOpenTransaction = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
     setOpenModal(true);
   };
@@ -164,7 +180,7 @@ export const TransactionHistory = () => {
       {transactions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No transactions recorded yet.</h2>}
       <div className='flex flex-col gap-3 items-center'>
         {transactions.map(transaction =>
-          <Transaction key={transaction.id} transaction={transaction} clickHandler={() => handleOpenTransaction(transaction)} />
+          <TransactionCard key={transaction.id} transaction={transaction} clickHandler={() => handleOpenTransaction(transaction)} />
         )}
       </div>
       <TransactionModal open={openModal} setOpen={setOpenModal} transaction={selectedTransaction} />

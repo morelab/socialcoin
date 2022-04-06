@@ -14,8 +14,7 @@ import {
 import classNames from 'classnames';
 import { useUser } from '../../context/UserContext';
 import { useTheme } from '../../context/ThemeContext';
-import userService from '../../services/users';
-
+import { logout } from '../api/logout';
 
 type TabProps = {
   url: string;
@@ -104,7 +103,7 @@ const TopbarMenu = () => {
   const history = useHistory();
 
   const logoutHandler = React.useCallback(() => {
-    userService.logout()
+    logout()
       .then(() => {
         setUser(null);
         history.push('/');

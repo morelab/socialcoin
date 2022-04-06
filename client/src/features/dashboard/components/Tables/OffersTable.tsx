@@ -7,7 +7,7 @@ import { Offer } from '../../../../types';
 import { useDashboard } from '../../../../context/DashboardContext';
 import { useUser } from '../../../../context/UserContext';
 
-const OffersTable = () => {
+export const OffersTable = () => {
   const [openSlide, setOpenSlide] = React.useState(false);
   const [openQR, setOpenQR] = React.useState(false);
   const [activeID, setActiveID] = React.useState(0);
@@ -24,6 +24,8 @@ const OffersTable = () => {
     setSlideOffer(offer);
     setOpenSlide(true);
   };
+
+  if (!user) return null;
 
   const getOwnOffers = () => {
     return user.role === 'AD'
@@ -103,5 +105,3 @@ const OffersTable = () => {
     </>
   );
 };
-
-export default OffersTable;

@@ -1,39 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams, useHistory, Redirect } from 'react-router-dom';
 import { ShoppingBagIcon, SwitchHorizontalIcon } from '@heroicons/react/outline';
-import offerService from '../../../services/offers';
+
+import { Spinner } from '../../../components/Elements/Spinner';
+import ConfirmationModal from '../../dashboard/components/ConfirmationModal';
+
+import { Offer, User } from '../../../types';
+import { getOffer } from '../api/getOffer';
+import { redeemOffer } from '../api/redeemOffer';
 import { useUser } from '../../../context/UserContext';
-import LoadingIcon from '../../../components/common/LoadingIcon';
-import ConfirmationModal from '../../../components/overlay/ConfirmationModal';
 import { notifyError } from '../../../utils/notifications';
 
 
 export const OfferRedeem = () => {
-  const offerID = useParams<{ id?: string }>().id;
-  const [offer, setOffer] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
-  const [paymentState, setPaymentState] = useState('initial');
+  const offerID = useParams<{ id: string }>().id;
+  const [offer, setOffer] = React.useState<Offer>({} as Offer);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [paymentState, setPaymentState] = React.useState('initial');
   const { user, setUser } = useUser();
   const history = useHistory();
 
-  if (user.role === 'PM') {
+  if (user?.role === 'PM') {
     return <Redirect to="/dashboard/campaigns" />;
   }
 
-  useEffect(() => {
-    offerService.getOne(offerID).then(action => setOffer(action));
+  React.useEffect(() => {
+    getOffer(offerID).then(action => setOffer(action));
   }, []);
 
   if (!offer) {
     return (
       <div className='px-5 flex items-center justify-center'>
-        <LoadingIcon />
+        <Spinner />
       </div>
     );
   }
 
   const handleOpenModal = async () => {
-    if (user.balance < offer.price) {
+    if (user && user.balance < offer.price) {
       notifyError('Not enough balance in your account.');
     } else {
       setOpenModal(true);
@@ -41,14 +45,16 @@ export const OfferRedeem = () => {
   };
 
   const handlePayment = async () => {
-    setPaymentState('redeeming');
-    await offerService.redeemOne(offer.id);
-    setPaymentState('redeemed');
-    const newUser = {
-      ...user,
-      balance: user.balance - offer.price
-    };
-    setUser(newUser);
+    if (user) {
+      setPaymentState('redeeming');
+      await redeemOffer(offer.id.toString());
+      setPaymentState('redeemed');
+      const newUser = {
+        ...user,
+        balance: user.balance - offer.price
+      };
+      setUser(newUser);
+    }
   };
 
   const getBottomSection = () => {
@@ -56,7 +62,7 @@ export const OfferRedeem = () => {
       return (
         <div className='flex flex-col items-center justify-center'>
           <h2 className='text-xl dark:text-gray-200'>Please wait...</h2>
-          <LoadingIcon />
+          <Spinner />
         </div>
       );
     } else if (paymentState === 'redeemed') {
@@ -81,7 +87,7 @@ export const OfferRedeem = () => {
       return (
         <>
           <div className='flex items-center justify-between'>
-            <span className='text-lg flex-1 text-gray-800 dark:text-gray-200 flex justify-start'>{user.name}</span>
+            <span className='text-lg flex-1 text-gray-800 dark:text-gray-200 flex justify-start'>{user?.name}</span>
             <SwitchHorizontalIcon className="h-10 w-10 text-gray-500 dark:text-gray-200 mx-4 md:mx-10" aria-hidden="true" />
             <span className='text-lg text-right flex-1 text-gray-800 dark:text-gray-200 flex justify-end'>{offer.company_name}</span>
           </div>
@@ -126,7 +132,7 @@ export const OfferRedeem = () => {
               <ShoppingBagIcon className="h-10 w-10 text-indigo-600 dark:text-indigo-500" aria-hidden="true" />
             </div>
             <span className='text-2xl text-center font-bold text-gray-800 dark:text-gray-100'>
-              {offer.name} - {offer.price/100} UDC
+              {offer.name} - {offer.price / 100} UDC
             </span>
           </div>
           <div className='h-full w-full px-7 sm:px-10 lg:px-20 py-5 flex flex-col items-center gap-6'>

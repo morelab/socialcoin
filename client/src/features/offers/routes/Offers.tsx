@@ -1,16 +1,17 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { CreditCardIcon } from '@heroicons/react/solid';
-import offerService from '../../../services/offers';
-import userService from '../../../services/users';
-import { useUser } from '../../../context/UserContext';
+
+import { getOffers } from '../api/getOffers';
+import { getSelfUserBalance } from '../api/getSelfUserBalance';
 import { Offer } from '../../../types';
+import { useUser } from '../../../context/UserContext';
 
 type OfferProps = {
   offer: Offer;
 };
 
-const Offer = ({ offer }: OfferProps) => {
+const OfferCard = ({ offer }: OfferProps) => {
   return (
     <div className='flex flex-col rounded-lg shadow-md w-96 h-36 overflow-hidden'>
       <div className='flex-grow divide-x-2 divide-gray-200 grid grid-cols-5 bg-white dark:bg-gray-800'>
@@ -36,29 +37,31 @@ export const Offers = () => {
   const [offers, setOffers] = React.useState<Offer[]>([]);
   const { user, setUser } = useUser();
 
-  if (user.role === 'PM') {
+  if (user?.role === 'PM') {
     return <Redirect to="/dashboard/campaigns" />;
   }
 
   React.useEffect(() => {
     const loadOffers = async () => {
-      const offers = await offerService.getAll();
+      const offers = await getOffers();
       setOffers(offers);
     };
     loadOffers();
   }, []);
 
   React.useEffect(() => {
-    userService.getSelfBalance().then(result => setUser({ ...user, balance: result.balance }));
+    getSelfUserBalance().then(balance => {
+      if (user) setUser({ ...user, balance: balance })
+    });
   }, []);
 
   return (
     <div className='p-5'>
-      <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Offers - {user.balance / 100} UDC</h1>
+      <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Offers - {user && user.balance / 100} UDC</h1>
       {offers.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No offers created yet.</h2>}
       <div className='flex flex-wrap gap-6'>
         {offers.map(offer =>
-          <Offer key={offer.id} offer={offer} />
+          <OfferCard key={offer.id} offer={offer} />
         )}
       </div>
     </div>

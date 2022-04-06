@@ -10,7 +10,8 @@ import { Action } from '../../../../types';
 import { useUser } from '../../../../context/UserContext';
 import { useDashboard } from '../../../../context/DashboardContext';
 import { notifyWarning } from '../../../../utils/notifications';
-import actionService from '../../../services/actions';
+import { updateAction } from '../../api/updateAction';
+import { deleteAction } from '../../api/deleteAction';
 
 
 type FormProps = {
@@ -24,7 +25,7 @@ type MenuProps = {
   setOpen: (open: boolean) => void;
 };
 
-type FormContent = {
+export type FormContent = {
   name: string;
   description: string;
   reward: number;
@@ -79,7 +80,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
       return;
     }
 
-    const editedAction = await actionService.updateOne(action.id, formAction);
+    const editedAction = await updateAction(action.id, formAction);
     dispatch({
       type: 'editAction',
       payload: editedAction
@@ -88,13 +89,15 @@ const EditActionForm = ({ action, close }: FormProps) => {
   };
 
   const handleDelete = async () => {
-    await actionService.deleteOne(action.id);
+    await deleteAction(action.id);
     dispatch({
       type: 'removeAction',
       payload: action.id
     });
     close();
   };
+
+  if (!user) return null;
 
   const getOwnCampaigns = () => {
     return user.role === 'AD'

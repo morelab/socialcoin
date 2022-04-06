@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Button } from '../../../components/Elements/Button';
-import { InputField } from '../../../components/Form/InputField';
-import { TextareaField } from '../../../components/Form/TextareaField';
-import { ContentModal } from '../../../components/Overlay/ContentModal';
+import { Button } from '../../../../components/Elements/Button';
+import { InputField } from '../../../../components/Form/InputField';
+import { TextareaField } from '../../../../components/Form/TextareaField';
+import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
-import { useDashboard } from '../../../context/DashboardContext';
-import campaignService from '../../../services/campaigns';
+import { useDashboard } from '../../../../context/DashboardContext';
+import { createCampaign } from '../../api/createCampaign';
 
 
 type FormProps = {
@@ -18,14 +18,14 @@ type MenuProps = {
   setOpen: (open: boolean) => void;
 };
 
-type FormContent = {
+export type NewCampaignFormContent = {
   name: string;
   description: string;
 };
 
 
 const NewCampaignForm = ({ close }: FormProps) => {
-  const [formState, setFormState] = React.useState<FormContent>({ name: '', description: '' });
+  const [formState, setFormState] = React.useState<NewCampaignFormContent>({ name: '', description: '' });
   const { dispatch } = useDashboard();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -47,7 +47,7 @@ const NewCampaignForm = ({ close }: FormProps) => {
       description: formState.description,
     };
 
-    const createdCampaign = await campaignService.createNew(newCampaign);
+    const createdCampaign = await createCampaign(newCampaign);
     dispatch({
       type: 'addCampaign',
       payload: createdCampaign

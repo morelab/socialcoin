@@ -2,9 +2,12 @@ import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { Redirect } from 'react-router-dom';
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import campaignService from '../../../services/campaigns';
-import ContentModal from '../../../components/overlay/ContentModal';
+
+import { CompanyCampaigns, getCampaignsByCompany } from '../api/getCampaignsByCompany';
+import { ContentModal } from '../../../components/Overlay/ContentModal';
 import { useUser } from '../../../context/UserContext';
+import { User } from '../../../types';
+
 
 type CampaignModalProps = {
   open: boolean;
@@ -12,6 +15,7 @@ type CampaignModalProps = {
   title: string;
   content: string;
 };
+
 
 const CampaignModal = ({ open, setOpen, title, content }: CampaignModalProps) => {
   return (
@@ -45,7 +49,7 @@ const CampaignModal = ({ open, setOpen, title, content }: CampaignModalProps) =>
   );
 };
 
-const CompanySection = ({ entry }) => {
+const CompanySection = ({ company, campaigns }: CompanyCampaigns) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [data, setData] = React.useState({
     title: '',
@@ -53,7 +57,7 @@ const CompanySection = ({ entry }) => {
   });
   const { user } = useUser();
 
-  if (user.role === 'PM') {
+  if (user?.role === 'PM') {
     return <Redirect to="/dashboard/campaigns" />;
   }
 
@@ -70,12 +74,12 @@ const CompanySection = ({ entry }) => {
       <div className='rounded-lg shadow-md overflow-hidden w-full flex-grow divide-y-2 divide-gray-200 dark:divide-gray-500 bg-white dark:bg-gray-800'>
         <div className='px-4 py-3 dark:bg-gray-900'>
           <h1 className='font-bold text-lg text-gray-800 dark:text-gray-50'>
-            By {entry.company.name}:
+            By {company.name}:
           </h1>
         </div>
         <div className='px-4 py-3 text-gray-800 dark:text-gray-50'>
           <li className='list-none'>
-            {entry.campaigns.map(campaign =>
+            {campaigns.map(campaign =>
               <ul key={`cmp-${campaign.id}`} className="group p-2 rounded cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-500" onClick={() => handleOpenModal(campaign.name, campaign.description)}>
                 <div className="flex items-center justify-between">
                   {campaign.name}
@@ -97,10 +101,10 @@ const CompanySection = ({ entry }) => {
 };
 
 export const Campaigns = () => {
-  const [companies, setCompanies] = React.useState([]);
+  const [companies, setCompanies] = React.useState<CompanyCampaigns[]>([]);
 
   React.useEffect(() => {
-    campaignService.getByCompany()
+    getCampaignsByCompany()
       .then(company_list => {
         setCompanies(company_list);
       });
@@ -111,7 +115,7 @@ export const Campaigns = () => {
       <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Campaigns</h1>
       {companies.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No companies registered yet.</h2>}
       <div className='flex flex-wrap gap-6'>
-        {companies.map(company => <CompanySection key={`c-${company.id}`} entry={company} />)}
+        {companies.map(entry => <CompanySection key={`c-${entry.company.id}`} company={entry.company} campaigns={entry.campaigns} />)}
       </div>
     </div>
   );
