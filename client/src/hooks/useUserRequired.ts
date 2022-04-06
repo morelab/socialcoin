@@ -3,6 +3,12 @@ import { useHistory } from 'react-router-dom';
 import { axios } from '../lib/axios';
 
 import { useUser } from '../context/UserContext';
+import { User } from '../types';
+
+const getSelf = async (): Promise<User> => {
+  const result = await axios.get('/api/users/self');
+  return result.data;
+};
 
 export const useUserRequired = () => {
   const { user, setUser } = useUser();
@@ -10,11 +16,12 @@ export const useUserRequired = () => {
 
   React.useEffect(() => {
     if (user == null) {
-      axios.get('/api/users/self')
+      getSelf()
         .then(result => {
-          setUser(result.data);
-          console.log(result.data);
+          setUser(result);
+          console.log(result);
         }).catch(err => {
+          console.log(err);
           history.push('/');
         });
     }
