@@ -15,6 +15,7 @@ export type Campaign = {
   name: string;
   description: string;
   company_id: number;
+  company_name: string;
 };
 
 export type Action = {

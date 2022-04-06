@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
-import QRModal from './QRModal';
-import SlideOver from '../../overlay/SlideOver';
-import EditOfferForm from '../Menus/EditOfferMenu';
+import React from 'react';
+
+import { QRModal } from './QRModal';
+import { EditOfferMenu } from '../Menus/EditOfferMenu';
+
+import { Offer } from '../../../../types';
 import { useDashboard } from '../../../../context/DashboardContext';
 import { useUser } from '../../../../context/UserContext';
 
 const OffersTable = () => {
-  const [openSlide, setOpenSlide] = useState(false);
-  const [openQR, setOpenQR] = useState(false);
-  const [activeID, setActiveID] = useState(0);
-  const [slideOffer, setSlideOffer] = useState({});
+  const [openSlide, setOpenSlide] = React.useState(false);
+  const [openQR, setOpenQR] = React.useState(false);
+  const [activeID, setActiveID] = React.useState(0);
+  const [slideOffer, setSlideOffer] = React.useState<Offer>({} as Offer);
   const { state } = useDashboard();
   const { user } = useUser();
 
-  const handleQR = (id) => {
+  const handleQR = (id: number) => {
     setActiveID(id);
     setOpenQR(true);
   };
 
-  const handleEdit = (offer) => {
+  const handleEdit = (offer: Offer) => {
     setSlideOffer(offer);
     setOpenSlide(true);
   };
@@ -31,9 +33,7 @@ const OffersTable = () => {
 
   return (
     <>
-      <SlideOver open={openSlide} setOpen={setOpenSlide} >
-        <EditOfferForm data={slideOffer} setOpen={setOpenSlide} />
-      </SlideOver>
+      <EditOfferMenu offer={slideOffer} open={openSlide} setOpen={setOpenSlide} />
       <QRModal open={openQR} setOpen={setOpenQR} url={`${window.location.href}/redeem/${activeID}`} />
       <div className="shadow overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">

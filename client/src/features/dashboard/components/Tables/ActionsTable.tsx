@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
-import QRModal from './QRModal';
-import SlideOver from '../../overlay/SlideOver';
-import EditActionForm from '../forms/EditActionForm';
-import { useDashboard } from '../../../context/DashboardContext';
-import { useUser } from '../../../context/UserContext';
+import React from 'react';
+
+import { QRModal } from './QRModal';
+import { EditActionMenu } from '../Menus/EditActionMenu';
+
+import { Action } from '../../../../types';
+import { useDashboard } from '../../../../context/DashboardContext';
+import { useUser } from '../../../../context/UserContext';
 
 const ActionsTable = () => {
-  const [openSlide, setOpenSlide] = useState(false);
-  const [openQR, setOpenQR] = useState(false);
-  const [activeID, setActiveID] = useState(0);
-  const [slideAction, setSlideAction] = useState({});
+  const [openSlide, setOpenSlide] = React.useState(false);
+  const [openQR, setOpenQR] = React.useState(false);
+  const [activeID, setActiveID] = React.useState(0);
+  const [slideAction, setSlideAction] = React.useState<Action>({} as Action);
   const { state } = useDashboard();
   const { user } = useUser();
 
-  const handleQR = (id) => {
+  const handleQR = (id: number) => {
     setActiveID(id);
     setOpenQR(true);
   };
 
-  const handleEdit = (action) => {
+  const handleEdit = (action: Action) => {
     setSlideAction(action);
     setOpenSlide(true);
   };
@@ -31,9 +33,7 @@ const ActionsTable = () => {
 
   return (
     <>
-      <SlideOver open={openSlide} setOpen={setOpenSlide} >
-        <EditActionForm data={slideAction} setOpen={setOpenSlide} />
-      </SlideOver>
+      <EditActionMenu action={slideAction} open={openSlide} setOpen={setOpenSlide} />
       <QRModal open={openQR} setOpen={setOpenQR} url={`${window.location.href}/register/${activeID}`} />
       <div className="shadow block whitespace-nowrap overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">

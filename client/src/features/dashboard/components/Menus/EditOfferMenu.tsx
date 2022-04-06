@@ -128,7 +128,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
   );
 };
 
-export const NewOfferMenu = ({ offer, open, setOpen }: MenuProps) => {
+export const EditOfferMenu = ({ offer, open, setOpen }: MenuProps) => {
   return (
     <ContentModal open={open} setOpen={setOpen}>
       <EditOfferForm offer={offer} close={() => setOpen(false)} />
