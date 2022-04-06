@@ -114,64 +114,62 @@ const EditActionForm = ({ action, close }: FormProps) => {
 
   return (
     <div className="mt-5 md:mt-0 md:col-span-2">
-      <form action="#" method="POST" onSubmit={handleActionSubmit}>
-        <div className="bg-white dark:bg-gray-800">
-          <div className="grid grid-cols-6 gap-6">
-            <InputField
-              label="Action name"
-              name="name"
-              type="text"
-              value={formState.name}
-              onChange={handleInputChange}
-              required
-            />
-            <InputField
-              label="Description"
-              name="description"
-              type="text"
-              value={formState.description}
-              onChange={handleInputChange}
-              required
-            />
-            <InputField
-              label="Key Performance Indicator"
-              name="kpi_indicator"
-              type="text"
-              value={formState.kpi_indicator}
-              onChange={handleInputChange}
-              required
-            />
+      <form action="#" method="POST" onSubmit={handleActionSubmit} className='flex flex-col gap-4'>
+        <div className="bg-white dark:bg-gray-800 flex flex-col gap-4">
+          <InputField
+            label="Action name"
+            name="name"
+            type="text"
+            value={formState.name}
+            onChange={handleInputChange}
+            required
+          />
+          <InputField
+            label="Description"
+            name="description"
+            type="text"
+            value={formState.description}
+            onChange={handleInputChange}
+            required
+          />
+          <InputField
+            label="Key Performance Indicator"
+            name="kpi_indicator"
+            type="text"
+            value={formState.kpi_indicator}
+            onChange={handleInputChange}
+            required
+          />
 
-            <div className='flex items-center justify-between gap-2 col-span-6'>
-              <InputField
-                label="Reward"
-                name="reward"
-                type="number"
-                value={formState.reward}
-                onChange={handleInputChange}
-                required
-              />
-              <InputField
-                label="Target"
-                name="kpi_target"
-                type="number"
-                value={formState.kpi_target}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <SelectField
-              label="Campaign"
-              name="campaign_id"
-              options={campaigns}
-              value={formState.campaign_id}
+          <div className='flex items-center justify-between gap-2 col-span-6'>
+            <InputField
+              label="Reward"
+              name="reward"
+              type="number"
+              value={formState.reward}
+              onChange={handleInputChange}
+              required
+            />
+            <InputField
+              label="Target"
+              name="kpi_target"
+              type="number"
+              value={formState.kpi_target}
               onChange={handleInputChange}
               required
             />
           </div>
+
+          <SelectField
+            label="Campaign"
+            name="campaign_id"
+            options={campaigns}
+            value={formState.campaign_id}
+            onChange={handleInputChange}
+            required
+          />
         </div>
-        <div className="px-4 py-3 text-right sm:px-6">
+        <div className="py-3 text-right">
           <Button type='submit' variant='submit'>Save</Button>
           <Button variant='delete' onClick={() => setOpenDelete(true)}>Delete action</Button>
         </div>

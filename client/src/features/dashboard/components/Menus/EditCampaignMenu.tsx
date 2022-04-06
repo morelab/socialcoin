@@ -75,27 +75,23 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
 
   return (
     <div className="mt-5 md:mt-0 md:col-span-2">
-      <form action="#" method="POST" onSubmit={handleCampaignSubmit}>
-        <div className="bg-white dark:bg-gray-800">
-          <div className="grid grid-cols-6 gap-6">
-            <InputField
-              label="Campaign name"
-              name="name"
-              type="text"
-              value={formState.name}
-              onChange={handleInputChange}
-              required
-            />
-            <TextareaField
-              label="Description"
-              name="description"
-              value={formState.description}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-        </div>
-        <div className="px-4 py-3 text-right sm:px-6">
+      <form action="#" method="POST" onSubmit={handleCampaignSubmit} className='flex flex-col gap-4'>
+        <InputField
+          label="Campaign name"
+          name="name"
+          type="text"
+          value={formState.name}
+          onChange={handleInputChange}
+          required
+        />
+        <TextareaField
+          label="Description"
+          name="description"
+          value={formState.description}
+          onChange={handleInputChange}
+          required
+        />
+        <div className="py-3 text-right">
           <Button type='submit' variant='submit'>Save</Button>
           <Button variant='delete' onClick={() => setOpenDelete(true)}>Delete campaign</Button>
         </div>

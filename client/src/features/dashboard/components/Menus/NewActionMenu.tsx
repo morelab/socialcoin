@@ -114,63 +114,61 @@ const NewActionForm = ({ close }: FormProps) => {
       </div>
       <div className="mt-5 md:mt-0 md:col-span-2">
         <form action="#" method="POST" onSubmit={handleSubmit}>
-          <div className="bg-white dark:bg-gray-800">
-            <div className="grid grid-cols-6 gap-6">
-              <InputField
-                label="Action name"
-                name="name"
-                type="text"
-                value={formState.name}
-                onChange={handleInputChange}
-                required
-              />
-              <InputField
-                label="Description"
-                name="description"
-                type="text"
-                value={formState.description}
-                onChange={handleInputChange}
-                required
-              />
-              <InputField
-                label="Key Performance Indicator"
-                name="kpi_indicator"
-                type="text"
-                value={formState.kpi_indicator}
-                onChange={handleInputChange}
-                required
-              />
+          <div className="bg-white dark:bg-gray-800 flex flex-col gap-4">
+            <InputField
+              label="Action name"
+              name="name"
+              type="text"
+              value={formState.name}
+              onChange={handleInputChange}
+              required
+            />
+            <InputField
+              label="Description"
+              name="description"
+              type="text"
+              value={formState.description}
+              onChange={handleInputChange}
+              required
+            />
+            <InputField
+              label="Key Performance Indicator"
+              name="kpi_indicator"
+              type="text"
+              value={formState.kpi_indicator}
+              onChange={handleInputChange}
+              required
+            />
 
-              <div className='flex items-center gap-2 justify-between col-span-6'>
-                <InputField
-                  label="Reward"
-                  name="reward"
-                  type="number"
-                  value={formState.reward}
-                  onChange={handleInputChange}
-                  required
-                  isHalf={true}
-                />
-                <InputField
-                  label="Target"
-                  name="kpi_target"
-                  type="number"
-                  value={formState.kpi_target}
-                  onChange={handleInputChange}
-                  required
-                  isHalf={true}
-                />
-              </div>
-              <SelectField
-                label="Campaign"
-                name="campaign_id"
-                options={campaigns}
-                value={formState.campaign_id}
+            <div className='flex items-center gap-2 justify-between col-span-6'>
+              <InputField
+                label="Reward"
+                name="reward"
+                type="number"
+                value={formState.reward}
                 onChange={handleInputChange}
+                required
+                isHalf={true}
+              />
+              <InputField
+                label="Target"
+                name="kpi_target"
+                type="number"
+                value={formState.kpi_target}
+                onChange={handleInputChange}
+                required
+                isHalf={true}
               />
             </div>
+            <SelectField
+              label="Campaign"
+              name="campaign_id"
+              options={campaigns}
+              value={formState.campaign_id}
+              onChange={handleInputChange}
+            />
           </div>
-          <div className="px-4 py-3 text-right sm:px-6">
+          <div className="py-3 text-right">
             <Button type='submit' variant='submit'>
               Create
             </Button>

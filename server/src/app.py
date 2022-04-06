@@ -38,15 +38,15 @@ api.add_resource(Logout, '/api/logout')
 
 api.add_resource(CampaignsAll, '/api/campaigns')
 api.add_resource(CampaignsByCompany, '/api/campaigns/company')
-api.add_resource(CampaignsDetail, '/api/campaigns/<int:campaign_id>')
+api.add_resource(CampaignsDetail, '/api/campaigns/<string:campaign_id>')
 
 api.add_resource(ActionsAll, '/api/actions')
-api.add_resource(ActionsDetail, '/api/actions/<int:action_id>')
-api.add_resource(ActionRegister, '/api/actions/<int:action_id>/register')
+api.add_resource(ActionsDetail, '/api/actions/<string:action_id>')
+api.add_resource(ActionRegister, '/api/actions/<string:action_id>/register')
 
 api.add_resource(OffersAll, '/api/offers')
-api.add_resource(OffersDetail, '/api/offers/<int:offer_id>')
-api.add_resource(OfferRedeem, '/api/offers/<int:offer_id>/redeem')
+api.add_resource(OffersDetail, '/api/offers/<string:offer_id>')
+api.add_resource(OfferRedeem, '/api/offers/<string:offer_id>/redeem')
 
 api.add_resource(TransactionsAll, '/api/transactions')
 

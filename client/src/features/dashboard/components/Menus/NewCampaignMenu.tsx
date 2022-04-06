@@ -67,26 +67,24 @@ const NewCampaignForm = ({ close }: FormProps) => {
       </div>
       <div className="mt-5 md:mt-0 md:col-span-2">
         <form action="#" method="POST" onSubmit={handleSubmit}>
-          <div className="bg-white dark:bg-gray-800">
-            <div className="grid grid-cols-6 gap-6">
-              <InputField
-                label="Campaign name"
-                name="name"
-                type="text"
-                value={formState.name}
-                onChange={handleInputChange}
-                required
-              />
-              <TextareaField
-                label="Description"
-                name="description"
-                value={formState.description}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+          <div className="bg-white dark:bg-gray-800 flex flex-col gap-6">
+            <InputField
+              label="Campaign name"
+              name="name"
+              type="text"
+              value={formState.name}
+              onChange={handleInputChange}
+              required
+            />
+            <TextareaField
+              label="Description"
+              name="description"
+              value={formState.description}
+              onChange={handleInputChange}
+              required
+            />
           </div>
-          <div className="px-4 py-3 text-right sm:px-6">
+          <div className="py-3 text-right">
             <Button type='submit' variant='submit'>
               Create
             </Button>

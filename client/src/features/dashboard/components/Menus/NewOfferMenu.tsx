@@ -73,41 +73,39 @@ const NewOfferForm = ({ close }: FormProps) => {
         <div className="px-4 sm:px-0">
           <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Create offer</h3>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-200">
-          As a promoter, you can reward users that complete good deeds by offering them offers in exchange for the UDC
-          earned. Offers must have a description detailing what the collaborators are paying for, and a price tag.
+            As a promoter, you can reward users that complete good deeds by offering them offers in exchange for the UDC
+            earned. Offers must have a description detailing what the collaborators are paying for, and a price tag.
           </p>
         </div>
       </div>
       <div className="mt-5 md:mt-0 md:col-span-2">
         <form action="#" method="POST" onSubmit={handleSubmit}>
-          <div className="bg-white dark:bg-gray-800">
-            <div className="grid grid-cols-6 gap-6">
-              <InputField
-                label="Offer name"
-                name="name"
-                type="text"
-                value={formState.name || ''}
-                onChange={handleInputChange}
-                required
-              />
-              <TextareaField
-                label="Description"
-                name="description"
-                value={formState.description || ''}
-                onChange={handleInputChange}
-                required
-              />
-              <InputField
-                label="Price"
-                name="price"
-                type="number"
-                value={formState.price || 0}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+          <div className="bg-white dark:bg-gray-800 flex flex-col gap-4">
+            <InputField
+              label="Offer name"
+              name="name"
+              type="text"
+              value={formState.name || ''}
+              onChange={handleInputChange}
+              required
+            />
+            <TextareaField
+              label="Description"
+              name="description"
+              value={formState.description || ''}
+              onChange={handleInputChange}
+              required
+            />
+            <InputField
+              label="Price"
+              name="price"
+              type="number"
+              value={formState.price || 0}
+              onChange={handleInputChange}
+              required
+            />
           </div>
-          <div className="px-4 py-3 text-right sm:px-6">
+          <div className="py-3 text-right">
             <Button type='submit' variant='submit'>
               Create
             </Button>

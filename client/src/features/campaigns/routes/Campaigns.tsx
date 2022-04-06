@@ -19,30 +19,26 @@ type CampaignModalProps = {
 const CampaignModal = ({ open, setOpen, title, content }: CampaignModalProps) => {
   return (
     <ContentModal open={open} setOpen={setOpen}>
-      <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-        <div className="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div className="sm:flex sm:items-start">
-            <div className="mt-3 text-center sm:mt-0 sm:text-left">
-              <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
-                {title}
-              </Dialog.Title>
-              <div className="mt-2">
-                <p className="text-sm text-gray-500 dark:text-gray-300">
-                  {content}
-                </p>
-              </div>
-            </div>
+      <div className="sm:flex sm:items-start">
+        <div className="mt-3 text-center sm:mt-0 sm:text-left">
+          <Dialog.Title as="h3" className="text-xl mb-4 leading-6 font-medium text-gray-900 dark:text-gray-100">
+            {title}
+          </Dialog.Title>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500 dark:text-gray-300">
+              {content}
+            </p>
           </div>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button
-            type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-mediumtext-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-            onClick={() => setOpen(false)}
-          >
-            Close
-          </button>
-        </div>
+      </div>
+      <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button
+          type="button"
+          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-mediumtext-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+          onClick={() => setOpen(false)}
+        >
+          Close
+        </button>
       </div>
     </ContentModal>
   );

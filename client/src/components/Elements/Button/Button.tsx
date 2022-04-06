@@ -2,7 +2,7 @@ import React from 'react';
 
 const variants = {
   submit: 'text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:ring-indigo-500',
-  delete: 'text-white bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 focus:ring-red-500',
+  delete: 'text-white bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600 focus:ring-red-500',
 };
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
