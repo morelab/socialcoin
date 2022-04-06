@@ -1,5 +1,5 @@
-import { axios } from "../../../lib/axios";
-import { NewCampaignFormContent } from "../components/Menus/NewCampaignMenu";
+import { axios } from '../../../lib/axios';
+import { NewCampaignFormContent } from '../components/Menus/NewCampaignMenu';
 
 export const createCampaign = async (newCampaign: NewCampaignFormContent) => {
   console.log('campaignService.createNew');

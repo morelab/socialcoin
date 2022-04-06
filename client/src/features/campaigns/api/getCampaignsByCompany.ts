@@ -9,4 +9,4 @@ export type CompanyCampaigns = {
 export const getCampaignsByCompany = async (): Promise<CompanyCampaigns[]> => {
   const companies = await axios.get('/api/campaigns/company');
   return companies.data;
-}
+};

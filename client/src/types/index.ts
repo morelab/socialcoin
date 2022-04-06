@@ -2,7 +2,7 @@ export type RoleKey = 'AD' | 'PM' | 'CB';
 export type Role = 'Administrator' | ' Promoter' | 'Collaborator';
 
 export type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: RoleKey;
@@ -12,37 +12,37 @@ export type User = {
 };
 
 export type Campaign = {
-  id: number;
+  id: string;
   name: string;
   description: string;
-  company_id: number;
+  company_id: string;
   company_name: string;
 };
 
 export type Action = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   reward: number;
   kpi: number;
   kpi_target: number;
   kpi_indicator: string;
-  company_id: number;
+  company_id: string;
   company_name: string;
-  campaign_id: number;
+  campaign_id: string;
 };
 
 export type Offer = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: number;
   company_name: string;
-  company_id: number;
+  company_id: string;
 };
 
 export type Transaction = {
-  id: number;
+  id: string;
   date: string;
   transaction_hash: string;
   sender_address: string;

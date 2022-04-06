@@ -1,5 +1,5 @@
 import { axios } from '../../lib/axios';
 
-export const logout = async (): Promise<any> => {
+export const logout = async () => {
   return axios.post('/api/logout');
-}
+};

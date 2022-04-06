@@ -73,7 +73,7 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
       return;
     }
 
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('kpi', kpi_value.toString());
     formData.append('verification_url', verificationURL);
     formData.append('image_proof', files[0]);

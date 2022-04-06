@@ -31,7 +31,7 @@ export type FormContent = {
   reward: number;
   kpi_target: number;
   kpi_indicator: string;
-  campaign_id: number;
+  campaign_id: string;
 };
 
 

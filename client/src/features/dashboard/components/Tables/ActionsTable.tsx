@@ -10,12 +10,12 @@ import { useUser } from '../../../../context/UserContext';
 export const ActionsTable = () => {
   const [openSlide, setOpenSlide] = React.useState(false);
   const [openQR, setOpenQR] = React.useState(false);
-  const [activeID, setActiveID] = React.useState(0);
+  const [activeID, setActiveID] = React.useState('');
   const [slideAction, setSlideAction] = React.useState<Action>({} as Action);
   const { state } = useDashboard();
   const { user } = useUser();
 
-  const handleQR = (id: number) => {
+  const handleQR = (id: string) => {
     setActiveID(id);
     setOpenQR(true);
   };

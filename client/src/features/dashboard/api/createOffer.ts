@@ -1,5 +1,5 @@
-import { axios } from "../../../lib/axios";
-import { NewOfferFormContent } from "../components/Menus/NewOfferMenu";
+import { axios } from '../../../lib/axios';
+import { NewOfferFormContent } from '../components/Menus/NewOfferMenu';
 
 export const createOffer = async (newOffer: NewOfferFormContent) => {
   console.log('offerService.createNew');

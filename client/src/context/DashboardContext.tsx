@@ -18,13 +18,13 @@ export type DashboardAction =
   | { type: 'loadOffers', payload: Offer[] }
   | { type: 'addCampaign', payload: Campaign }
   | { type: 'editCampaign', payload: Campaign }
-  | { type: 'removeCampaign', payload: number }
+  | { type: 'removeCampaign', payload: string }
   | { type: 'addAction', payload: Action }
   | { type: 'editAction', payload: Action }
-  | { type: 'removeAction', payload: number }
+  | { type: 'removeAction', payload: string }
   | { type: 'addOffer', payload: Offer }
   | { type: 'editOffer', payload: Offer }
-  | { type: 'removeOffer', payload: number };
+  | { type: 'removeOffer', payload: string };
 
 type ContextValue = {
   state: DashboardState;
@@ -102,7 +102,7 @@ const dashboardReducer = (state: DashboardState, action: DashboardAction): Dashb
   case 'removeAction': {
     return {
       ...state,
-      actions: state.actions.filter(act => act.id !== payload)
+      actions: state.actions.filter(action => action.id !== payload)
     };
   }
   case 'addOffer': {

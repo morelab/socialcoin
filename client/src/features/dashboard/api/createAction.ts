@@ -1,5 +1,5 @@
-import { axios } from "../../../lib/axios";
-import { NewActionFormContent } from "../components/Menus/NewActionMenu";
+import { axios } from '../../../lib/axios';
+import { NewActionFormContent } from '../components/Menus/NewActionMenu';
 
 export const createAction = async (newAction: NewActionFormContent) => {
   console.log('actionService.createNew');

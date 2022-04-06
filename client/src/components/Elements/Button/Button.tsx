@@ -24,7 +24,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         className={`inline-flex justify-center py-2 px-4 border border-transparent w-full shadow-sm text-md font-medium
-              rounded-md focus:outline-none focus:ring-2 mb-3 focus:ring-offset-2 transition ${variants[variant]}`}
+              rounded-md focus:outline-none focus:ring-2 mb-3 focus:ring-offset-2 transition ${variants[variant]} ${className}`}
         {...props}
       >
         {props.children}
@@ -32,3 +32,5 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
+
+Button.displayName = 'Button';

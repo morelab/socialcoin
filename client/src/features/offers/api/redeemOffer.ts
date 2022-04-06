@@ -1,4 +1,4 @@
-import { axios } from "../../../lib/axios";
+import { axios } from '../../../lib/axios';
 
 export const redeemOffer = async (offerID: string) => {
   console.log('offerService.redeemOne');

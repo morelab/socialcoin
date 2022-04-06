@@ -5,7 +5,7 @@ import { ShoppingBagIcon, SwitchHorizontalIcon } from '@heroicons/react/outline'
 import { Spinner } from '../../../components/Elements/Spinner';
 import ConfirmationModal from '../../dashboard/components/ConfirmationModal';
 
-import { Offer, User } from '../../../types';
+import { Offer } from '../../../types';
 import { getOffer } from '../api/getOffer';
 import { redeemOffer } from '../api/redeemOffer';
 import { useUser } from '../../../context/UserContext';

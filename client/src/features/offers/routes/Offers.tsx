@@ -51,7 +51,7 @@ export const Offers = () => {
 
   React.useEffect(() => {
     getSelfUserBalance().then(balance => {
-      if (user) setUser({ ...user, balance: balance })
+      if (user) setUser({ ...user, balance: balance });
     });
   }, []);
 

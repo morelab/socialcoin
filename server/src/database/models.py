@@ -1,11 +1,13 @@
 from __future__ import annotations
 from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, or_
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, backref
 from .db import Base, db_session
+import uuid
 
 class User(Base):
     __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
 
@@ -44,7 +46,9 @@ class User(Base):
         # db_session.expunge() # REVIEW necessary when using a single session?
     
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        user = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        user['id'] = str(user.get('id'))
+        return user
     
     @staticmethod
     def all():
@@ -74,11 +78,11 @@ class User(Base):
 
 class Campaign(Base):
     __tablename__ = 'campaign'
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(80), nullable=False)
     description = Column(String, nullable=False)
 
-    company_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    company_id = Column(UUID(as_uuid=True), ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     actions = relationship('Action', backref=backref('campaign'))
 
     def __init__(self, name, description, company_id):
@@ -96,7 +100,10 @@ class Campaign(Base):
         # db_session.expunge() # REVIEW necessary when using a single session?
         
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        campaign = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        campaign['id'] = str(campaign.get('id'))
+        campaign['company_id'] = str(campaign.get('company_id'))
+        return campaign
 
     @staticmethod
     def all():
@@ -119,7 +126,7 @@ class Campaign(Base):
 
 class Action(Base):
     __tablename__ = 'action'
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(80), nullable=False)
     description = Column(String(255), nullable=False)
     reward = Column(Float, nullable=False)
@@ -127,8 +134,8 @@ class Action(Base):
     kpi_target = Column(Integer, default=0)
     kpi_indicator = Column(String(127), nullable=False)
 
-    company_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
-    campaign_id = Column(Integer, ForeignKey('campaign.id', ondelete='CASCADE'), nullable=False)
+    company_id = Column(UUID(as_uuid=True), ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    campaign_id = Column(UUID(as_uuid=True), ForeignKey('campaign.id', ondelete='CASCADE'), nullable=False)
 
     def __init__(self, name, description, reward, kpi_target, kpi_indicator, company_id, campaign_id):
         self.name = name
@@ -151,7 +158,11 @@ class Action(Base):
         # db_session.expunge() # REVIEW necessary when using a single session?
         
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        action = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        action['id'] = str(action.get('id'))
+        action['company_id'] = str(action.get('company_id'))
+        action['campaign_id'] = str(action.get('campaign_id'))
+        return action
     
     @staticmethod
     def all():
@@ -179,12 +190,12 @@ class Action(Base):
 
 class Offer(Base):
     __tablename__ = 'offer'
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(80), nullable=False)
     description = Column(String(511))
     price = Column(Float, nullable=False)
 
-    company_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    company_id = Column(UUID(as_uuid=True), ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
 
     def __init__(self, name, description, price, company_id):
         self.name = name
@@ -202,7 +213,10 @@ class Offer(Base):
         # db_session.expunge() # REVIEW necessary when using a single session?
         
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        offer = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        offer['id'] = str(offer.get('id'))
+        offer['company_id'] = str(offer.get('company_id'))
+        return offer
     
     @staticmethod
     def all():
@@ -226,7 +240,7 @@ class Offer(Base):
 
 class Transaction(Base):
     __tablename__ = 'transaction'
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     date = Column(DateTime, nullable=False)
     transaction_hash = Column(String(255), nullable=False)
     sender_address = Column(String(127), nullable=False)
@@ -256,7 +270,9 @@ class Transaction(Base):
         # db_session.expunge() # REVIEW necessary when using a single session?
         
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        transaction = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        transaction['id'] = str(transaction.get('id'))
+        return transaction
 
     @staticmethod
     def all():

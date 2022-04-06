@@ -1,6 +1,6 @@
 import { axios } from '../../../lib/axios';
 
-export const registerAction = async (actionId: number, formData: FormData): Promise<any> => {
+export const registerAction = async (actionId: string, formData: FormData) => {
   const result = await axios.post(
     `/api/actions/${actionId}/register`,
     formData,
@@ -11,4 +11,4 @@ export const registerAction = async (actionId: number, formData: FormData): Prom
     }
   );
   return result.data;
-}
+};

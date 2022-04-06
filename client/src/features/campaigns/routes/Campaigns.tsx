@@ -6,7 +6,6 @@ import { ChevronRightIcon } from '@heroicons/react/solid';
 import { CompanyCampaigns, getCampaignsByCompany } from '../api/getCampaignsByCompany';
 import { ContentModal } from '../../../components/Overlay/ContentModal';
 import { useUser } from '../../../context/UserContext';
-import { User } from '../../../types';
 
 
 type CampaignModalProps = {
