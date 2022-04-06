@@ -1,4 +1,5 @@
 from flask import Flask, session
+from flask_cors import CORS
 from flask_restful import Api, Resource
 from common.admin import create_admin
 from config import APP_SECRET
@@ -6,6 +7,7 @@ from database.db import init_db, db_session
 from resources import *
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = APP_SECRET
 api = Api(app)
 
