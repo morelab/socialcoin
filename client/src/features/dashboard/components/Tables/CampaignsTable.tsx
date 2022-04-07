@@ -21,7 +21,7 @@ type SeeAllLinksProps = {
 
 const CampaignModal = ({ open, setOpen, content }: CampaignModalProps) => {
   return (
-    <ContentModal open={open} setOpen={setOpen}>
+    <ContentModal open={open} setOpen={setOpen} className='p-4 sm:p-8'>
       <div className="sm:flex sm:items-start mb-4">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <p className="text-sm text-gray-500 dark:text-gray-100">

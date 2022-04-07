@@ -19,7 +19,7 @@ type CampaignModalProps = {
 const CampaignModal = ({ open, setOpen, title, content }: CampaignModalProps) => {
   return (
     <ContentModal open={open} setOpen={setOpen}>
-      <div className="sm:flex sm:items-start">
+      <div className="sm:flex sm:items-start p-5">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <Dialog.Title as="h3" className="text-xl mb-4 leading-6 font-medium text-gray-900 dark:text-gray-100">
             {title}
@@ -34,7 +34,7 @@ const CampaignModal = ({ open, setOpen, title, content }: CampaignModalProps) =>
       <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
         <button
           type="button"
-          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-mediumtext-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
           onClick={() => setOpen(false)}
         >
           Close

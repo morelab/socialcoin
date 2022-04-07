@@ -1,5 +1,5 @@
 import {
-  BrowserRouter as Router, Route, Switch
+  HashRouter, Route, Switch
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,12 +15,12 @@ function App() {
     <>
       <UserProvider>
         <ThemeProvider>
-          <Router>
+          <HashRouter>
             <Switch>
               <Route exact path='/' component={Landing} />
               <Route component={PagesContainer} />
             </Switch>
-          </Router>
+          </HashRouter>
         </ThemeProvider>
       </UserProvider>
 

@@ -178,7 +178,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
         open={openDelete}
         setOpen={setOpenDelete}
         title="Delete action"
-        description={`Are you sure you want to delete the action '${action.name}'? This action cannot be undone.`}
+        content={`Are you sure you want to delete the action '${action.name}'? This action cannot be undone.`}
         buttonValue="Delete"
         confirmHandler={handleDelete}
       />

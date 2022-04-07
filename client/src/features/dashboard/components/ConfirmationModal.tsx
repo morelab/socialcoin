@@ -11,7 +11,7 @@ type ConfirmationModalProps = {
 
 const ConfirmationModal = ({ open, setOpen, title, content, confirmHandler }: ConfirmationModalProps) => {
   return (
-    <ContentModal open={open} setOpen={setOpen}>
+    <ContentModal open={open} setOpen={setOpen} className='p-4 sm:px-8 sm:pt-8 sm:pb-6'>
       <div className="mb-3 flex flex-col items-center justify-center gap-4">
         <div className="mx-auto flex-shrink-0 flex items-center justify-center h-14 w-14 rounded-full bg-indigo-200 dark:bg-indigo-100 sm:mx-0 sm:h-16 sm:w-16">
           <QuestionMarkCircleIcon className="h-10 w-10 text-indigo-600 dark:text-indigo-500" aria-hidden="true" />

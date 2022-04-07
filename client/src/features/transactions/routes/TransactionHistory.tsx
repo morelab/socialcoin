@@ -27,7 +27,7 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
 
   return (
     <ContentModal open={open} setOpen={setOpen}>
-      <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div className="overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
         <div className="px-4 py-5 sm:px-6 bg-indigo-600 dark:bg-indigo-500">
           <h3 className="text-lg leading-6 font-medium text-gray-100">{transaction.transaction_info}</h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-200 dark:text-gray-300">{transaction.date}</p>
@@ -74,13 +74,13 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
             </div>
           </dl>
         </div>
-        <div className="px-4 py-3 flex sm:px-6 gap-4">
+        <div className="px-4 py-3 flex sm:px-6 gap-4 bg-gray-50 dark:bg-gray-900 ">
           <button
             type="button"
             className="w-full inline-flex justify-center rounded-md border border-indigo-400 shadow-sm px-4 py-2
             text-base font-medium dark:text-white hovedark:focus:ring-indigo-700 sm:text-sm
             text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400
-            focus:outline-none focus:ring-2 mb-3 focus:ring-offset-2 focus:ring-indigo-500 transition"
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
             onClick={() => {
               setOpen(false);
             }}

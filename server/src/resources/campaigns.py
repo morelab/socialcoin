@@ -3,6 +3,8 @@ from flask_restful import Resource
 from common.utils import get_user_from_token
 from database.models import Campaign, User
 
+# TODO validation with Marshmallow https://marshmallow.readthedocs.io/en/stable/examples.html#quotes-api-flask-sqlalchemy
+
 class CampaignsAll(Resource):
     def get(self):
         campaigns = Campaign.all()

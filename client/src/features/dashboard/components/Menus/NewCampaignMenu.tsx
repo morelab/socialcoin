@@ -97,7 +97,7 @@ const NewCampaignForm = ({ close }: FormProps) => {
 
 export const NewCampaignMenu = ({ open, setOpen }: MenuProps) => {
   return (
-    <ContentModal open={open} setOpen={setOpen}>
+    <ContentModal open={open} setOpen={setOpen} className='p-4'>
       <NewCampaignForm close={() => setOpen(false)} />
     </ContentModal>
   );

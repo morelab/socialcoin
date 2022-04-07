@@ -4,7 +4,7 @@ from xml.dom import ValidationErr
 from urllib.parse import urlencode
 from typing import Dict, Any
 from common.blockchain import generate_keys
-from config import APP_SECRET, BASE_BACKEND_URL, BASE_FRONTEND_URL, BLOCKCHAIN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+from config import APP_SECRET, BASE_BACKEND_URL, BASE_FRONTEND_URL, BLOCKCHAIN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NETWORK
 from database.models import User
 import jwt
 import requests
@@ -62,7 +62,12 @@ def retrieve_or_create_user(**profile_data) -> User:
     user = User(**profile_data, blockchain_public=keys.get('address'), blockchain_private=keys.get('key'))
     user.save()
     
-    add_account_to_allowlist(keys.get('address'))
+    try:
+        # add the new created account to the Besu allowlist, only when using ethereum
+        if NETWORK == 'fabric':
+            add_account_to_allowlist(keys.get('address'))
+    except:
+        print('Error adding an account to the Besu allowlist')
     
     return user
 
@@ -110,7 +115,7 @@ class GoogleLogin(Resource):
         }, SECRET_KEY, algorithm="HS256")
         
         # redirect the user
-        response = make_response(redirect(f'{BASE_FRONTEND_URL}/dashboard'))
+        response = make_response(redirect(f'{BASE_FRONTEND_URL}/#/dashboard'))
         response.set_cookie('jwt_token', token)
 
         return response

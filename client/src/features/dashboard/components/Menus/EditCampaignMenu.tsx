@@ -100,7 +100,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
         open={openDelete}
         setOpen={setOpenDelete}
         title="Delete campaign"
-        description={`Are you sure you want to delete the campaign '${campaign.name}'? This action cannot be undone.`}
+        content={`Are you sure you want to delete the campaign '${campaign.name}'? This action cannot be undone.`}
         buttonValue="Delete"
         confirmHandler={handleDelete}
       />

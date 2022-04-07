@@ -181,7 +181,7 @@ const NewActionForm = ({ close }: FormProps) => {
 
 export const NewActionMenu = ({ open, setOpen }: MenuProps) => {
   return (
-    <ContentModal open={open} setOpen={setOpen}>
+    <ContentModal open={open} setOpen={setOpen} className='p-4'>
       <NewActionForm close={() => setOpen(false)} />
     </ContentModal>
   );

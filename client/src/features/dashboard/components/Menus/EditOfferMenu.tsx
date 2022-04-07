@@ -117,7 +117,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
         open={openDelete}
         setOpen={setOpenDelete}
         title="Delete offer"
-        description={`Are you sure you want to delete the offer '${offer.name}'? This action cannot be undone.`}
+        content={`Are you sure you want to delete the offer '${offer.name}'? This action cannot be undone.`}
         buttonValue="Delete"
         confirmHandler={handleDelete}
       />

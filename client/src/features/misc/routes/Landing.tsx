@@ -37,7 +37,7 @@ export const Landing = () => {
   const { dark, setDark } = useTheme();
 
   if (user != null) {
-    return <Redirect to={'/dashboard'} />;
+    return <Redirect to='/dashboard' />;
   }
 
   const openGoogleLoginPage = useCallback(() => {

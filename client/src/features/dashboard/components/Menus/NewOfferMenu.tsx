@@ -118,7 +118,7 @@ const NewOfferForm = ({ close }: FormProps) => {
 
 export const NewOfferMenu = ({ open, setOpen }: MenuProps) => {
   return (
-    <ContentModal open={open} setOpen={setOpen}>
+    <ContentModal open={open} setOpen={setOpen} className='p-4'>
       <NewOfferForm close={() => setOpen(false)} />
     </ContentModal>
   );
