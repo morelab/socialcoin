@@ -1,9 +1,25 @@
 from flask import request
 from flask_restful import Resource
-from common.utils import get_user_from_token
+from marshmallow import fields, Schema, ValidationError
+from common.utils import get_user_from_token, not_none
 from database.models import Campaign, User
 
-# TODO validation with Marshmallow https://marshmallow.readthedocs.io/en/stable/examples.html#quotes-api-flask-sqlalchemy
+
+class CampaignSchema(Schema):
+    id = fields.Str(dump_only=True)
+    name = fields.Str(required=True)
+    description = fields.Str(required=True)
+    company_id = fields.Str(required=True)
+    
+class OptionalCampaignSchema(Schema):
+    id = fields.Str(dump_only=True)
+    name = fields.Str()
+    description = fields.Str()
+    company_id = fields.Str(dump_only=True)
+
+campaign_schema = CampaignSchema()
+optional_campaign_schema = OptionalCampaignSchema()
+
 
 class CampaignsAll(Resource):
     def get(self):
@@ -14,15 +30,23 @@ class CampaignsAll(Resource):
         return campaign_dicts
 
     def post(self):
-        if request.content_type != 'application/json':
-            return {'error': 'only application/json is accepted'}, 400
-        
         user = get_user_from_token(request)
+        
+        if not user:
+            return {'error': 'not logged in'}, 401
         
         if user.role == 'CB':
             return {'error': 'collaborators cannot create campaigns'}, 403
 
-        data = request.json
+        json_data = request.get_json()
+        if not json_data:
+            return {"error": "no input data provided"}, 400
+    
+        try:
+            data = campaign_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages, 400
+        
         new_campaign = Campaign(
             name=data.get('name'),
             description=data.get('description'),
@@ -59,11 +83,11 @@ class CampaignsDetail(Resource):
         return campaign.as_dict()
 
     def put(self, campaign_id):
-        if request.content_type != 'application/json':
-            return {'error': 'only application/json is accepted'}, 400
-    
         user = get_user_from_token(request)
         
+        if not user:
+            return {'error': 'not logged in'}, 401
+
         if user.role == 'CB':
             return {'error': 'collaborators cannot edit campaigns'}, 403
         
@@ -72,9 +96,15 @@ class CampaignsDetail(Resource):
         if campaign.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot edit another promoter\'s campaigns'}, 403
 
-        data = request.json
-        campaign.name = data.get('name')
-        campaign.description = data.get('description')
+        json_data = request.get_json()
+        try:
+            data = optional_campaign_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages, 400
+
+        # TODO find out if there's a cleaner way to do this
+        campaign.name = not_none(data.get('name'), campaign.name)
+        campaign.description = not_none(data.get('description'), campaign.description)
         campaign.save()
         
         return campaign.as_dict(), 200

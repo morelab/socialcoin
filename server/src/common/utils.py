@@ -15,3 +15,8 @@ def get_user_from_token(request) -> User:
     user = User.get_by_email(user_email)
     
     return user
+
+def not_none(s, d):
+    if s is None:
+        return d
+    return s

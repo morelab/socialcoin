@@ -27,8 +27,9 @@ class UsersSelf(Resource):
         data = request.json
         name = data.get('name')
         
-        user.name = name
-        user.save()
+        if name:
+            user.name = name
+            user.save()
         
         user_dict = user.as_dict()
         user_dict['balance'] = blockchain_manager.balance_of(user_dict.get('blockchain_public'))

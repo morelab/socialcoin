@@ -1,8 +1,9 @@
 from flask import request
 from flask_restful import Resource
 from datetime import datetime
+from marshmallow import fields, Schema, ValidationError
 from common.blockchain import blockchain_manager
-from common.utils import get_user_from_token
+from common.utils import get_user_from_token, not_none
 from config import ADMIN_ADDRESS, PRIVATE_KEY
 from database.models import Offer, Transaction, User
 
@@ -32,7 +33,25 @@ def offer_redeem(*, buyer_address: str, offer_id: int):
         external_proof_url=''
     )
     transaction.save()
+
+
+class OfferSchema(Schema):
+    id = fields.Str(dump_only=True)
+    name = fields.Str(required=True)
+    description = fields.Str()
+    price = fields.Float(required=True)
+    company_id = fields.Str(required=True)
+
+class OptionalOfferSchema(Schema):
+    id = fields.Str(dump_only=True)
+    name = fields.Str()
+    description = fields.Str()
+    price = fields.Float()
+    company_id = fields.Str()
     
+offer_schema = OfferSchema()
+optional_offer_schema = OptionalOfferSchema()
+
 
 class OffersAll(Resource):
     def get(self):
@@ -43,15 +62,20 @@ class OffersAll(Resource):
         return offer_dicts
 
     def post(self):
-        if request.content_type != 'application/json':
-            return {'error': 'only application/json is accepted'}, 400
-        
         user = get_user_from_token(request)
+
+        if not user:
+            return {'error': 'not logged in'}, 401
         
         if user.role == 'CB':
             return {'error': 'collaborators cannot create offers'}, 403
         
-        data = request.json
+        json_data = request.get_json()
+        try:
+            data = offer_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages, 400
+
         new_offer = Offer(
             name=data.get('name'),
             description=data.get('description'),
@@ -71,10 +95,10 @@ class OffersDetail(Resource):
         return offer_dict
 
     def put(self, offer_id):
-        if request.content_type != 'application/json':
-            return {'error': 'only application/json is accepted'}, 400
-        
         user = get_user_from_token(request)
+        
+        if not user:
+            return {'error': 'not logged in'}, 401
         
         if user.role == 'CB':
             return {'error': 'collaborators cannot edit offers'}, 403
@@ -84,10 +108,15 @@ class OffersDetail(Resource):
         if offer.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot edit another promoter\'s offers'}, 403
 
-        data = request.json
-        offer.name = data.get('name')
-        offer.description = data.get('description')
-        offer.price = data.get('price')
+        json_data = request.get_json()
+        try:
+            data = optional_offer_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages, 400
+
+        offer.name = not_none(data.get('name'), offer.name)
+        offer.description = not_none(data.get('description'), offer.description)
+        offer.price = not_none(data.get('price'), offer.price)
         offer.save()
         
         return offer.as_dict(), 200

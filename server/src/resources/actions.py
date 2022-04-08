@@ -1,8 +1,9 @@
 from flask import request
 from flask_restful import Resource
 from datetime import datetime
+from marshmallow import fields, Schema, ValidationError
 from common.blockchain import blockchain_manager
-from common.utils import get_user_from_token
+from common.utils import get_user_from_token, not_none
 from config import ADMIN_ADDRESS, IPFS_ON, IPFS_URL, PRIVATE_KEY
 from database.models import Action, User, Transaction
 import base58
@@ -62,6 +63,38 @@ def decode_hash(hash):
     return reduced_hash
 
 
+class ActionSchema(Schema):
+    id = fields.Str(dump_only=True)
+    name = fields.Str(required=True)
+    description = fields.Str(required=True)
+    reward = fields.Int(required=True)
+    kpi = fields.Int()
+    kpi_target = fields.Int(required=True)
+    kpi_indicator = fields.Str(required=True)
+    company_id = fields.Str(required=True)
+    campaign_id = fields.Str(required=True)
+
+class OptionalActionSchema(Schema):
+    id = fields.Str(dump_only=True)
+    name = fields.Str()
+    description = fields.Str()
+    reward = fields.Int()
+    kpi = fields.Int()
+    kpi_target = fields.Int()
+    kpi_indicator = fields.Str()
+    company_id = fields.Str()
+    campaign_id = fields.Str()
+    
+class ActionRegisterSchema(Schema):
+    kpi = fields.Int(required=True)
+    verification_url = fields.Str()
+    image_proof = fields.Raw(type='file')   # TODO test if this works
+
+action_schema = ActionSchema()
+optional_action_schema = OptionalActionSchema()
+action_register_schema = ActionRegisterSchema()
+
+
 class ActionsAll(Resource):
     def get(self):
         actions = Action.all()
@@ -71,15 +104,20 @@ class ActionsAll(Resource):
         return action_dicts
 
     def post(self):
-        if request.content_type != 'application/json':
-            return {'error': 'only application/json is accepted'}, 400
-        
         user = get_user_from_token(request)
+
+        if not user:
+            return {'error': 'not logged in'}, 401
         
         if user.role == 'CB':
             return {'error': 'collaborators cannot create actions'}, 403
         
-        data = request.json
+        json_data = request.get_json()
+        try:
+            data = action_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages, 400
+
         new_action = Action(
             name=data.get('name'),
             description=data.get('description'),
@@ -100,10 +138,10 @@ class ActionsDetail(Resource):
         return action.as_dict()
 
     def put(self, action_id):
-        if request.content_type != 'application/json':
-            return {'error': 'only application/json is accepted'}, 400
-        
         user = get_user_from_token(request)
+        
+        if not user:
+            return {'error': 'not logged in'}, 401
         
         if user.role == 'CB':
             return {'error': 'collaborators cannot edit actions'}, 403
@@ -113,12 +151,17 @@ class ActionsDetail(Resource):
         if action.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot edit another promoter\'s actions'}, 403
 
-        data = request.json
-        action.name = data.get('name')
-        action.description = data.get('description')
-        action.reward = data.get('reward')
-        action.kpi_target = data.get('kpi_target')
-        action.kpi_indicator = data.get('kpi_indicator')
+        json_data = request.get_json()
+        try:
+            data = optional_action_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages, 400
+
+        action.name = not_none(data.get('name'), action.name)
+        action.description = not_none(data.get('description'), action.description)
+        action.reward = not_none(data.get('reward'), action.reward)
+        action.kpi_target = not_none(data.get('kpi_target'), action.kpi_target)
+        action.kpi_indicator = not_none(data.get('kpi_indicator'), action.kpi_indicator)
         action.save()
         
         return action.as_dict(), 200
@@ -141,15 +184,19 @@ class ActionsDetail(Resource):
 
 class ActionRegister(Resource):
     def post(self, action_id):
-        # if request.content_type != 'multipart/form-data':
-        #     return {'error': 'only multipart/form-data is accepted'}, 400
-        
         user = get_user_from_token(request)
         action = Action.get(action_id)
         company = User.get(action.company_id)
         company_balance = blockchain_manager.balance_of(company.blockchain_public)
         
-        data = dict(request.form)
+        # TODO test if the validation works properly
+        
+        json_data = dict(request.form)
+        try:
+            data = action_register_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages, 400
+        
         kpi = data.get('kpi')   # 'multiplier' of the action
         url_proof = data.get('verification_url')        # external optional proof URL (e.g. Strava)
         image_proof = request.files.get('image_proof')  # mandatory photo proof (e.g. Strava)
