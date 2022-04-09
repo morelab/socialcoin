@@ -102,7 +102,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
         />
         <InputField
           label="Price"
-          name="offerPrice"
+          name="price"
           type="number"
           value={formState.price}
           onChange={handleInputChange}

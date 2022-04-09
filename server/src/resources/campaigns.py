@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from marshmallow import fields, Schema, ValidationError
-from common.utils import get_user_from_token, not_none
+from common.utils import get_user_from_token, is_valid_uuid, not_none
 from database.models import Campaign, User
 
 
@@ -9,7 +9,7 @@ class CampaignSchema(Schema):
     id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
     description = fields.Str(required=True)
-    company_id = fields.Str(required=True)
+    company_id = fields.Str()
     
 class OptionalCampaignSchema(Schema):
     id = fields.Str(dump_only=True)
@@ -41,7 +41,7 @@ class CampaignsAll(Resource):
         json_data = request.get_json()
         if not json_data:
             return {"error": "no input data provided"}, 400
-    
+
         try:
             data = campaign_schema.load(json_data)
         except ValidationError as err:
@@ -79,7 +79,14 @@ class CampaignsByCompany(Resource):
 
 class CampaignsDetail(Resource):
     def get(self, campaign_id):
+        if not is_valid_uuid(campaign_id):
+            return {'message': f'no campaign with id {campaign_id} found'}, 404
+
         campaign = Campaign.get(campaign_id)
+
+        if not campaign:
+            return {'message': f'no campaign with id {campaign_id} found'}, 404
+
         return campaign.as_dict()
 
     def put(self, campaign_id):
@@ -91,7 +98,13 @@ class CampaignsDetail(Resource):
         if user.role == 'CB':
             return {'error': 'collaborators cannot edit campaigns'}, 403
         
+        if not is_valid_uuid(campaign_id):
+            return {'message': f'no campaign with id {campaign_id} found'}, 404
+        
         campaign = Campaign.get(campaign_id)
+        
+        if not campaign:
+            return {'message': f'no campaign with id {campaign_id} found'}, 404
 
         if campaign.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot edit another promoter\'s campaigns'}, 403
@@ -112,10 +125,19 @@ class CampaignsDetail(Resource):
     def delete(self, campaign_id):
         user = get_user_from_token(request)
         
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
         if user.role == 'CB':
             return {'error': 'collaborators cannot delete campaigns'}, 403
         
+        if not is_valid_uuid(campaign_id):
+            return {'message': f'no campaign with id {campaign_id} found'}, 404
+        
         campaign = Campaign.get(campaign_id)
+        
+        if not campaign:
+            return {'message': f'no campaign with id {campaign_id} found'}, 404
 
         if campaign.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot delete another promoter\'s campaigns'}, 403

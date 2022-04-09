@@ -3,7 +3,7 @@ from flask_restful import Resource
 from datetime import datetime
 from marshmallow import fields, Schema, ValidationError
 from common.blockchain import blockchain_manager
-from common.utils import get_user_from_token, not_none
+from common.utils import get_user_from_token, is_valid_uuid, not_none
 from config import ADMIN_ADDRESS, PRIVATE_KEY
 from database.models import Offer, Transaction, User
 
@@ -40,7 +40,7 @@ class OfferSchema(Schema):
     name = fields.Str(required=True)
     description = fields.Str()
     price = fields.Float(required=True)
-    company_id = fields.Str(required=True)
+    company_id = fields.Str()
 
 class OptionalOfferSchema(Schema):
     id = fields.Str(dump_only=True)
@@ -89,9 +89,15 @@ class OffersAll(Resource):
 
 class OffersDetail(Resource):
     def get(self, offer_id):
+        if not is_valid_uuid(offer_id):
+            return {'message': f'no offer with id {offer_id} found'}, 404
+
         offer = Offer.get(offer_id)
+        if not offer:
+            return {'message': f'no offer with id {offer_id} found'}, 404
         offer_dict = offer.as_dict()
         offer_dict['company_name'] = User.get(offer.company_id).name
+
         return offer_dict
 
     def put(self, offer_id):
@@ -102,8 +108,14 @@ class OffersDetail(Resource):
         
         if user.role == 'CB':
             return {'error': 'collaborators cannot edit offers'}, 403
-        
+
+        if not is_valid_uuid(offer_id):
+            return {'message': f'no offer with id {offer_id} found'}, 404
+
         offer = Offer.get(offer_id)
+        
+        if not offer:
+            return {'message': f'no offer with id {offer_id} found'}, 404
 
         if offer.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot edit another promoter\'s offers'}, 403
@@ -124,10 +136,19 @@ class OffersDetail(Resource):
     def delete(self, offer_id):
         user = get_user_from_token(request)
         
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
         if user.role == 'CB':
             return {'error': 'collaborators cannot delete offers'}, 403
+
+        if not is_valid_uuid(offer_id):
+            return {'message': f'no offer with id {offer_id} found'}, 404
         
         offer = Offer.get(offer_id)
+        
+        if not offer:
+            return {'message': f'no offer with id {offer_id} found'}, 404
 
         if offer.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot delete another promoter\'s offers'}, 403
@@ -140,6 +161,15 @@ class OffersDetail(Resource):
 class OfferRedeem(Resource):
     def post(self, offer_id):
         user = get_user_from_token(request)
+        
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
+        if not is_valid_uuid(offer_id):
+            return {'message': f'no offer with id {offer_id} found'}, 404
+        
+        if not Offer.exists(offer_id):
+            return {'message': f'no offer with id {offer_id} found'}, 404
         
         offer_redeem(
             buyer_address=user.blockchain_public,

@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from common.admin import create_admin
@@ -14,10 +14,6 @@ api = Api(app)
 init_db()
 create_admin(app)
 
-@app.before_request
-def test_middleware():
-    pass
-
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -26,8 +22,8 @@ def shutdown_session(exception=None):
 
 class Home(Resource):
     def get(self):
-        user = session.get('user')
-        return user
+        # TODO API endpoint docs
+        return 'running'
 
 
 # flask_restful API routes
@@ -53,7 +49,7 @@ api.add_resource(TransactionsAll, '/api/transactions')
 api.add_resource(UsersSelf, '/api/users/self')
 api.add_resource(UserBalance, '/api/users/balance')
 
-# TODO error handlers https://flask.palletsprojects.com/en/2.0.x/errorhandling/
+# TODO error handlers https://flask.palletsprojects.com/en/2.1.x/errorhandling/
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)

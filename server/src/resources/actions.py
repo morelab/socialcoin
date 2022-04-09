@@ -3,9 +3,9 @@ from flask_restful import Resource
 from datetime import datetime
 from marshmallow import fields, Schema, ValidationError
 from common.blockchain import blockchain_manager
-from common.utils import get_user_from_token, not_none
+from common.utils import get_user_from_token, is_valid_uuid, not_none
 from config import ADMIN_ADDRESS, IPFS_ON, IPFS_URL, PRIVATE_KEY
-from database.models import Action, User, Transaction
+from database.models import Action, Campaign, User, Transaction
 import base58
 import requests
 import os
@@ -71,7 +71,7 @@ class ActionSchema(Schema):
     kpi = fields.Int()
     kpi_target = fields.Int(required=True)
     kpi_indicator = fields.Str(required=True)
-    company_id = fields.Str(required=True)
+    company_id = fields.Str()
     campaign_id = fields.Str(required=True)
 
 class OptionalActionSchema(Schema):
@@ -118,6 +118,10 @@ class ActionsAll(Resource):
         except ValidationError as err:
             return err.messages, 400
 
+        campaign_id = data.get('campaign_id')
+        if not Campaign.exists(campaign_id):
+            return {'error': f'no campaign with id {campaign_id} exists'}, 404
+
         new_action = Action(
             name=data.get('name'),
             description=data.get('description'),
@@ -134,7 +138,14 @@ class ActionsAll(Resource):
 
 class ActionsDetail(Resource):
     def get(self, action_id):
+        if not is_valid_uuid(action_id):
+            return {'message': f'no action with id {action_id} found'}, 404
+
         action = Action.get(action_id)
+
+        if not action:
+            return {'message': f'no action with id {action_id} found'}, 404
+
         return action.as_dict()
 
     def put(self, action_id):
@@ -146,7 +157,13 @@ class ActionsDetail(Resource):
         if user.role == 'CB':
             return {'error': 'collaborators cannot edit actions'}, 403
         
+        if not is_valid_uuid(action_id):
+            return {'message': f'no action with id {action_id} found'}, 404
+        
         action = Action.get(action_id)
+        
+        if not action:
+            return {'message': f'no action with id {action_id} found'}, 404
 
         if action.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot edit another promoter\'s actions'}, 403
@@ -169,10 +186,19 @@ class ActionsDetail(Resource):
     def delete(self, action_id):
         user = get_user_from_token(request)
         
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
         if user.role == 'CB':
             return {'error': 'collaborators cannot delete actions'}, 403
         
+        if not is_valid_uuid(action_id):
+            return {'message': f'no action with id {action_id} found'}, 404
+        
         action = Action.get(action_id)
+        
+        if not action:
+            return {'message': f'no action with id {action_id} found'}, 404
 
         if action.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot delete another promoter\'s actions'}, 403
@@ -185,7 +211,18 @@ class ActionsDetail(Resource):
 class ActionRegister(Resource):
     def post(self, action_id):
         user = get_user_from_token(request)
+        
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
+        if not is_valid_uuid(action_id):
+            return {'message': f'no action with id {action_id} found'}, 404
+        
         action = Action.get(action_id)
+        
+        if not action:
+            return {'message': f'no action with id {action_id} found'}, 404
+        
         company = User.get(action.company_id)
         company_balance = blockchain_manager.balance_of(company.blockchain_public)
         

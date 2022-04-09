@@ -122,6 +122,10 @@ class Campaign(Base):
         campaign = Campaign.query.get(campaign_id)
         db_session.delete(campaign)
         db_session.commit()
+        
+    @staticmethod
+    def exists(campaign_id) -> bool:
+        return Campaign.query.filter_by(id=campaign_id).first() is not None
 
 
 class Action(Base):
@@ -235,6 +239,10 @@ class Offer(Base):
         offer = Offer.query.get(offer_id)
         db_session.delete(offer)
         db_session.commit()
+        
+    @staticmethod
+    def exists(offer_id) -> bool:
+        return Offer.query.filter_by(id=offer_id).first() is not None
 
 
 
