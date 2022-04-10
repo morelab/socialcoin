@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python src/app.py -h 0.0.0.0
+    container_name: socialcoin-api
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 5000:5000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:13-alpine
+    container_name: socialcoin-database
+    volumes:
+      - './postgres_data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=socialcoin
+      - POSTGRES_PASSWORD=socialcoin
+      - POSTGRES_DB=socialcoin_dev
+
+volumes:
+  postgres_data:

@@ -52,4 +52,4 @@ api.add_resource(UserBalance, '/api/users/balance')
 # TODO error handlers https://flask.palletsprojects.com/en/2.1.x/errorhandling/
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+    app.run(host='0.0.0.0')
