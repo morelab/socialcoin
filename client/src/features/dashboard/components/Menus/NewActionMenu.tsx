@@ -6,7 +6,7 @@ import { InputField } from '../../../../components/Form/InputField';
 import { SelectField } from '../../../../components/Form/SelectField';
 import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { notifyError, notifyWarning } from '../../../../utils/notifications';
 import { useUser } from '../../../../context/UserContext';
 import { createAction } from '../../api/createAction';
@@ -32,14 +32,14 @@ export type NewActionFormContent = {
 
 
 const NewActionForm = ({ close }: FormProps) => {
-  const { state, dispatch } = useDashboard();
+  const { data, dispatchData } = useData();
   const [formState, setFormState] = React.useState<NewActionFormContent>({
     name: '',
     description: '',
     reward: 0,
     kpi_target: 0,
     kpi_indicator: '',
-    campaign_id: state.campaigns[0].id
+    campaign_id: data.campaigns[0].id
   });
   const { user } = useUser();
 
@@ -80,7 +80,7 @@ const NewActionForm = ({ close }: FormProps) => {
     }
 
     const createdAction = await createAction(newAction);
-    dispatch({
+    dispatchData({
       type: 'addAction',
       payload: createdAction
     });
@@ -91,8 +91,8 @@ const NewActionForm = ({ close }: FormProps) => {
 
   const getOwnCampaigns = () => {
     return user.role === 'AD'
-      ? state.campaigns
-      : state.campaigns.filter(c => c.company_id === user.id);
+      ? data.campaigns
+      : data.campaigns.filter(c => c.company_id === user.id);
   };
 
   const campaigns = getOwnCampaigns().map(campaign => {
@@ -181,9 +181,9 @@ const NewActionForm = ({ close }: FormProps) => {
 };
 
 export const NewActionMenu = ({ open, setOpen }: MenuProps) => {
-  const { state } = useDashboard();
+  const { data } = useData();
 
-  if (state.campaigns.length === 0) {
+  if (data.campaigns.length === 0) {
     return (
       <ContentModal open={open} setOpen={setOpen} className='p-4'>
         <div className="mb-3 flex flex-col items-center justify-center gap-4">

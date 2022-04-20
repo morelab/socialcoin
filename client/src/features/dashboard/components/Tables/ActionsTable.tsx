@@ -4,15 +4,15 @@ import { QRModal } from './QRModal';
 import { EditActionMenu } from '../Menus/EditActionMenu';
 
 import { Action } from '../../../../types';
-import { useDashboard } from '../../../../context/DashboardContext';
 import { useUser } from '../../../../context/UserContext';
+import { useData } from '../../../../context/DataContext';
 
 export const ActionsTable = () => {
   const [openSlide, setOpenSlide] = React.useState(false);
   const [openQR, setOpenQR] = React.useState(false);
   const [activeID, setActiveID] = React.useState('');
   const [slideAction, setSlideAction] = React.useState<Action>({} as Action);
-  const { state } = useDashboard();
+  const { data } = useData();
   const { user } = useUser();
 
   const handleQR = (id: string) => {
@@ -27,10 +27,11 @@ export const ActionsTable = () => {
 
   if (!user) return null;
 
+  // TODO move funcionality to API
   const getOwnActions = () => {
     return user.role === 'AD'
-      ? state.actions
-      : state.actions.filter(a => a.company_id === user.id);
+      ? data.actions
+      : data.actions.filter(a => a.company_id === user.id);
   };
 
   return (

@@ -6,7 +6,7 @@ import { TextareaField } from '../../../../components/Form/TextareaField';
 import { DeletionModal } from '../DeletionModal';
 
 import { Offer } from '../../../../types';
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { notifyWarning } from '../../../../utils/notifications';
 import { updateOffer } from '../../api/updateOffer';
 import { deleteOffer } from '../../api/deleteOffer';
@@ -38,7 +38,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
     price: offer.price / 100
   });
   const [openDelete, setOpenDelete] = React.useState(false);
-  const { dispatch } = useDashboard();
+  const { dispatchData } = useData();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = event.currentTarget;
@@ -66,7 +66,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
     }
 
     const editedOffer = await updateOffer(offer.id, formOffer);
-    dispatch({
+    dispatchData({
       type: 'editOffer',
       payload: editedOffer
     });
@@ -75,7 +75,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
 
   const handleDelete = async () => {
     await deleteOffer(offer.id);
-    dispatch({
+    dispatchData({
       type: 'removeOffer',
       payload: offer.id
     });

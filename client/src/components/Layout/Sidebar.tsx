@@ -4,10 +4,14 @@ import {
   HomeIcon, FlagIcon, CollectionIcon, ShoppingCartIcon,
   SwitchHorizontalIcon, InformationCircleIcon, MenuIcon, XIcon
 } from '@heroicons/react/outline';
+import { LogoutIcon, MoonIcon, SunIcon } from '@heroicons/react/solid';
 
 import { useUser } from '../../context/UserContext';
+import { useTheme } from '../../context/ThemeContext';
 import useClickOutside from '../../hooks/useClickOutside';
 import logo from '../../assets/logo.png';
+import { logout } from '../api/logout';
+import ConfirmationModal from '../../features/dashboard/components/ConfirmationModal';
 
 
 type LinkInfo = {
@@ -80,7 +84,55 @@ const SidebarLink = ({ icon, url, content, setOpen, active }: SidebarLinkProps) 
   </Link>
 );
 
-const Sidebar = ({ open, setOpen }: SidebarProps) => {
+const SidebarFooter = () => {
+  const [openModal, setOpenModal] = React.useState(false);
+  const { user, setUser } = useUser();
+  const { dark, setDark } = useTheme();
+
+  const handleThemeChange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    setDark(!dark);
+    localStorage.setItem('theme', dark ? 'light' : 'dark');
+    if (dark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  const logoutHandler = async () => {
+    await logout();
+    setUser(null);
+  };
+
+  const reduceName = (name: string | undefined) => name && name.length > 22 ? name.slice(0, 15) + '...' : name;
+
+  return (
+    <>
+      <div className='flex items-center justify-center gap-2 mx-1 py-4 text-gray-600 dark:text-gray-300'>
+        <div className='flex flex-col items-start justify-center'>
+          {/* TODO revise font size on mobile */}
+          <span className='text-sm font-bold'>{reduceName(user?.name)}</span>
+          <Link to='/profile' className='text-sm text-indigo-400 hover:underline'>View profile</Link>
+        </div>
+        <div className='col-span-1 flex items-center justify-center'>
+          <button onClick={handleThemeChange} className='flex flex-col items-center justify-center rounded-lg p-1.5 hover:bg-gray-200 dark:hover:bg-gray-900 transition-colors'>
+            {dark
+              ? <SunIcon className='h-7 w-7' />
+              : <MoonIcon className='h-7 w-7' />
+            }
+          </button>
+          <button onClick={() => setOpenModal(true)} className='flex flex-col items-center justify-center rounded-lg p-1.5 hover:bg-gray-200 dark:hover:bg-gray-900 transition-colors'>
+            <LogoutIcon className='h-7 w-7 text-gray-600 dark:text-gray-100' />
+          </button>
+        </div>
+      </div>
+      <ConfirmationModal open={openModal} setOpen={setOpenModal} title='Log out' content='Do you want to log out from socialcoin?' confirmHandler={logoutHandler} />
+    </>
+  );
+};
+
+export const Sidebar = ({ open, setOpen }: SidebarProps) => {
   const openHandler = () => setOpen(!open);
   const { user } = useUser();
   const sidebarRef = React.useRef();
@@ -95,27 +147,28 @@ const Sidebar = ({ open, setOpen }: SidebarProps) => {
       <div ref={sidebarRef.current} className={`h-screen w-72 fixed bg-white dark:bg-gray-800 lg:border-0 border-r border-gray-300 dark:border-r-gray-700 shadow transition-all duration-300 ease-out z-10 lg:ml-0 ${open ? '' : '-ml-72'}`}>
         <SidebarHead />
         {user &&
-          <ul className='flex flex-col p-2'>
-            {links.map(l => {
-              if (l.accessType === 'ALL' || user.role === 'AD' || l.accessType === user.role) {
-                return (
-                  <li key={l.url}>
-                    <SidebarLink
-                      icon={l.icon}
-                      url={l.url}
-                      content={l.content}
-                      setOpen={setOpen}
-                      active={window.location.pathname.startsWith(l.url)}
-                    />
-                  </li>
-                );
-              }
-            })}
-          </ul>
+          <div className='flex flex-col h-full pb-20 divide-y-2 divide-gray-300 dark:divide-gray-700'>
+            <ul className='flex flex-col p-2 mb-auto'>
+              {links.map(l => {
+                if (l.accessType === 'ALL' || user.role === 'AD' || l.accessType === user.role) {
+                  return (
+                    <li key={l.url}>
+                      <SidebarLink
+                        icon={l.icon}
+                        url={l.url}
+                        content={l.content}
+                        setOpen={setOpen}
+                        active={window.location.pathname.startsWith(l.url)}
+                      />
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+            <SidebarFooter />
+          </div>
         }
       </div>
     </>
   );
 };
-
-export default Sidebar;

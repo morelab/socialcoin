@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import {
   CollectionIcon,
@@ -100,15 +100,11 @@ const TabGroup = () => {
 
 const TopbarMenu = () => {
   const { user, setUser } = useUser();
-  const history = useHistory();
 
-  const logoutHandler = React.useCallback(() => {
-    logout()
-      .then(() => {
-        setUser(null);
-        history.push('/');
-      });
-  }, [setUser, history]);
+  const logoutHandler = async () => {
+    await logout();
+    setUser(null);
+  };
 
   return (
     <Menu as="div" className="ml-3 relative">

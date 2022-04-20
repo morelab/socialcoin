@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
-import { useUser } from '../../../context/UserContext';
 import { Action } from '../../../types';
 import { getActions } from '../api/getActions';
 
@@ -14,7 +14,7 @@ const ActionCard = ({ action }: ActionProps) => {
     <div className='flex flex-col rounded-lg shadow-md w-96 overflow-hidden'>
       <div className='flex-grow divide-y-2 divide-gray-200 dark:divide-gray-500 bg-white dark:bg-gray-800'>
         <div className='px-4 py-3 dark:bg-gray-900'>
-          <h2 className='font-bold text-lg text-gray-800 dark:text-gray-50'>{action.name} - {action.reward/100} UDC</h2>
+          <h2 className='font-bold text-lg text-gray-800 dark:text-gray-50'>{action.name} - {action.reward / 100} UDC</h2>
           <span className='text-gray-600 dark:text-gray-300'>{action.company_name}</span>
         </div>
         <div className='px-4 py-3 text-gray-800 dark:text-gray-50'>
@@ -30,11 +30,6 @@ const ActionCard = ({ action }: ActionProps) => {
 
 export const Actions = () => {
   const [actions, setActions] = React.useState<Action[]>([]);
-  const { user } = useUser();
-
-  if (user?.role === 'PM') {
-    return <Redirect to="/dashboard/campaigns" />;
-  }
 
   React.useEffect(() => {
     const loadActions = async () => {
@@ -45,13 +40,13 @@ export const Actions = () => {
   }, []);
 
   return (
-    <div className='p-5'>
-      <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Actions</h1>
-      <div className='flex flex-wrap gap-6'>
+    <>
+      <MiniTopbar title='Actions' />
+      <div className='flex flex-wrap gap-6 px-2 sm:px-0'>
         {actions.filter(action => action.kpi < action.kpi_target).map(action =>
           <ActionCard key={action.id} action={action} />
         )}
       </div>
-    </div>
+    </>
   );
 };

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
 import logo from '../../../assets/logo.png';
 import GoogleButton from 'react-google-button';
@@ -37,7 +37,7 @@ export const Landing = () => {
   const { dark, setDark } = useTheme();
 
   if (user != null) {
-    return <Redirect to='/dashboard' />;
+    return <Navigate to='/dashboard' />;
   }
 
   const openGoogleLoginPage = useCallback(() => {

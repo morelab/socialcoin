@@ -5,7 +5,7 @@ import { InputField } from '../../../../components/Form/InputField';
 import { TextareaField } from '../../../../components/Form/TextareaField';
 import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { notifyWarning } from '../../../../utils/notifications';
 import { createOffer } from '../../api/createOffer';
 
@@ -32,7 +32,7 @@ const NewOfferForm = ({ close }: FormProps) => {
     description: '',
     price: 0
   });
-  const { dispatch } = useDashboard();
+  const { dispatchData } = useData();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = event.currentTarget;
@@ -60,7 +60,7 @@ const NewOfferForm = ({ close }: FormProps) => {
     }
 
     const createdOffer = await createOffer(newOffer);
-    dispatch({
+    dispatchData({
       type: 'addOffer',
       payload: createdOffer
     });

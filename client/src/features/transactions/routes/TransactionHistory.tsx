@@ -6,6 +6,7 @@ import { ContentModal } from '../../../components/Overlay/ContentModal';
 
 import { Transaction } from '../../../types';
 import { getTransactions } from '../api/getTransactions';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 
 type TransactionModalProps = {
@@ -175,8 +176,8 @@ export const TransactionHistory = () => {
   };
 
   return (
-    <div className="p-5">
-      <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Transactions</h1>
+    <div>
+      <MiniTopbar title='Transactions' />
       {transactions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No transactions recorded yet.</h2>}
       <div className='flex flex-col gap-3 items-center'>
         {transactions.map(transaction =>

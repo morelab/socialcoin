@@ -1,15 +1,15 @@
 import React, { FormEvent } from 'react';
-import { useParams, Redirect, useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Spinner } from '../../../components/Elements/Spinner';
 import { Button } from '../../../components/Elements/Button';
 import { InputField } from '../../../components/Form/InputField';
 
 import { Action } from '../../../types';
-import { useUser } from '../../../context/UserContext';
 import { notifyWarning } from '../../../utils/notifications';
 import { getAction } from '../api/getAction';
 import { registerAction } from '../api/registerAction';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 type RegisterStates = 'initial' | 'registering' | 'registered';
 
@@ -148,16 +148,17 @@ export const ActionRegister = () => {
   const actionID = useParams<{ id: string }>().id;
   const [action, setAction] = React.useState<Action>({} as Action);
   const [registerState, setRegisterState] = React.useState<RegisterStates>('initial');
-  const { user } = useUser();
-  const history = useHistory();
-
-  if (user?.role === 'PM') {
-    return <Redirect to="/dashboard/campaigns" />;
-  }
+  const navigate = useNavigate();
 
   React.useEffect(() => {
-    getAction(actionID).then(action => setAction(action));
+    if (actionID) {
+      getAction(actionID).then(action => {
+        setAction(action);
+      });
+    }
   }, []);
+
+  // TODO unexisting action
 
   if (!action) {
     return (
@@ -184,7 +185,7 @@ export const ActionRegister = () => {
           </p>
           <button
             type="button"
-            onClick={() => history.push('/actions')}
+            onClick={() => navigate('/actions')}
             className="inline-flex justify-center py-2 px-4 border border-gray-400 w-full shadow-sm text-md font-medium
                 rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
                 focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
@@ -199,23 +200,26 @@ export const ActionRegister = () => {
   };
 
   return (
-    <div className='flex items-center justify-center'>
-      <div className='shadow-lg max-w-3xl divide-y-2 sm:divide-x-2 sm:divide-y-0 divide-gray-300 flex flex-col sm:grid sm:grid-cols-5 m-5 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden'>
-        <div className='col-span-2'>
-          <div className='p-3 flex flex-col bg-indigo-600 dark:bg-indigo-500 text-gray-200'>
-            <span className='font-semibold text-xl mb-1'>{action.name}</span>
-            <span className='font-medium text-lg'>{action.reward / 100} UDC</span>
+    <>
+      <MiniTopbar title='Action registration' />
+      <div className='flex items-center justify-center'>
+        <div className='shadow-lg max-w-3xl divide-y-2 sm:divide-x-2 sm:divide-y-0 divide-gray-300 flex flex-col sm:grid sm:grid-cols-5 m-5 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden'>
+          <div className='col-span-2'>
+            <div className='p-3 flex flex-col bg-indigo-600 dark:bg-indigo-500 text-gray-200'>
+              <span className='font-semibold text-xl mb-1'>{action.name}</span>
+              <span className='font-medium text-lg'>{action.reward / 100} UDC</span>
+            </div>
+            <div className='p-3 dark:text-gray-200'>
+              <p>
+                {action.description}
+              </p>
+            </div>
           </div>
-          <div className='p-3 dark:text-gray-200'>
-            <p>
-              {action.description}
-            </p>
+          <div className='p-3 col-span-3 bg-white dark:bg-gray-800'>
+            {getSideSection()}
           </div>
-        </div>
-        <div className='p-3 col-span-3 bg-white dark:bg-gray-800'>
-          {getSideSection()}
         </div>
       </div>
-    </div>
+    </>
   );
 };

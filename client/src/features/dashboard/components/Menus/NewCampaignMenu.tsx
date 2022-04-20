@@ -5,7 +5,7 @@ import { InputField } from '../../../../components/Form/InputField';
 import { TextareaField } from '../../../../components/Form/TextareaField';
 import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { createCampaign } from '../../api/createCampaign';
 
 
@@ -26,7 +26,7 @@ export type NewCampaignFormContent = {
 
 const NewCampaignForm = ({ close }: FormProps) => {
   const [formState, setFormState] = React.useState<NewCampaignFormContent>({ name: '', description: '' });
-  const { dispatch } = useDashboard();
+  const { dispatchData } = useData();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = event.currentTarget;
@@ -48,7 +48,7 @@ const NewCampaignForm = ({ close }: FormProps) => {
     };
 
     const createdCampaign = await createCampaign(newCampaign);
-    dispatch({
+    dispatchData({
       type: 'addCampaign',
       payload: createdCampaign
     });

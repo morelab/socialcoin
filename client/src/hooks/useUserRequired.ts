@@ -1,29 +1,33 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { axios } from '../lib/axios';
 
 import { useUser } from '../context/UserContext';
 import { User } from '../types';
 
-const getSelf = async (): Promise<User> => {
-  const result = await axios.get('/api/users/self');
-  return result.data;
+type UserResponse = {
+  data: User;
 };
 
-export const useUserRequired = () => {
+export const getSelf = (): Promise<UserResponse> => {
+  return axios.get('/api/users/self');
+};
+
+export const useUserRequired = (): boolean => {
+  const [loaded, setLoaded] = React.useState<boolean>(false);
   const { user, setUser } = useUser();
-  const history = useHistory();
 
   React.useEffect(() => {
-    if (user == null) {
+    if (user === null) {
       getSelf()
         .then(result => {
-          setUser(result);
-          console.log(result);
+          setUser(result.data);
+          setLoaded(true);
         }).catch(err => {
           console.log(err);
-          history.push('/');
+          setLoaded(true);
         });
     }
   }, [user, setUser]);
+
+  return loaded;
 };

@@ -4,7 +4,7 @@ import { QRModal } from './QRModal';
 import { EditOfferMenu } from '../Menus/EditOfferMenu';
 
 import { Offer } from '../../../../types';
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { useUser } from '../../../../context/UserContext';
 
 export const OffersTable = () => {
@@ -12,7 +12,7 @@ export const OffersTable = () => {
   const [openQR, setOpenQR] = React.useState(false);
   const [activeID, setActiveID] = React.useState('');
   const [slideOffer, setSlideOffer] = React.useState<Offer>({} as Offer);
-  const { state } = useDashboard();
+  const { data } = useData();
   const { user } = useUser();
 
   const handleQR = (id: string) => {
@@ -27,10 +27,11 @@ export const OffersTable = () => {
 
   if (!user) return null;
 
+  // TODO move funcionality to API
   const getOwnOffers = () => {
     return user.role === 'AD'
-      ? state.offers
-      : state.offers.filter(o => o.company_id === user.id);
+      ? data.offers
+      : data.offers.filter(o => o.company_id === user.id);
   };
 
   return (

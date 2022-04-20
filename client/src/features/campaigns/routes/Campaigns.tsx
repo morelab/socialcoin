@@ -1,11 +1,10 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
-import { Redirect } from 'react-router-dom';
 import { ChevronRightIcon } from '@heroicons/react/solid';
 
 import { CompanyCampaigns, getCampaignsByCompany } from '../api/getCampaignsByCompany';
 import { ContentModal } from '../../../components/Overlay/ContentModal';
-import { useUser } from '../../../context/UserContext';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 
 type CampaignModalProps = {
@@ -50,11 +49,6 @@ const CompanySection = ({ company, campaigns }: CompanyCampaigns) => {
     title: '',
     content: ''
   });
-  const { user } = useUser();
-
-  if (user?.role === 'PM') {
-    return <Redirect to="/dashboard/campaigns" />;
-  }
 
   const handleOpenModal = (title: string, content: string) => {
     setData({
@@ -106,12 +100,12 @@ export const Campaigns = () => {
   }, []);
 
   return (
-    <div className='p-5'>
-      <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Campaigns</h1>
+    <>
+      <MiniTopbar title='Campaigns' />
       {companies.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No companies registered yet.</h2>}
       <div className='flex flex-wrap gap-6'>
         {companies.map(entry => <CompanySection key={`c-${entry.company.id}`} company={entry.company} campaigns={entry.campaigns} />)}
       </div>
-    </div>
+    </>
   );
 };

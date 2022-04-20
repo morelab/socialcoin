@@ -4,7 +4,7 @@ import { ContentModal } from '../../../../components/Overlay/ContentModal';
 import { EditCampaignMenu } from '../Menus/EditCampaignMenu';
 
 import { Campaign } from '../../../../types';
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { useUser } from '../../../../context/UserContext';
 
 
@@ -71,7 +71,7 @@ const SeeAllLink = ({ campaign }: SeeAllLinksProps) => {
 export const CampaignsTable = () => {
   const [openSlide, setOpenSlide] = React.useState(false);
   const [slideCampaign, setSlideCampaign] = React.useState<Campaign>({} as Campaign);
-  const { state } = useDashboard();
+  const { data } = useData();
   const { user } = useUser();
 
   const handleEdit = (campaign: Campaign, event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -82,10 +82,11 @@ export const CampaignsTable = () => {
 
   if (!user) return null;
 
+  // TODO move funcionality to API
   const getOwnCampaigns = () => {
     return user.role === 'AD'
-      ? state.campaigns
-      : state.campaigns.filter(c => c.company_id === user.id);
+      ? data.campaigns
+      : data.campaigns.filter(c => c.company_id === user.id);
   };
 
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useHistory, Redirect } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ShoppingBagIcon, SwitchHorizontalIcon } from '@heroicons/react/outline';
 
 import { Spinner } from '../../../components/Elements/Spinner';
@@ -10,6 +10,7 @@ import { getOffer } from '../api/getOffer';
 import { redeemOffer } from '../api/redeemOffer';
 import { useUser } from '../../../context/UserContext';
 import { notifyError } from '../../../utils/notifications';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 
 export const OfferRedeem = () => {
@@ -18,14 +19,12 @@ export const OfferRedeem = () => {
   const [openModal, setOpenModal] = React.useState(false);
   const [paymentState, setPaymentState] = React.useState('initial');
   const { user, setUser } = useUser();
-  const history = useHistory();
-
-  if (user?.role === 'PM') {
-    return <Redirect to="/dashboard/campaigns" />;
-  }
+  const navigate = useNavigate();
 
   React.useEffect(() => {
-    getOffer(offerID).then(action => setOffer(action));
+    if (offerID) {
+      getOffer(offerID).then(action => setOffer(action));
+    }
   }, []);
 
   if (!offer) {
@@ -74,7 +73,7 @@ export const OfferRedeem = () => {
           </p>
           <button
             type="button"
-            onClick={() => history.push('/offers')}
+            onClick={() => navigate('/offers')}
             className="inline-flex justify-center py-2 px-4 border border-gray-400 w-full shadow-sm text-md font-medium
                 rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
                 focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
@@ -94,7 +93,7 @@ export const OfferRedeem = () => {
           <div className='flex flex-col sm:flex-row items-center justify-center gap-x-4 w-full'>
             <button
               type="button"
-              onClick={() => history.push('/offers')}
+              onClick={() => navigate('/offers')}
               className="inline-flex justify-center py-2 px-4 border border-gray-400 w-full shadow-sm text-md font-medium
                 rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
                 focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
@@ -125,6 +124,7 @@ export const OfferRedeem = () => {
         content={`Do you want to redeem the offer '${offer.name}' in exchange for ${offer.price / 100} UDC?`}
         confirmHandler={handlePayment}
       />
+      <MiniTopbar title={`Offer redemption - ${user && user.balance / 100} UDC`} />
       <div className='flex items-center justify-center transition'>
         <div className='shadow-lg max-w-3xl m-5 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden divide-y divide-gray-200 dark:divide-gray-700'>
           <div className='bg-gray-50 dark:bg-gray-900 h-full w-full px-7 sm:px-10 lg:px-20 py-7 flex flex-col items-center gap-4'>

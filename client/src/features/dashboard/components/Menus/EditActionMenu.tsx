@@ -8,7 +8,7 @@ import { DeletionModal } from '../DeletionModal';
 
 import { Action } from '../../../../types';
 import { useUser } from '../../../../context/UserContext';
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { notifyWarning } from '../../../../utils/notifications';
 import { updateAction } from '../../api/updateAction';
 import { deleteAction } from '../../api/deleteAction';
@@ -45,7 +45,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
     campaign_id: action.campaign_id
   });
   const [openDelete, setOpenDelete] = React.useState(false);
-  const { state, dispatch } = useDashboard();
+  const { data, dispatchData } = useData();
   const { user } = useUser();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -81,7 +81,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
     }
 
     const editedAction = await updateAction(action.id, formAction);
-    dispatch({
+    dispatchData({
       type: 'editAction',
       payload: editedAction
     });
@@ -90,7 +90,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
 
   const handleDelete = async () => {
     await deleteAction(action.id);
-    dispatch({
+    dispatchData({
       type: 'removeAction',
       payload: action.id
     });
@@ -101,8 +101,8 @@ const EditActionForm = ({ action, close }: FormProps) => {
 
   const getOwnCampaigns = () => {
     return user.role === 'AD'
-      ? state.campaigns
-      : state.campaigns.filter(c => c.company_id === user.id);
+      ? data.campaigns
+      : data.campaigns.filter(c => c.company_id === user.id);
   };
 
   const campaigns = getOwnCampaigns().map(campaign => {

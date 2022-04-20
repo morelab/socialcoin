@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { PencilIcon } from '@heroicons/react/solid';
 
 import ConfirmationModal from '../../dashboard/components/ConfirmationModal';
@@ -7,14 +6,12 @@ import ConfirmationModal from '../../dashboard/components/ConfirmationModal';
 import { RoleKey } from '../../../types';
 import { useUser } from '../../../context/UserContext';
 import { updateUserSelf } from '../api/updateUserSelf';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 export const Profile = () => {
   const { user, setUser } = useUser();
   const [formName, setFormName] = React.useState(user?.name);
   const [openModal, setOpenModal] = React.useState(false);
-  const history = useHistory();
-
-  if (!user) history.push('/');
 
   const handleFormChange = (e: React.FormEvent<HTMLInputElement>) => setFormName(e.currentTarget.value);
   const reduceAddress = (address: string | undefined) => address && address.slice(0, 7) + '...' + address.slice(address.length - 5);
@@ -43,6 +40,7 @@ export const Profile = () => {
 
   return (
     <>
+      <MiniTopbar title='Profile' />
       <ConfirmationModal
         open={openModal}
         setOpen={setOpenModal}

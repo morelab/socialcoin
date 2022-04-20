@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CreditCardIcon } from '@heroicons/react/solid';
 
 import { getOffers } from '../api/getOffers';
 import { getSelfUserBalance } from '../api/getSelfUserBalance';
 import { Offer } from '../../../types';
 import { useUser } from '../../../context/UserContext';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 type OfferProps = {
   offer: Offer;
@@ -37,10 +38,6 @@ export const Offers = () => {
   const [offers, setOffers] = React.useState<Offer[]>([]);
   const { user, setUser } = useUser();
 
-  if (user?.role === 'PM') {
-    return <Redirect to="/dashboard/campaigns" />;
-  }
-
   React.useEffect(() => {
     const loadOffers = async () => {
       const offers = await getOffers();
@@ -56,14 +53,14 @@ export const Offers = () => {
   }, []);
 
   return (
-    <div className='p-5'>
-      <h1 className='text-3xl font-semibold text-gray-700 dark:text-white mb-3'>Offers - {user && user.balance / 100} UDC</h1>
+    <>
+      <MiniTopbar title={`Offers - ${user && user.balance / 100} UDC`} />
       {offers.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No offers created yet.</h2>}
       <div className='flex flex-wrap gap-6'>
         {offers.map(offer =>
           <OfferCard key={offer.id} offer={offer} />
         )}
       </div>
-    </div>
+    </>
   );
 };

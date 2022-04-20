@@ -7,7 +7,7 @@ import { SlideOver } from '../../../../components/Overlay/SlideOver';
 import { DeletionModal } from '../DeletionModal';
 
 import { Campaign } from '../../../../types';
-import { useDashboard } from '../../../../context/DashboardContext';
+import { useData } from '../../../../context/DataContext';
 import { updateCampaign } from '../../api/updateCampaign';
 import { deleteCampagin } from '../../api/deleteCampaign';
 
@@ -35,7 +35,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
     description: campaign.description
   });
   const [openDelete, setOpenDelete] = React.useState(false);
-  const { dispatch } = useDashboard();
+  const { dispatchData } = useData();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = event.currentTarget;
@@ -57,7 +57,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
     };
 
     const editedCampaign = await updateCampaign(campaign.id, formCampaign);
-    dispatch({
+    dispatchData({
       type: 'editCampaign',
       payload: editedCampaign
     });
@@ -66,7 +66,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
 
   const handleDelete = async () => {
     await deleteCampagin(campaign.id);
-    dispatch({
+    dispatchData({
       type: 'removeCampaign',
       payload: campaign.id
     });
