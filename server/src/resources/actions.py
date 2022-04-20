@@ -8,7 +8,6 @@ from config import ADMIN_ADDRESS, IPFS_ON, IPFS_URL, PRIVATE_KEY
 from database.models import Action, Campaign, User, Transaction
 import base58
 import requests
-import os
 import time
 
 def action_reward(*, from_address: str, to_address: str, from_balance: int, action_id: int, reward: int, img_hash: str, url_proof: str):
@@ -238,6 +237,9 @@ class ActionRegister(Resource):
         url_proof = data.get('verification_url')        # external optional proof URL (e.g. Strava)
         image_proof = request.files.get('image_proof')  # mandatory photo proof (e.g. Strava)
         reward = action.reward * float(kpi)    # adjust to the contrat decimals
+        
+        if not kpi and not url_proof:
+            return {'error': 'required at least one of the fields verification_url or image_proof' }, 400
         
         if IPFS_ON:
             ipfs_response = ipfs_add_file(image_proof)

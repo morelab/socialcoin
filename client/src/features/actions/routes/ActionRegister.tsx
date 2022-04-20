@@ -68,8 +68,9 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
       notifyWarning('Please enter a KPI greater than 0.');
       return;
     }
-    if (files.length == 0) {
-      notifyWarning('Please introduce a file.');
+    if (files.length == 0 && verificationURL.length < 3) {
+      // TODO: improve URL validation
+      notifyWarning('Please introduce a file or a valid verification url.');
       return;
     }
 
@@ -128,7 +129,7 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
             </div>
           </div>
           <InputField
-            label="Verification URL (not mandatory)"
+            label="Verification URL"
             name="verificationUrl"
             type="text"
             value={formState.verificationUrl}
