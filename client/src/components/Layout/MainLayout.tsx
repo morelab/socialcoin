@@ -18,7 +18,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     <div className='flex bg-gray-200 dark:bg-gray-700'>
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       <div className='grow min-h-screen transition-all duration-300 ease-out lg:ml-72' style={leftStyle}>
-        <main className='flex-1 relative overflow-y-auto focus:outline-none mx-auto px-0 lg:px-5 lg:py-2'>
+        <main className='flex-1 relative overflow-y-auto h-full focus:outline-none mx-auto px-0 lg:px-5 lg:py-2'>
           {children}
         </main>
       </div>

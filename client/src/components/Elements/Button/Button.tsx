@@ -6,7 +6,7 @@ const variants = {
 };
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant: keyof typeof variants;
+  variant?: keyof typeof variants;
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

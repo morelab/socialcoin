@@ -3,7 +3,7 @@ from database.models import User
 from uuid import UUID
 import jwt
 
-def get_user_from_token(request) -> dict:
+def get_user_from_token(request) -> User or None:
     cookie_token: str = request.cookies.get('jwt_token')
     header_token: str = request.headers.get('Authorization')
 

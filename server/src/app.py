@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from common.admin import create_admin
@@ -46,6 +46,8 @@ api.add_resource(OfferRedeem, '/api/offers/<string:offer_id>/redeem')
 
 api.add_resource(TransactionsAll, '/api/transactions')
 
+api.add_resource(UsersAdmin, '/api/users/admin')
+api.add_resource(UsersAdminDetail, '/api/users/admin/<string:user_id>')
 api.add_resource(UsersSelf, '/api/users/self')
 api.add_resource(UserBalance, '/api/users/balance')
 

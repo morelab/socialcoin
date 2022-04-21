@@ -14,6 +14,8 @@ import { useData } from '../context/DataContext';
 import { getCampaigns } from '../api/getCampaigns';
 import { getActions } from '../api/getActions';
 import { getOffers } from '../api/getOffers';
+import { useUser } from '../context/UserContext';
+import { getSelfUserBalance } from '../features/dashboard/api/getSelfUserBalance';
 
 
 type UserRole = 'CB' | 'PM' | 'AD';
@@ -21,6 +23,9 @@ type UserRole = 'CB' | 'PM' | 'AD';
 
 const App = () => {
   const { dispatchData } = useData();
+  const { user, setUser } = useUser();
+
+  if (!user) return null;
 
   React.useEffect(() => {
     const campaigns = getCampaigns();
@@ -47,6 +52,19 @@ const App = () => {
         });
       });
   }, [dispatchData]);
+
+  React.useEffect(() => {
+    if (user.balance === null || user.balance === undefined) {
+      getSelfUserBalance()
+        .then(balance => {
+          const newUser = {
+            ...user,
+            balance: balance
+          };
+          setUser(newUser);
+        });
+    }
+  }, []);
 
   return (
     <MainLayout>
