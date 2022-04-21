@@ -55,7 +55,16 @@ optional_offer_schema = OptionalOfferSchema()
 
 class OffersAll(Resource):
     def get(self):
-        offers = Offer.all()
+        user = get_user_from_token(request)
+
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
+        if user.role == 'PM':
+            offers = Offer.get_by_company(user.id)
+        else:
+            offers = Offer.all()
+        
         offer_dicts = [offer.as_dict() for offer in offers]
         for offer in offer_dicts:
             offer['company_name'] = User.get(offer['company_id']).name
@@ -164,6 +173,9 @@ class OfferRedeem(Resource):
         
         if not user:
             return {'error': 'not logged in'}, 401
+        
+        if user.role == 'PM':
+            return {'error': 'promoters cannot redeem offers'}
         
         if not is_valid_uuid(offer_id):
             return {'message': f'no offer with id {offer_id} found'}, 404

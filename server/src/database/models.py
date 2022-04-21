@@ -178,7 +178,7 @@ class Action(Base):
 
     @staticmethod
     def get_by_company(company_id) -> Action:
-        return Action.query.filter_by(company_id=company_id).first()
+        return Action.query.filter_by(company_id=company_id)
     
     @staticmethod
     def get_by_campaign(campaign_id) -> Action:

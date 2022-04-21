@@ -23,7 +23,16 @@ optional_campaign_schema = OptionalCampaignSchema()
 
 class CampaignsAll(Resource):
     def get(self):
-        campaigns = Campaign.all()
+        user = get_user_from_token(request)
+        
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
+        if user.role == 'PM':
+            campaigns = Campaign.get_by_company(user.id)
+        else:
+            campaigns = Campaign.all()
+        
         campaign_dicts = [campaign.as_dict() for campaign in campaigns]
         for campaign in campaign_dicts:
             campaign['company_name'] = User.get(campaign['company_id']).name

@@ -5,7 +5,6 @@ import { EditCampaignMenu } from '../Menus/EditCampaignMenu';
 
 import { Campaign } from '../../../../types';
 import { useData } from '../../../../context/DataContext';
-import { useUser } from '../../../../context/UserContext';
 
 
 type CampaignModalProps = {
@@ -72,21 +71,11 @@ export const CampaignsTable = () => {
   const [openSlide, setOpenSlide] = React.useState(false);
   const [slideCampaign, setSlideCampaign] = React.useState<Campaign>({} as Campaign);
   const { data } = useData();
-  const { user } = useUser();
 
   const handleEdit = (campaign: Campaign, event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
     setSlideCampaign(campaign);
     setOpenSlide(true);
-  };
-
-  if (!user) return null;
-
-  // TODO move funcionality to API
-  const getOwnCampaigns = () => {
-    return user.role === 'AD'
-      ? data.campaigns
-      : data.campaigns.filter(c => c.company_id === user.id);
   };
 
   return (
@@ -114,7 +103,7 @@ export const CampaignsTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-600 dark:bg-gray-800">
-            {getOwnCampaigns().map(campaign => (
+            {data.campaigns.map(campaign => (
               <tr key={campaign.id}>
                 <td className="px-2 py-2 whitespace-normal">
                   <div className="flex items-center">

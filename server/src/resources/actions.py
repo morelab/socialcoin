@@ -96,7 +96,16 @@ action_register_schema = ActionRegisterSchema()
 
 class ActionsAll(Resource):
     def get(self):
-        actions = Action.all()
+        user = get_user_from_token(request)
+        
+        if not user:
+            return {'error': 'not logged in'}, 401
+        
+        if user.role == 'PM':
+            actions = Action.get_by_company(user.id)
+        else:
+            actions = Action.all()
+        
         action_dicts = [action.as_dict() for action in actions]
         for action in action_dicts:
             action['company_name'] = User.get(action['company_id']).name
@@ -213,6 +222,9 @@ class ActionRegister(Resource):
         
         if not user:
             return {'error': 'not logged in'}, 401
+        
+        if user.role == 'PM':
+            return {'error': 'promoters cannot register actions'}, 403
         
         if not is_valid_uuid(action_id):
             return {'message': f'no action with id {action_id} found'}, 404

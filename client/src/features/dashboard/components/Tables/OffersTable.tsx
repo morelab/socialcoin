@@ -5,7 +5,6 @@ import { EditOfferMenu } from '../Menus/EditOfferMenu';
 
 import { Offer } from '../../../../types';
 import { useData } from '../../../../context/DataContext';
-import { useUser } from '../../../../context/UserContext';
 
 export const OffersTable = () => {
   const [openSlide, setOpenSlide] = React.useState(false);
@@ -13,7 +12,6 @@ export const OffersTable = () => {
   const [activeID, setActiveID] = React.useState('');
   const [slideOffer, setSlideOffer] = React.useState<Offer>({} as Offer);
   const { data } = useData();
-  const { user } = useUser();
 
   const handleQR = (id: string) => {
     setActiveID(id);
@@ -23,15 +21,6 @@ export const OffersTable = () => {
   const handleEdit = (offer: Offer) => {
     setSlideOffer(offer);
     setOpenSlide(true);
-  };
-
-  if (!user) return null;
-
-  // TODO move funcionality to API
-  const getOwnOffers = () => {
-    return user.role === 'AD'
-      ? data.offers
-      : data.offers.filter(o => o.company_id === user.id);
   };
 
   return (
@@ -72,7 +61,7 @@ export const OffersTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-600 dark:bg-gray-800">
-            {getOwnOffers().map((offer) => (
+            {data.offers.map((offer) => (
               <tr key={offer.id}>
                 <td className="px-2 py-2 whitespace-nowrap">
                   <div className="flex items-center">

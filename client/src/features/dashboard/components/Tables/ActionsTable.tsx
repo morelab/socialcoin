@@ -4,7 +4,6 @@ import { QRModal } from './QRModal';
 import { EditActionMenu } from '../Menus/EditActionMenu';
 
 import { Action } from '../../../../types';
-import { useUser } from '../../../../context/UserContext';
 import { useData } from '../../../../context/DataContext';
 
 export const ActionsTable = () => {
@@ -13,7 +12,6 @@ export const ActionsTable = () => {
   const [activeID, setActiveID] = React.useState('');
   const [slideAction, setSlideAction] = React.useState<Action>({} as Action);
   const { data } = useData();
-  const { user } = useUser();
 
   const handleQR = (id: string) => {
     setActiveID(id);
@@ -23,15 +21,6 @@ export const ActionsTable = () => {
   const handleEdit = (action: Action) => {
     setSlideAction(action);
     setOpenSlide(true);
-  };
-
-  if (!user) return null;
-
-  // TODO move funcionality to API
-  const getOwnActions = () => {
-    return user.role === 'AD'
-      ? data.actions
-      : data.actions.filter(a => a.company_id === user.id);
   };
 
   return (
@@ -84,7 +73,7 @@ export const ActionsTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-600 dark:bg-gray-800">
-            {getOwnActions().map((action) => (
+            {data.actions.map((action) => (
               <tr key={action.id}>
                 <td className="px-2 py-2 whitespace-normal">
                   <div className="flex items-center">
