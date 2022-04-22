@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CreditCardIcon } from '@heroicons/react/solid';
 
-import { getOffers } from '../api/getOffers';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
+import { useUser } from '../../../context/UserContext';
+import { useData } from '../../../context/DataContext';
 import { getSelfUserBalance } from '../api/getSelfUserBalance';
 import { Offer } from '../../../types';
-import { useUser } from '../../../context/UserContext';
-import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
+
 
 type OfferProps = {
   offer: Offer;
@@ -35,16 +36,8 @@ const OfferCard = ({ offer }: OfferProps) => {
 };
 
 export const Offers = () => {
-  const [offers, setOffers] = React.useState<Offer[]>([]);
   const { user, setUser } = useUser();
-
-  React.useEffect(() => {
-    const loadOffers = async () => {
-      const offers = await getOffers();
-      setOffers(offers);
-    };
-    loadOffers();
-  }, []);
+  const { data } = useData();
 
   React.useEffect(() => {
     getSelfUserBalance().then(balance => {
@@ -55,9 +48,9 @@ export const Offers = () => {
   return (
     <>
       <MiniTopbar title={`Offers - ${user && user.balance / 100} UDC`} />
-      {offers.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No offers created yet.</h2>}
+      {data.offers.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No offers available.</h2>}
       <div className='flex flex-wrap gap-6'>
-        {offers.map(offer =>
+        {data.offers.map(offer =>
           <OfferCard key={offer.id} offer={offer} />
         )}
       </div>

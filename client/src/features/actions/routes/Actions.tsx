@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
+import { useData } from '../../../context/DataContext';
 
 import { Action } from '../../../types';
-import { getActions } from '../api/getActions';
 
 type ActionProps = {
   action: Action;
@@ -29,21 +29,16 @@ const ActionCard = ({ action }: ActionProps) => {
 };
 
 export const Actions = () => {
-  const [actions, setActions] = React.useState<Action[]>([]);
+  const { data } = useData();
 
-  React.useEffect(() => {
-    const loadActions = async () => {
-      const actions = await getActions();
-      setActions(actions);
-    };
-    loadActions();
-  }, []);
+  const actions = data.actions.filter(action => action.kpi < action.kpi_target);
 
   return (
     <>
       <MiniTopbar title='Actions' />
+      {actions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No actions available.</h2>}
       <div className='flex flex-wrap gap-6 px-2 sm:px-0'>
-        {actions.filter(action => action.kpi < action.kpi_target).map(action =>
+        {actions.map(action =>
           <ActionCard key={action.id} action={action} />
         )}
       </div>

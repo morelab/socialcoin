@@ -7,6 +7,8 @@ import { ContentModal } from '../../../components/Overlay/ContentModal';
 import { Transaction } from '../../../types';
 import { getTransactions } from '../api/getTransactions';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
+import { Sidebar } from '../components/Sidebar';
+import { FilterProvider, useFilters } from '../context/FilterContext';
 
 
 type TransactionModalProps = {
@@ -53,7 +55,7 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
             </div>
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">Quantity</dt>
-              <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2">{transaction.quantity/100} UDC</dd>
+              <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2">{transaction.quantity / 100} UDC</dd>
             </div>
             <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">Transaction hash</dt>
@@ -139,7 +141,7 @@ const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
             {getTransactionTitle()}
             <div className='hidden md:block text-sm'>{transaction.date}</div>
           </span>
-          <span>{transaction.quantity/100} UDC</span>
+          <span>{transaction.quantity / 100} UDC</span>
         </div>
         <div className="flex flex-col sender-to-receiver p-1.5 sm:p-2.5 w-full">
           <span>From: {transaction.sender_name}</span>
@@ -150,10 +152,11 @@ const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
   );
 };
 
-export const TransactionHistory = () => {
+export const Transactions = () => {
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
   const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction>({} as Transaction);
   const [openModal, setOpenModal] = React.useState(false);
+  const { filters } = useFilters();
 
   React.useEffect(() => {
     getTransactions().then(result => {
@@ -175,16 +178,53 @@ export const TransactionHistory = () => {
     setOpenModal(true);
   };
 
+  const getFilteredTransactions = () => {
+    const { receiver, sender, date } = filters;
+    let filteredTransactions = transactions.slice();
+
+    if (sender && sender !== '')
+      filteredTransactions = filteredTransactions.filter(transaction => {
+        return transaction.sender_name.toLowerCase().includes(sender.toLowerCase())
+          || transaction.sender_email.toLowerCase().includes(sender.toLowerCase())
+          || transaction.sender_address.toLowerCase().includes(sender.toLowerCase());
+      });
+
+    if (receiver && receiver !== '')
+      filteredTransactions = filteredTransactions.filter(transaction => {
+        return transaction.receiver_name.toLowerCase().includes(receiver.toLowerCase())
+          || transaction.receiver_email.toLowerCase().includes(receiver.toLowerCase())
+          || transaction.receiver_address.toLowerCase().includes(receiver.toLowerCase());
+      });
+
+    if (date && date !== '')
+      filteredTransactions = filteredTransactions.filter(transaction => transaction.date.split(' ')[0] === date);
+
+    return filteredTransactions;
+  };
+
   return (
     <div>
       <MiniTopbar title='Transactions' />
-      {transactions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No transactions recorded yet.</h2>}
-      <div className='flex flex-col gap-3 items-center'>
-        {transactions.map(transaction =>
-          <TransactionCard key={transaction.id} transaction={transaction} clickHandler={() => handleOpenTransaction(transaction)} />
-        )}
+      <div className='flex flex-col-reverse gap-2 lg:grid lg:grid-cols-3 2xl:grid-cols-4 lg:gap-4 h-full w-full'>
+        <div className='lg:col-span-2 2xl:col-span-3'>
+          {transactions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No transactions recorded.</h2>}
+          <div className='flex flex-col gap-3 items-center'>
+            {getFilteredTransactions().map(transaction =>
+              <TransactionCard key={transaction.id} transaction={transaction} clickHandler={() => handleOpenTransaction(transaction)} />
+            )}
+          </div>
+        </div>
+        <Sidebar className='bg-white dark:bg-gray-800 lg:col-span-1 2xl:col-span-1' />
       </div>
       <TransactionModal open={openModal} setOpen={setOpenModal} transaction={selectedTransaction} />
     </div>
+  );
+};
+
+export const TransactionHistory = () => {
+  return (
+    <FilterProvider>
+      <Transactions />
+    </FilterProvider>
   );
 };
