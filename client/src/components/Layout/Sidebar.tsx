@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import {
   HomeIcon, FlagIcon, CollectionIcon, ShoppingCartIcon,
   SwitchHorizontalIcon, InformationCircleIcon, MenuIcon, XIcon
@@ -31,7 +31,6 @@ type SidebarLinkProps = {
   url: string;
   content: string;
   setOpen: (open: boolean) => void;
-  active: boolean;
 };
 
 type SidebarProps = {
@@ -69,19 +68,19 @@ const SidebarHead = () => (
   </Link>
 );
 
-const SidebarLink = ({ icon, url, content, setOpen, active }: SidebarLinkProps) => (
-  <Link
+const SidebarLink = ({ icon, url, content, setOpen }: SidebarLinkProps) => (
+  <NavLink
     to={url}
     onClick={() => setOpen(false)}
-    className={`
-      flex items-center p-2 m-1 text-lg font-semibold text-gray-600 rounded-lg hover:bg-gray-200 
+    className={({ isActive }) => `
+    flex items-center p-2 m-1 text-lg font-semibold text-gray-600 rounded-lg hover:bg-gray-200 
     hover:text-gray-800 transition-colors dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-900
-      ${active ? 'bg-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-900' : ''}
+      ${isActive ? 'bg-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-900' : ''}
     `}
   >
     {icon}
     {content}
-  </Link>
+  </NavLink>
 );
 
 const SidebarFooter = () => {
@@ -158,7 +157,6 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
                         url={l.url}
                         content={l.content}
                         setOpen={setOpen}
-                        active={window.location.pathname.startsWith(l.url)}
                       />
                     </li>
                   );

@@ -1,12 +1,14 @@
 import React from 'react';
 
 import { QRModal } from './QRModal';
+import { SearchBar } from '../../../../components/Form/SearchBar';
 import { EditOfferMenu } from '../Menus/EditOfferMenu';
 
 import { Offer } from '../../../../types';
 import { useData } from '../../../../context/DataContext';
 
 export const OffersTable = () => {
+  const [searchValue, setSearchValue] = React.useState('');
   const [openSlide, setOpenSlide] = React.useState(false);
   const [openQR, setOpenQR] = React.useState(false);
   const [activeID, setActiveID] = React.useState('');
@@ -23,11 +25,28 @@ export const OffersTable = () => {
     setOpenSlide(true);
   };
 
+  const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.value;
+    setSearchValue(value);
+  };
+
+  const offers = searchValue === ''
+    ? data.offers
+    : data.offers.filter(offer => {
+      return offer.name.toLowerCase().includes(searchValue.toLowerCase())
+        || offer.company_name.toLowerCase().includes(searchValue.toLowerCase())
+        || offer.description.toLowerCase().includes(searchValue.toLowerCase());
+    });
+
   return (
     <>
       <EditOfferMenu offer={slideOffer} open={openSlide} setOpen={setOpenSlide} />
       <QRModal open={openQR} setOpen={setOpenQR} url={`${window.location.href}/redeem/${activeID}`} />
-      <div className="shadow overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800">
+      <div className="shadow overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800 bg-white dark:bg-gray-800 divide-y divide-gray-500">
+        <div className='m-2 px-2 sm:px-3.5 flex items-center justify-between'>
+          <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>Offers</h2>
+          <SearchBar value={searchValue} changeHandler={handleSearch} />
+        </div>
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
           <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
@@ -61,7 +80,7 @@ export const OffersTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-600 dark:bg-gray-800">
-            {data.offers.map((offer) => (
+            {offers.map((offer) => (
               <tr key={offer.id}>
                 <td className="px-2 py-2 whitespace-nowrap">
                   <div className="flex items-center">

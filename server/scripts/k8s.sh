@@ -4,4 +4,4 @@
 kompose convert --volumes hostPath -o k8s
 
 # deploy to cluster
-kubectl apply -f k8s/
+kubectl apply -f k8s/ --namespace socialcoin

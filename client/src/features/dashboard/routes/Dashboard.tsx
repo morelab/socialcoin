@@ -91,7 +91,7 @@ const CreateButton = ({ index }: HeaderProps) => {
       <button
         onClick={() => setOpen(!open)}
         type="button"
-        className="flex rounded-lg items-center px-3 py-2 ml-5 sm:ml-7 text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition-colors"
+        className="flex rounded-lg items-center px-3 py-2 text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition-colors"
       >
         <span className="sr-only">{`Create new ${type}`}</span>
         <PlusIcon className="w-6 h-6 md:mr-2" aria-hidden="true" />
