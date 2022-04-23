@@ -20,7 +20,7 @@ def action_reward(*, from_address: str, to_address: str, from_balance: int, acti
         caller_key=admin_key,
         promoter=from_address,
         to=to_address,
-        action_id=action_id,
+        action_id=str(action_id),
         reward=reward,
         time=int(time.time()),
         ipfs_hash=img_hash
@@ -85,7 +85,7 @@ class OptionalActionSchema(Schema):
     campaign_id = fields.Str()
     
 class ActionRegisterSchema(Schema):
-    kpi = fields.Int(required=True)
+    kpi = fields.Int(required=True, type=float)
     verification_url = fields.Str()
     image_proof = fields.Raw(type='file')   # TODO test if this works
 
@@ -226,6 +226,8 @@ class ActionRegister(Resource):
         if user.role == 'PM':
             return {'error': 'promoters cannot register actions'}, 403
         
+        old_balance = blockchain_manager.balance_of(user.blockchain_public)
+        
         if not is_valid_uuid(action_id):
             return {'message': f'no action with id {action_id} found'}, 404
         
@@ -237,6 +239,7 @@ class ActionRegister(Resource):
         company = User.get(action.company_id)
         company_balance = blockchain_manager.balance_of(company.blockchain_public)
         
+        # TODO check company balance on API instead of on the blockchain
         # TODO test if the validation works properly
         
         json_data = dict(request.form)
@@ -246,7 +249,7 @@ class ActionRegister(Resource):
             return err.messages, 400
         
         kpi = data.get('kpi')   # 'multiplier' of the action
-        url_proof = data.get('verification_url')        # external optional proof URL (e.g. Strava)
+        url_proof = data.get('verification_url')        # external proof URL (e.g. Strava)
         image_proof = request.files.get('image_proof')  # mandatory photo proof (e.g. Strava)
         reward = action.reward * float(kpi)    # adjust to the contrat decimals
         
@@ -272,4 +275,7 @@ class ActionRegister(Resource):
         action.kpi += int(kpi)
         action.save()
         
-        return {'success': True}
+        return {
+            'new_balance': blockchain_manager.balance_of(user.blockchain_public),
+            'old_balance': old_balance
+        }
