@@ -40,6 +40,10 @@ type SidebarProps = {
   setOpen: (open: boolean) => void;
 };
 
+type FooterProps = {
+  closeMenu: () => void;
+};
+
 type LangsDicts = {
   [key: string]: string;
 };
@@ -178,7 +182,7 @@ const FooterMenu = () => {
   );
 };
 
-const SidebarFooter = () => {
+const SidebarFooter = ({ closeMenu }: FooterProps) => {
   const { user } = useUser();
   const { t } = useTranslation();
 
@@ -190,7 +194,13 @@ const SidebarFooter = () => {
         <div className='flex flex-col items-start justify-center'>
           {/* TODO revise font size on mobile */}
           <span className='text-sm font-bold'>{reduceName(user?.name)}</span>
-          <Link to='/profile' className='text-sm text-indigo-400 hover:underline'>{t('sidebar.viewProfile')}</Link>
+          <Link
+            to='/profile'
+            className='text-sm text-indigo-400 hover:underline'
+            onClick={closeMenu}
+          >
+            {t('sidebar.viewProfile')}
+          </Link>
         </div>
         <div className='col-span-1'>
           <FooterMenu />
@@ -205,16 +215,16 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
   const { t } = useTranslation();
 
   const openHandler = () => setOpen(!open);
-  const sidebarRef = React.useRef();
+  const sidebarRef = React.useRef<HTMLDivElement>(null);
 
   const onClickOutside = React.useCallback(() => setOpen(false), []);
 
-  // useClickOutside(sidebarRef, onClickOutside);
+  useClickOutside(sidebarRef, onClickOutside);
 
   return (
     <>
       <OpenButton open={open} handler={openHandler} />
-      <div ref={sidebarRef.current} className={`h-screen w-72 fixed bg-white dark:bg-gray-800 lg:border-0 border-r border-gray-300 dark:border-r-gray-700 shadow transition-all duration-300 ease-out z-10 lg:ml-0 ${open ? '' : '-ml-72'}`}>
+      <div ref={sidebarRef} className={`h-screen w-72 fixed bg-white dark:bg-gray-800 lg:border-0 border-r border-gray-300 dark:border-r-gray-700 shadow transition-all duration-300 ease-out z-10 lg:ml-0 ${open ? '' : '-ml-72'}`}>
         <SidebarHead />
         {user &&
           <div className='flex flex-col h-full pb-20 divide-y-2 divide-gray-300 dark:divide-gray-700'>
@@ -234,7 +244,7 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
                 }
               })}
             </ul>
-            <SidebarFooter />
+            <SidebarFooter closeMenu={() => setOpen(false)} />
           </div>
         }
       </div>

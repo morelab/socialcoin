@@ -1,14 +1,12 @@
 import React from 'react';
 
-export default function useClickOutside(elRef: React.MutableRefObject<any>, callback: () => void) {
-  const callbackRef = React.useRef<() => void>();
-  callbackRef.current = callback;
+export default function useClickOutside(elRef: React.RefObject<HTMLDivElement>, callback: () => void) {
+  const callbackRef = React.useRef<() => void>(callback);
+  // callbackRef.current = callback;
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // TODO check if '&& callback' is necessary
-      // if (!elRef?.current?.contains(event.target) && callback) {
-      if (!elRef?.current?.contains(event.target)) {
+      if (!elRef?.current?.contains(event.target as Node)) {
         if (callbackRef.current) callbackRef.current(); // TODO check if adding 'event' inside current() is necessary
       }
     };
