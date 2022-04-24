@@ -46,7 +46,7 @@ export const OffersTable = () => {
       <QRModal open={openQR} setOpen={setOpenQR} url={`${window.location.href}/redeem/${activeID}`} />
       <div className="shadow overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800 bg-white dark:bg-gray-800 divide-y divide-gray-500">
         <div className='m-2 px-2 sm:px-3.5 flex items-center justify-between'>
-          <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>{t('common.offers')}</h2>
+          <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>{t('main.offers')}</h2>
           <SearchBar value={searchValue} changeHandler={handleSearch} />
         </div>
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">

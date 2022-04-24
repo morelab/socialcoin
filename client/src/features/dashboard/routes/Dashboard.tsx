@@ -6,6 +6,7 @@ import {
   ShoppingCartIcon,
   UsersIcon,
 } from '@heroicons/react/solid';
+import { useTranslation } from 'react-i18next';
 
 import { NewCampaignMenu } from '../components/Menus/NewCampaignMenu';
 import { NewActionMenu } from '../components/Menus/NewActionMenu';
@@ -19,7 +20,6 @@ import { UsersTable } from '../components/Tables/UsersTable';
 import { useUser } from '../../../context/UserContext';
 import { Tab } from '@headlessui/react';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
-import { useTranslation } from 'react-i18next';
 
 
 type HeaderProps = {
@@ -27,12 +27,14 @@ type HeaderProps = {
 };
 
 type TabProps = {
-  content: 'Campaigns' | 'Actions' | 'Offers' | 'Users';
+  content: 'campaigns' | 'actions' | 'offers' | 'users';
   active?: boolean;
 };
 
 
 const DashboardTab = ({ content, active }: TabProps) => {
+  const { t } = useTranslation();
+
   const className = active
     ? 'h-16 inline-flex items-center px-5 sm:px-4 py-4 text-md font-medium text-center text-blue-500 rounded-t-lg border-b-2 border-blue-600 transition-colors group dark:text-blue-300 dark:border-blue-300'
     : 'h-16 inline-flex items-center px-5 sm:px-4 py-4 text-md font-medium text-center text-gray-400 rounded-t-lg border-b-2 border-transparent transition-colors hover:text-gray-500 hover:border-gray-300 dark:hover:text-gray-300 group';
@@ -43,13 +45,13 @@ const DashboardTab = ({ content, active }: TabProps) => {
 
   let icon: JSX.Element;
   switch (content) {
-    case 'Campaigns':
+    case 'campaigns':
       icon = <FlagIcon className={iconClassname} />;
       break;
-    case 'Actions':
+    case 'actions':
       icon = <CollectionIcon className={iconClassname} />;
       break;
-    case 'Offers':
+    case 'offers':
       icon = <ShoppingCartIcon className={iconClassname} />;
       break;
     default:
@@ -61,7 +63,7 @@ const DashboardTab = ({ content, active }: TabProps) => {
     <div className={className}>
       {icon}
       <span className='hidden sm:inline'>
-        {content}
+        {t(`main.${content}`)}
       </span>
     </div>
   );
@@ -106,7 +108,6 @@ const CreateButton = ({ index }: HeaderProps) => {
 
 export const Dashboard = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const { t } = useTranslation();
   const { user } = useUser();
 
   if (!user) return null;
@@ -115,10 +116,10 @@ export const Dashboard = () => {
     <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
       <Tab.List as={MiniTopbar}>
         <div>
-          <Tab>{({ selected }) => <DashboardTab content={t('main.campaigns')} active={selected} />}</Tab>
-          <Tab>{({ selected }) => <DashboardTab content={t('main.actions')} active={selected} />}</Tab>
-          <Tab>{({ selected }) => <DashboardTab content={t('main.offers')} active={selected} />}</Tab>
-          {user.role === 'AD' && <Tab>{({ selected }) => <DashboardTab content={t('main.users')} active={selected} />}</Tab>}
+          <Tab>{({ selected }) => <DashboardTab content="campaigns" active={selected} />}</Tab>
+          <Tab>{({ selected }) => <DashboardTab content="actions" active={selected} />}</Tab>
+          <Tab>{({ selected }) => <DashboardTab content="offers" active={selected} />}</Tab>
+          {user.role === 'AD' && <Tab>{({ selected }) => <DashboardTab content="users" active={selected} />}</Tab>}
         </div>
         <CreateButton index={selectedIndex} />
       </Tab.List>

@@ -1,5 +1,131 @@
 {
   "translation": {
+    "about": {
+      "about": "Sobre",
+      "firstSection": {
+        "title": "Sobre Deustocoin",
+        "p1": "DeustoCoin es un proyecto que pretende fomentar el lema <strong>“Blockchain for Good”</strong> y contribuir a un mundo mejor a través de una tecnología emergente como es el Blockchain.",
+        "p2": "Dicho proyecto consta de una aplicación web en la que pueden operar tanto miembros de la universidad de Deusto como promotores de campañas pertenecientes a empresas externas a la universidad (cafeterías, museos, transporte...).",
+        "p3": "Mediante este proyecto, se pretende mejorar la imagen corporativa de la Universidad, cumpliendo con varios de los 17 ODS <strong>(Objetivos de Desarrollo Sostenible)</strong> establecidos por las Naciones Unidas."
+      },
+      "secondSection": {
+        "title": "Funcionamiento",
+        "p1": {
+          "beforeLinks": "Hay varios roles que conforman la plataforma de DeustoCoin, además de una criptomoneda compatible con ",
+          "afterLinks": "<strong>(UDCoin)</strong>, que será la moneda a canjear para las diferentes ofertas. Los roles en cuestión varían en función del usuario, y hay tres: <strong>colaborador</strong>, <strong>promotor</strong>, y un <strong>administrador</strong> que podrá realizar lastareas de los dos tipos de usuario anteriores."
+        },
+        "p2": "El <strong>colaborador</strong> podrá realizar una serie de tareas como el envío de monedas a compañeros, consulta de campañas, canjeo de UDCoins en ofertas y registro y confirmación de una buena acción para así obtener su respectiva recompensa.",
+        "p3": "Los <strong>promotores</strong> podrán lanzar campañas, recompensas y acciones, monitorizar los KPIs de las mismas, y observar en gráficas el progreso de las acciones correspondientes a las campañas."
+      }
+    },
+    "actions": {
+      "backToActions": "Volver a acciones",
+      "photoProof": "Foto de prueba",
+      "noFile": "Ningún archivo seleccionado",
+      "registerAction": "Registrar acción",
+      "rewarded": "Has sido recompensado con",
+      "successfulPayment": "Pago realizado correctamente",
+      "uploadFile": "Subir un fichero",
+      "verificationURL": "URL de verificación"
+    },
+    "common": {
+      "accept": "Aceptar",
+      "and": "y",
+      "by": "Por",
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "confirm": "Confirmar",
+      "create": "Crear",
+      "date": "Fecha",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "error": "Error",
+      "from": "De",
+      "none": "Ninguno",
+      "pleaseWait": "Por favor, espera",
+      "redeem": "Canjear",
+      "save": "Guardar",
+      "to": "A"
+    },
+    "dashboard": {
+      "seeAll": "Ver todo",
+      "menus": {
+        "createCampaign": "Crear campaña",
+        "createAction": "Crear acción",
+        "createOffer": "Crear recompensa",
+        "createNew": "Crear nuevo",
+        "campaignName": "Nombre de campaña",
+        "actionName": "Nombre de acción",
+        "offerName": "Nombre de recompensa",
+        "deleteCampaign": "Eliminar campaña",
+        "deleteAction": "Eliminar acción",
+        "deleteOffer": "Eliminar recompensa"
+      },
+      "tables": {
+        "description": "Descripción",
+        "download": "Descargar",
+        "indicator": "Indicador",
+        "name": "Nombre",
+        "price": "Precio",
+        "progress": "Progreso",
+        "reward": "Recompensa",
+        "role": "Rol",
+        "saveChanges": "Guardar cambios",
+        "saveRoleChange": "Guardar cambio de rol",
+        "target": "Objetivo",
+        "user": "Usuario"
+      }
+    },
+    "errors": {
+      "noCompanies": "Ninguna compañía registrada aún.",
+      "noActions": "No hay acciones disponibles.",
+      "noOffers": "No hay recompensas disponibles.",
+      "noTransactions": "Ninguna transacción registrada."
+    },
+    "landing": {
+      "description": "DeustoCoin pretende sacar el máximo partido de la tecnología Blockchain y llevarla al ámbito universitario, promoviendo un estilo de vida sostenible y respetuoso con el medio ambiente."
+    },
+    "main": {
+      "campaign": "Campaña",
+      "action": "Acción",
+      "offer": "Recompensa",
+      "transaction": "Transacción",
+      "user": "Usuario",
+      "campaigns": "Campañas",
+      "actions": "Acciones",
+      "offers": "Recompensas",
+      "transactions": "Transacciones",
+      "users": "Usuarios",
+      "profile": "Perfil"
+    },
+    "notifications": {
+      "introduceFileOrUrl": "Introduce un fichero o una URL de verificación válida.",
+      "noBalance": "Balance insuficiente en tu cuenta.",
+      "noCampaign": "Debes crear una campaña antes de crear una acción.",
+      "positiveKPI": "Introduce un KPI mayor que cero.",
+      "positivePrice": "El precio de la oferta debe ser mayor que cero.",
+      "positiveReward": "La recompensa de la acción debe ser mayor que cero.",
+      "positiveTarget": "El objetivo de la acción debe ser mayor que cero."
+    },
+    "profile": {
+      "confirmMsg": "¿Estás seguro de que quieres cambiar tu nombre de ",
+      "confirmNameChange": "Confirmar cambio de nombre"
+    },
+    "offers": {
+      "backToOffers": "Volver a recompensas",
+      "confirmRedemption": "Confirmar canjeo",
+      "offerRedemption": "Canjeo de recompensa",
+      "redeemOffer": "Canjear recompensa",
+      "referToCreator": "Consulta al creador de la oferta para reclamar tu recompensa."
+    },
+    "other": {
+      "blockchainAddress": "Dirección blockchain"
+    },
+    "roles": {
+      "cb": "Colaborador",
+      "pm": "Promotor",
+      "ad": "Administrador"
+    },
     "sidebar": {
       "title": "Socialcoin",
       "links": {
@@ -15,6 +141,19 @@
         "theme": "Cambiar tema",
         "logout": "Cerrar sesión"
       }
+    },
+    "transactions": {
+      "clearFilters": "Limpiar filtros",
+      "ipfsHash": "Hash de prueba de IPFS",
+      "filters": "Filtros",
+      "from": "De",
+      "quantity": "Cantidad",
+      "proofURL": "URL prueba externa",
+      "receiver": "Receptor",
+      "sender": "Remitente",
+      "showFilters": "Mostrar filtros",
+      "to": "A",
+      "transactionHash": "Hash de transaction"
     }
   }
 }

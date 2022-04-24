@@ -156,7 +156,7 @@ const FooterMenu = () => {
                     }
                     <span>{t('sidebar.footerMenu.theme')}</span>
                   </button>
-                  <button onClick={() => setOpenModal(true)} className='flex items-center justify-start gap-3 w-full rounded-lg p-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-700 transition-colors'>
+                  <button onClick={() => setOpenModal(true)} className='flex items-center justify-start gap-3 w-full rounded-lg mb-2 p-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-700 transition-colors'>
                     <LogoutIcon className='h-7 w-7 text-gray-600 dark:text-gray-100' />
                     <span>{t('sidebar.footerMenu.logout')}</span>
                   </button>
@@ -164,7 +164,7 @@ const FooterMenu = () => {
                     {Object.keys(lngs).map(lng => (
                       <button
                         key={lng}
-                        className={`rounded hover:bg-indigo-700 px-1.5 py-0.5 ${i18n.resolvedLanguage === lng ? 'bg-indigo-900' : 'bg-indigo-600'}`}
+                        className={`rounded hover:bg-indigo-400 hover:text-indigo-50 dark:hover:bg-indigo-700 px-1.5 py-0.5 ${i18n.resolvedLanguage === lng ? 'bg-indigo-400 text-indigo-50 dark:bg-indigo-900' : 'bg-indigo-300 dark:bg-indigo-600'}`}
                         onClick={() => i18n.changeLanguage(lng)}
                       >
                         {lngs[lng]}

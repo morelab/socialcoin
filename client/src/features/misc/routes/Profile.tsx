@@ -46,8 +46,8 @@ export const Profile = () => {
       <ConfirmationModal
         open={openModal}
         setOpen={setOpenModal}
-        title="Confirm name change"
-        content={`Are you sure you want to change your name from '${user?.name}' to '${formName}'?`}
+        title={t('profile.confirmNameChange')}
+        content={`${t('profile.confirmMsg')} '${user?.name}' to '${formName}'?`}
         confirmHandler={handleProfileEdit}
       />
       <div className='flex items-center justify-center w-full p-3'>

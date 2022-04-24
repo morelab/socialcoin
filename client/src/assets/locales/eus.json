@@ -9,6 +9,11 @@
         "offers": "Recompensas",
         "transactions": "Transacciones",
         "about": "Sobre"
+      },
+      "viewProfile": "Ver perfil",
+      "footerMenu": {
+        "theme": "Cambiar tema",
+        "logout": "Cerrar sesión"
       }
     }
   }
