@@ -1,11 +1,14 @@
 import { useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
-import logo from '../../../assets/logo.png';
+import { useTranslation } from 'react-i18next';
 import GoogleButton from 'react-google-button';
 
 import { useUser } from '../../../context/UserContext';
 import { useTheme } from '../../../context/ThemeContext';
+
+import logo from '../../../assets/logo.png';
+
 const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL } = process.env;
 
 type TopBarProps = {
@@ -35,6 +38,7 @@ const TopBar = ({ themeHandler, dark }: TopBarProps) => (
 export const Landing = () => {
   const { user } = useUser();
   const { dark, setDark } = useTheme();
+  const { t } = useTranslation();
 
   if (user != null) {
     return <Navigate to='/dashboard' />;
@@ -81,8 +85,7 @@ export const Landing = () => {
           <img className="h-20 w-20 mb-5" src={logo} alt="logo" />
           <h1 className="mb-4 font-semibold text-3xl dark:text-gray-100">DeustoCoin</h1>
           <p className='max-w-md mb-5 text-center dark:text-gray-100'>
-            DeustoCoin pretende sacar el máximo partido de la tecnología Blockchain y llevarla al ámbito universitario,
-            promoviendo un estilo de vida sostenible y respetuoso con el medio ambiente.
+            {t('landing.description')}
           </p>
           <GoogleButton
             onClick={openGoogleLoginPage}

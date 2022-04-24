@@ -1,5 +1,6 @@
 import React from 'react';
 import { PencilIcon } from '@heroicons/react/solid';
+import { useTranslation } from 'react-i18next';
 
 import ConfirmationModal from '../../dashboard/components/ConfirmationModal';
 
@@ -12,6 +13,7 @@ export const Profile = () => {
   const { user, setUser } = useUser();
   const [formName, setFormName] = React.useState(user?.name);
   const [openModal, setOpenModal] = React.useState(false);
+  const { t } = useTranslation();
 
   const handleFormChange = (e: React.FormEvent<HTMLInputElement>) => setFormName(e.currentTarget.value);
   const reduceAddress = (address: string | undefined) => address && address.slice(0, 7) + '...' + address.slice(address.length - 5);
@@ -32,15 +34,15 @@ export const Profile = () => {
   };
 
   const getRoleText = (role: RoleKey | undefined) => {
-    if (!role) return 'Collaborator';
-    if (role === 'AD') return 'Administrator';
-    else if (role === 'PM') return 'Promoter';
-    else return 'Collaborator';
+    if (!role) return t('roles.cb');
+    if (role === 'AD') return t('roles.ad');
+    else if (role === 'PM') return t('roles.pm');
+    else return t('roles.cb');
   };
 
   return (
     <>
-      <MiniTopbar title='Profile' />
+      <MiniTopbar title={t('main.profile')} />
       <ConfirmationModal
         open={openModal}
         setOpen={setOpenModal}
@@ -64,7 +66,7 @@ export const Profile = () => {
           <div className='p-5 pt-10 bg-white dark:bg-gray-800 rounded-lg'>
             <form action="#" method="POST" onSubmit={handleOpenModal}>
               <label htmlFor="username" className="block text-md font-medium text-gray-700 dark:text-gray-100">
-                Name
+                {t('dashboard.tables.name')}
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <input
@@ -87,13 +89,13 @@ export const Profile = () => {
               </div>
             </div>
             <div className='mt-6'>
-              <span className='block text-md font-medium text-indigo-600 dark:text-indigo-300'>Role</span>
+              <span className='block text-md font-medium text-indigo-600 dark:text-indigo-300'>{t('dashboard.tables.role')}</span>
               <div className='py-2 border-2 border-b-gray-300 border-x-transparent border-t-transparent block w-full dark:text-gray-100'>
                 {getRoleText(user?.role)}
               </div>
             </div>
             <div className='mt-6'>
-              <span className='block text-md font-medium text-indigo-600 dark:text-indigo-300'>Blockchain address</span>
+              <span className='block text-md font-medium text-indigo-600 dark:text-indigo-300'>{t('other.blockchainAddress')}</span>
               <div className='py-2 border-2 border-b-gray-300 border-x-transparent border-t-transparent block w-full dark:text-gray-100'>
                 {reduceAddress(user?.blockchain_public)}
               </div>

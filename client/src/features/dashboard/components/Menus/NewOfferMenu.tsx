@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '../../../../components/Elements/Button';
 import { InputField } from '../../../../components/Form/InputField';
@@ -32,6 +33,7 @@ const NewOfferForm = ({ close }: FormProps) => {
     description: '',
     price: 0
   });
+  const { t } = useTranslation();
   const { dispatchData } = useData();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -71,7 +73,7 @@ const NewOfferForm = ({ close }: FormProps) => {
     <div className="md:grid md:grid-cols-3 md:gap-6 mt-8">
       <div className="md:col-span-1 shadow rounded-lg bg-sky-100 dark:bg-gray-900 p-4 mb-10">
         <div className="px-4 sm:px-0">
-          <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Create offer</h3>
+          <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">{t('dashboard.menus.createOffer')}</h3>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-200">
             As a promoter, you can reward users that complete good deeds by offering them offers in exchange for the UDC
             earned. Offers must have a description detailing what the collaborators are paying for, and a price tag.
@@ -82,7 +84,7 @@ const NewOfferForm = ({ close }: FormProps) => {
         <form action="#" method="POST" onSubmit={handleSubmit}>
           <div className="bg-white dark:bg-gray-800 flex flex-col gap-4">
             <InputField
-              label="Offer name"
+              label={t('dashboard.menus.offerName')}
               name="name"
               type="text"
               value={formState.name || ''}
@@ -90,14 +92,14 @@ const NewOfferForm = ({ close }: FormProps) => {
               required
             />
             <TextareaField
-              label="Description"
+              label={t('dashboard.tables.description')}
               name="description"
               value={formState.description || ''}
               onChange={handleInputChange}
               required
             />
             <InputField
-              label="Price"
+              label={t('dashboard.tables.price')}
               name="price"
               type="number"
               value={formState.price || 0}
@@ -107,7 +109,7 @@ const NewOfferForm = ({ close }: FormProps) => {
           </div>
           <div className="py-3 text-right">
             <Button type='submit' variant='submit'>
-              Create
+              {t('common.create')}
             </Button>
           </div>
         </form>

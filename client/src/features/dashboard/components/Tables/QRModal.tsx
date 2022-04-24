@@ -1,4 +1,5 @@
 import QRCode from 'qrcode.react';
+import { useTranslation } from 'react-i18next';
 import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
 type QRModalProps = {
@@ -8,6 +9,8 @@ type QRModalProps = {
 };
 
 export const QRModal = ({ open, setOpen, url }: QRModalProps) => {
+  const { t } = useTranslation();
+
   return (
     <ContentModal open={open} setOpen={setOpen}>
       <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
@@ -24,7 +27,7 @@ export const QRModal = ({ open, setOpen, url }: QRModalProps) => {
             className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base text-white font-mediumtext-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
             onClick={() => setOpen(false)}
           >
-            Close
+            {t('common.close')}
           </button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { QuestionMarkCircleIcon } from '@heroicons/react/solid';
+import { useTranslation } from 'react-i18next';
 import { ContentModal } from '../../../components/Overlay/ContentModal';
 
 type ConfirmationModalProps = {
@@ -10,6 +11,8 @@ type ConfirmationModalProps = {
 };
 
 const ConfirmationModal = ({ open, setOpen, title, content, confirmHandler }: ConfirmationModalProps) => {
+  const { t } = useTranslation();
+
   return (
     <ContentModal open={open} setOpen={setOpen} className='p-4 sm:px-8 sm:pt-8 sm:pb-6'>
       <div className="mb-3 flex flex-col items-center justify-center gap-4">
@@ -31,7 +34,7 @@ const ConfirmationModal = ({ open, setOpen, title, content, confirmHandler }: Co
             setOpen(false);
           }}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
         <button
           type="button"
@@ -41,7 +44,7 @@ const ConfirmationModal = ({ open, setOpen, title, content, confirmHandler }: Co
             setOpen(false);
           }}
         >
-          Confirm
+          {t('common.confirm')}
         </button>
       </div>
     </ContentModal>

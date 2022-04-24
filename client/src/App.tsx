@@ -1,3 +1,4 @@
+import React from 'react';
 import { HashRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,9 +9,11 @@ import { ThemeProvider } from './context/ThemeContext';
 import { DataProvider } from './context/DataContext';
 import { AppRoutes } from './routes';
 
+
+// TODO Suspense fallback component
 function App() {
   return (
-    <>
+    <React.Suspense fallback="...loading">
       <UserProvider>
         <ThemeProvider>
           <DataProvider>
@@ -32,7 +35,7 @@ function App() {
         draggable
         pauseOnHover
       />
-    </>
+    </React.Suspense>
   );
 }
 

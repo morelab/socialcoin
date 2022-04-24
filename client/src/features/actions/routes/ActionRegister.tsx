@@ -1,15 +1,16 @@
 import React, { FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { Spinner } from '../../../components/Elements/Spinner';
 import { Button } from '../../../components/Elements/Button';
 import { InputField } from '../../../components/Form/InputField';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 import { Action } from '../../../types';
 import { notifyWarning } from '../../../utils/notifications';
 import { getAction } from '../api/getAction';
 import { registerAction } from '../api/registerAction';
-import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 type RegisterStates = 'initial' | 'registering' | 'registered';
 
@@ -31,6 +32,7 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
     files: []
   });
   const [fileName, setFileName] = React.useState('');
+  const { t } = useTranslation();
   const fileInputRef = React.createRef<HTMLInputElement>();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -97,7 +99,7 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
           />
           <div className='col-span-6'>
             <label htmlFor='photo-proof' className="block text-md font-medium text-gray-700 dark:text-gray-100">
-              Photo proof
+              {t('actions.photoProof')}
             </label>
             <div onClick={handleFileInputClick} className="cursor-pointer mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
               <div className="space-y-1 text-center">
@@ -120,16 +122,16 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
                     htmlFor="file-upload"
                     className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
                   >
-                    <span>Upload a file</span>
+                    <span>{t('actions.uploadFile')}</span>
                     <input id="file-upload" name="file-upload" type="file" className="sr-only" ref={fileInputRef} onChange={handleFileUpload} />
                   </label>
                 </div>
-                <p className="text-xs text-gray-500">{fileName.length < 2 ? 'No file selected.' : fileName}</p>
+                <p className="text-xs text-gray-500">{fileName.length < 2 ? t('actions.noFile') : fileName}</p>
               </div>
             </div>
           </div>
           <InputField
-            label="Verification URL"
+            label={t('actions.verificationURL')}
             name="verificationUrl"
             type="text"
             value={formState.verificationUrl}
@@ -137,7 +139,7 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
           />
         </div>
         <div className="px-4 py-3 text-right sm:px-6">
-          <Button type='submit' variant='submit'>Register action</Button>
+          <Button type='submit' variant='submit'>{t('actions.registerAction')}</Button>
         </div>
       </form>
     </div>
@@ -148,6 +150,7 @@ export const ActionRegister = () => {
   const actionID = useParams<{ id: string }>().id;
   const [action, setAction] = React.useState<Action>({} as Action);
   const [registerState, setRegisterState] = React.useState<RegisterStates>('initial');
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -172,16 +175,16 @@ export const ActionRegister = () => {
     if (registerState === 'registering') {
       return (
         <div className='flex flex-col items-center justify-center py-16'>
-          <h2 className='text-xl dark:text-gray-200'>Please wait...</h2>
+          <h2 className='text-xl dark:text-gray-200'>{t('common.pleaseWait')}...</h2>
           <Spinner />
         </div>
       );
     } else if (registerState === 'registered') {
       return (
         <div className='flex flex-col items-center justify-center py-16'>
-          <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-4'>The payment was successful!</h3>
+          <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-4'>{t('actions.successfulPayment')}!</h3>
           <p className='text-center dark:text-gray-300 mb-5'>
-            You have been rewarded {action.reward / 100} UDC.
+            {t('actions.rewarded')} {action.reward / 100} UDC.
           </p>
           <button
             type="button"
@@ -190,7 +193,7 @@ export const ActionRegister = () => {
                 rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
                 focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
           >
-            Go back to actions
+            {t('actions.backToActions')}
           </button>
         </div>
       );

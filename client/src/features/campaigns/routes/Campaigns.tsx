@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/solid';
+import { useTranslation } from 'react-i18next';
 
 import { CompanyCampaigns, getCampaignsByCompany } from '../api/getCampaignsByCompany';
 import { ContentModal } from '../../../components/Overlay/ContentModal';
@@ -16,6 +17,8 @@ type CampaignModalProps = {
 
 
 const CampaignModal = ({ open, setOpen, title, content }: CampaignModalProps) => {
+  const { t } = useTranslation();
+
   return (
     <ContentModal open={open} setOpen={setOpen}>
       <div className="sm:flex sm:items-start p-5">
@@ -36,7 +39,7 @@ const CampaignModal = ({ open, setOpen, title, content }: CampaignModalProps) =>
           className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
           onClick={() => setOpen(false)}
         >
-          Close
+          {t('common.close')}
         </button>
       </div>
     </ContentModal>
@@ -49,6 +52,7 @@ const CompanySection = ({ company, campaigns }: CompanyCampaigns) => {
     title: '',
     content: ''
   });
+  const { t } = useTranslation();
 
   const handleOpenModal = (title: string, content: string) => {
     setData({
@@ -63,7 +67,7 @@ const CompanySection = ({ company, campaigns }: CompanyCampaigns) => {
       <div className='rounded-lg shadow-md overflow-hidden w-full flex-grow divide-y-2 divide-gray-200 dark:divide-gray-500 bg-white dark:bg-gray-800'>
         <div className='px-4 py-3 dark:bg-gray-900'>
           <h1 className='font-bold text-lg text-gray-800 dark:text-gray-50'>
-            By {company.name}:
+            {t('common.by')} {company.name}:
           </h1>
         </div>
         <div className='px-4 py-3 text-gray-800 dark:text-gray-50'>
@@ -91,6 +95,7 @@ const CompanySection = ({ company, campaigns }: CompanyCampaigns) => {
 
 export const Campaigns = () => {
   const [companies, setCompanies] = React.useState<CompanyCampaigns[]>([]);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     getCampaignsByCompany()
@@ -101,8 +106,8 @@ export const Campaigns = () => {
 
   return (
     <>
-      <MiniTopbar title='Campaigns' />
-      {companies.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No companies registered yet.</h2>}
+      <MiniTopbar title={t('main.campaigns')} />
+      {companies.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noCompanies')}</h2>}
       <div className='flex flex-wrap gap-6'>
         {companies.map(entry => <CompanySection key={`c-${entry.company.id}`} company={entry.company} campaigns={entry.campaigns} />)}
       </div>

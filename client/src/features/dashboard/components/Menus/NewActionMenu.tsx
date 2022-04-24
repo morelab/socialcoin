@@ -10,6 +10,7 @@ import { useData } from '../../../../context/DataContext';
 import { notifyError, notifyWarning } from '../../../../utils/notifications';
 import { useUser } from '../../../../context/UserContext';
 import { createAction } from '../../api/createAction';
+import { useTranslation } from 'react-i18next';
 
 
 type FormProps = {
@@ -41,6 +42,7 @@ const NewActionForm = ({ close }: FormProps) => {
     kpi_indicator: '',
     campaign_id: data.campaigns[0].id
   });
+  const { t } = useTranslation();
   const { user } = useUser();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -106,7 +108,7 @@ const NewActionForm = ({ close }: FormProps) => {
     <div className="md:grid md:grid-cols-3 md:gap-6 mt-8">
       <div className="md:col-span-1 shadow rounded-lg bg-sky-100 dark:bg-gray-900 p-4 mb-10">
         <div className="px-4 sm:px-0">
-          <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Create action</h3>
+          <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">{t('dashboard.menus.createAction')}</h3>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-200">
             Good deeds are actions that collaborators can complete to help fulfill the good deed&apos;s campaign&apos;s
             objectives. They have a reward and target for its completion.
@@ -117,7 +119,7 @@ const NewActionForm = ({ close }: FormProps) => {
         <form action="#" method="POST" onSubmit={handleSubmit}>
           <div className="bg-white dark:bg-gray-800 flex flex-col gap-4">
             <InputField
-              label="Action name"
+              label={t('dashboard.menus.actionName')}
               name="name"
               type="text"
               value={formState.name}
@@ -125,7 +127,7 @@ const NewActionForm = ({ close }: FormProps) => {
               required
             />
             <InputField
-              label="Description"
+              label={t('dashboard.tables.description')}
               name="description"
               type="text"
               value={formState.description}
@@ -143,7 +145,7 @@ const NewActionForm = ({ close }: FormProps) => {
 
             <div className='flex items-center gap-2 justify-between col-span-6'>
               <InputField
-                label="Reward"
+                label={t('dashboard.tables.reward')}
                 name="reward"
                 type="number"
                 value={formState.reward}
@@ -152,7 +154,7 @@ const NewActionForm = ({ close }: FormProps) => {
                 isHalf={true}
               />
               <InputField
-                label="Target"
+                label={t('dashboard.tables.target')}
                 name="kpi_target"
                 type="number"
                 value={formState.kpi_target}
@@ -162,7 +164,7 @@ const NewActionForm = ({ close }: FormProps) => {
               />
             </div>
             <SelectField
-              label="Campaign"
+              label={t('dashboard.main.campaign')}
               name="campaign_id"
               options={campaigns}
               value={formState.campaign_id}
@@ -171,7 +173,7 @@ const NewActionForm = ({ close }: FormProps) => {
           </div>
           <div className="py-3 text-right">
             <Button type='submit' variant='submit'>
-              Create
+              {t('common.create')}
             </Button>
           </div>
         </form>
@@ -181,6 +183,7 @@ const NewActionForm = ({ close }: FormProps) => {
 };
 
 export const NewActionMenu = ({ open, setOpen }: MenuProps) => {
+  const { t } = useTranslation();
   const { data } = useData();
 
   if (data.campaigns.length === 0) {
@@ -190,7 +193,7 @@ export const NewActionMenu = ({ open, setOpen }: MenuProps) => {
           <div className="mx-auto flex-shrink-0 flex items-center justify-center h-14 w-14 rounded-full bg-indigo-200 dark:bg-indigo-100 sm:mx-0 sm:h-16 sm:w-16">
             <ExclamationIcon className="h-10 w-10 text-indigo-600" aria-hidden="true" />
           </div>
-          <h1 className='text-xl font-bold dark:text-gray-100'>Error</h1>
+          <h1 className='text-xl font-bold dark:text-gray-100'>{t('common.error')}</h1>
           <p className='text-md text-center dark:text-gray-200'>
             Please create a campaign before creating an action.
           </p>
@@ -203,7 +206,7 @@ export const NewActionMenu = ({ open, setOpen }: MenuProps) => {
               setOpen(false);
             }}
           >
-            Accept
+            {t('common.accept')}
           </button>
         </div>
       </ContentModal>

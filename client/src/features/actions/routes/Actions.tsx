@@ -1,5 +1,7 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 import { useData } from '../../../context/DataContext';
 
@@ -10,6 +12,8 @@ type ActionProps = {
 };
 
 const ActionCard = ({ action }: ActionProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className='flex flex-col rounded-lg shadow-md w-96 overflow-hidden'>
       <div className='flex-grow divide-y-2 divide-gray-200 dark:divide-gray-500 bg-white dark:bg-gray-800'>
@@ -22,21 +26,22 @@ const ActionCard = ({ action }: ActionProps) => {
         </div>
       </div>
       <Link to={`/actions/register/${action.id}`} className='flex items-center justify-center h-12 w-full text-xl transition-colors text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400'>
-        <span>Register action</span>
+        <span>{t('actions.registerAction')}</span>
       </Link>
     </div>
   );
 };
 
 export const Actions = () => {
+  const { t } = useTranslation();
   const { data } = useData();
 
   const actions = data.actions.filter(action => action.kpi < action.kpi_target);
 
   return (
     <>
-      <MiniTopbar title='Actions' />
-      {actions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No actions available.</h2>}
+      <MiniTopbar title={t('main.actions')} />
+      {actions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noActions')}</h2>}
       <div className='flex flex-wrap gap-6 px-2 sm:px-0'>
         {actions.map(action =>
           <ActionCard key={action.id} action={action} />

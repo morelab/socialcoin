@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShoppingBagIcon, SwitchHorizontalIcon } from '@heroicons/react/outline';
+import { useTranslation } from 'react-i18next';
 
 import { Spinner } from '../../../components/Elements/Spinner';
 import ConfirmationModal from '../../dashboard/components/ConfirmationModal';
@@ -19,6 +20,7 @@ export const OfferRedeem = () => {
   const [openModal, setOpenModal] = React.useState(false);
   const [paymentState, setPaymentState] = React.useState('initial');
   const { user, setUser } = useUser();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -60,16 +62,16 @@ export const OfferRedeem = () => {
     if (paymentState === 'redeeming') {
       return (
         <div className='flex flex-col items-center justify-center'>
-          <h2 className='text-xl dark:text-gray-200'>Please wait...</h2>
+          <h2 className='text-xl dark:text-gray-200'>{t('common.pleaseWait')}...</h2>
           <Spinner />
         </div>
       );
     } else if (paymentState === 'redeemed') {
       return (
         <div className='flex flex-col items-center justify-center'>
-          <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-4'>The payment was successful!</h3>
+          <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-4'>{t('actions.successfulPayment')}!</h3>
           <p className='text-center dark:text-gray-300 mb-5'>
-            Please refer to the offer creator to claim your reward.
+            {t('offers.referToCreator')}
           </p>
           <button
             type="button"
@@ -78,7 +80,7 @@ export const OfferRedeem = () => {
                 rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
                 focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
           >
-            Go back to offers
+            {t('offers.backToOffers')}
           </button>
         </div>
       );
@@ -98,7 +100,7 @@ export const OfferRedeem = () => {
                 rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
                 focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
             >
-              Go back to offers
+              {t('offers.backToOffers')}
             </button>
             <button
               type="button"
@@ -107,7 +109,7 @@ export const OfferRedeem = () => {
                 rounded-md text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400
                 focus:outline-none focus:ring-2 mb-3 focus:ring-offset-2 focus:ring-indigo-500 transition"
             >
-              Redeem
+              {t('common.redeem')}
             </button>
           </div>
         </>
@@ -120,11 +122,11 @@ export const OfferRedeem = () => {
       <ConfirmationModal
         open={openModal}
         setOpen={setOpenModal}
-        title="Confirm redemption"
-        content={`Do you want to redeem the offer '${offer.name}' in exchange for ${offer.price / 100} UDC?`}
+        title={t('offers.confirmRedemption')}
+        content={`Do you want to redeem the offer '${offer.name}' in exchange for ${offer.price / 100} UDC?`} // TODO
         confirmHandler={handlePayment}
       />
-      <MiniTopbar title={`Offer redemption - ${user && user.balance / 100} UDC`} />
+      <MiniTopbar title={`${t('offers.offerRedemption')} - ${user && user.balance / 100} UDC`} />
       <div className='flex items-center justify-center transition'>
         <div className='shadow-lg max-w-3xl m-5 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden divide-y divide-gray-200 dark:divide-gray-700'>
           <div className='bg-gray-50 dark:bg-gray-900 h-full w-full px-7 sm:px-10 lg:px-20 py-7 flex flex-col items-center gap-4'>

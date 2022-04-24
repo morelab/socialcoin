@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { QRModal } from './QRModal';
 import { EditActionMenu } from '../Menus/EditActionMenu';
@@ -13,6 +14,7 @@ export const ActionsTable = () => {
   const [openQR, setOpenQR] = React.useState(false);
   const [activeID, setActiveID] = React.useState('');
   const [slideAction, setSlideAction] = React.useState<Action>({} as Action);
+  const { t } = useTranslation();
   const { data } = useData();
 
   const handleQR = (id: string) => {
@@ -45,7 +47,7 @@ export const ActionsTable = () => {
       <QRModal open={openQR} setOpen={setOpenQR} url={`${window.location.href}/register/${activeID}`} />
       <div className="shadow block whitespace-nowrap overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800 bg-white dark:bg-gray-800 divide-y divide-gray-500">
         <div className='m-2 px-2 sm:px-3.5 flex items-center justify-between'>
-          <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>Actions</h2>
+          <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>{t('main.actions')}</h2>
           <SearchBar value={searchValue} changeHandler={handleSearch} />
         </div>
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
@@ -55,31 +57,31 @@ export const ActionsTable = () => {
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Name
+                {t('dashboard.tables.name')}
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Description
+                {t('dashboard.tables.description')}
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Reward
+                {t('dashboard.tables.reward')}
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Indicator
+                {t('dashboard.tables.indicator')}
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Progress
+                {t('dashboard.tables.progress')}
               </th>
               <th
                 scope="col"
@@ -88,7 +90,7 @@ export const ActionsTable = () => {
                 QR
               </th>
               <th scope="col" className="relative px-6 py-3">
-                <span className="sr-only">Edit</span>
+                <span className="sr-only">{t('common.edit')}</span>
               </th>
             </tr>
           </thead>
@@ -117,12 +119,12 @@ export const ActionsTable = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-normal">
                   <div onClick={() => handleQR(action.id)} className="cursor-pointer text-md text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200">
-                    Download
+                    {t('dashboard.tables.download')}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-md font-medium">
                   <div onClick={() => handleEdit(action)} className="cursor-pointer text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200">
-                    Edit
+                    {t('common.edit')}
                   </div>
                 </td>
               </tr>

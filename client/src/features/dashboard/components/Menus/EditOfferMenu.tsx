@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '../../../../components/Elements/Button';
 import { InputField } from '../../../../components/Form/InputField';
@@ -38,6 +39,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
     price: offer.price / 100
   });
   const [openDelete, setOpenDelete] = React.useState(false);
+  const { t } = useTranslation();
   const { dispatchData } = useData();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -86,7 +88,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
     <div className="mt-5 md:mt-0 md:col-span-2">
       <form action="#" method="POST" onSubmit={handleOfferSubmit} className='flex flex-col gap-4'>
         <InputField
-          label="Offer name"
+          label={t('dashboard.menus.offerName')}
           name="name"
           type="text"
           value={formState.name}
@@ -94,14 +96,14 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
           required
         />
         <TextareaField
-          label="Description"
+          label={t('dashboard.tables.description')}
           name="description"
           value={formState.description}
           onChange={handleInputChange}
           required
         />
         <InputField
-          label="Price"
+          label={t('dashboard.tables.price')}
           name="price"
           type="number"
           value={formState.price}
@@ -109,16 +111,16 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
           required
         />
         <div className="py-3 text-right">
-          <Button type='submit' variant='submit'>Save</Button>
-          <Button variant='delete' onClick={() => setOpenDelete(true)}>Delete offer</Button>
+          <Button type='submit' variant='submit'>{t('common.save')}</Button>
+          <Button variant='delete' onClick={() => setOpenDelete(true)}>{t('dashboard.menus.deleteOffer')}</Button>
         </div>
       </form>
       <DeletionModal
         open={openDelete}
         setOpen={setOpenDelete}
-        title="Delete offer"
+        title={t('dashboard.menus.deleteOffer')}
         content={`Are you sure you want to delete the offer '${offer.name}'? This action cannot be undone.`}
-        buttonValue="Delete"
+        buttonValue={t('common.delete')}
         confirmHandler={handleDelete}
       />
     </div>

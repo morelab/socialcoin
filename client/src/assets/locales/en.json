@@ -1,0 +1,137 @@
+{
+  "translation": {
+    "about": {
+      "about": "About",
+      "firstSection": {
+        "title": "About Deustocoin",
+        "p1": "DeustoCoin es un proyecto que pretende fomentar el lema “Blockchain for Good” y contribuir a un mundo mejor a través de una tecnología emergente como es el Blockchain.",
+        "p2": "Dicho proyecto consta de una aplicación web en la que pueden operar tanto miembros de la universidad de Deusto como promotores de campañas pertenecientes a empresas externas a la universidad (cafeterías, museos, transporte...).",
+        "p3": "Mediante este proyecto, se pretende mejorar la imagen corporativa de la Universidad, cumpliendo con varios de los 17 ODS (Objetivos de Desarrollo Sostenible) establecidos por las Naciones Unidas."
+      },
+      "secondSection": {
+        "title": "How it works"
+      }
+    },
+    "actions": {
+      "backToActions": "Go back to actions",
+      "photoProof": "Photo proof",
+      "noFile": "No file selected",
+      "registerAction": "Register action",
+      "rewarded": "You have been rewarded",
+      "successfulPayment": "The payment was successful",
+      "uploadFile": "Upload a file",
+      "verificationURL": "Verification URL"
+    },
+    "common": {
+      "accept": "Accept",
+      "by": "By",
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm",
+      "create": "Create",
+      "date": "Date",
+      "delete": "Delete",
+      "edit": "Edit",
+      "error": "Error",
+      "none": "None",
+      "pleaseWait": "Please wait",
+      "redeem": "Redeem",
+      "save": "Save"
+    },
+    "dashboard": {
+      "seeAll": "See all",
+      "menus": {
+        "createCampaign": "Create campaign",
+        "createAction": "Create action",
+        "createOffer": "Create reward",
+        "createNew": "Create new",
+        "campaignName": "Campaign name",
+        "actionName": "Action name",
+        "offerName": "Offer name",
+        "deleteCampaign": "Delete campaign",
+        "deleteAction": "Delete action",
+        "deleteOffer": "Delete reward"
+      },
+      "tables": {
+        "description": "Description",
+        "download": "Download",
+        "indicator": "Indicator",
+        "name": "Name",
+        "price": "Price",
+        "progress": "Progress",
+        "reward": "Reward",
+        "role": "Role",
+        "saveChanges": "Save changes",
+        "saveRoleChange": "Save role change",
+        "target": "Target",
+        "user": "User"
+      }
+    },
+    "errors": {
+      "noCompanies": "No companies registered yet.",
+      "noActions": "No actions available.",
+      "noOffers": "No rewards available.",
+      "noTransactions": "No transactions recorded."
+    },
+    "landing": {
+      "description": "DeustoCoin pretende sacar el máximo partido de la tecnología Blockchain y llevarla al ámbito universitario, promoviendo un estilo de vida sostenible y respetuoso con el medio ambiente."
+    },
+    "main": {
+      "campaign": "Campaign",
+      "action": "Action",
+      "offer": "Reward",
+      "transaction": "Transaction",
+      "user": "User",
+      "campaigns": "Campaigns",
+      "actions": "Actions",
+      "offers": "Rewards",
+      "transactions": "Transactions",
+      "users": "Users",
+      "profile": "Profile"
+    },
+    "offers": {
+      "backToOffers": "Go back to rewards",
+      "confirmRedemption": "Confirm redemption",
+      "offerRedemption": "Offer redemption",
+      "redeemOffer": "Redeem reward",
+      "referToCreator": "Please refer to the offer creator to claim your reward."
+    },
+    "other": {
+      "blockchainAddress": "Blockchain address"
+    },
+    "roles": {
+      "cb": "Collaborator",
+      "pm": "Promoter",
+      "ad": "Administrator"
+    },
+    "sidebar": {
+      "title": "Socialcoin",
+      "links": {
+        "dashboard": "Dashboard",
+        "campaigns": "Campaigns",
+        "actions": "Actions",
+        "offers": "Rewards",
+        "transactions": "Transactions",
+        "about": "About"
+      },
+      "viewProfile": "View profile",
+      "footerMenu": {
+        "theme": "Toggle theme",
+        "logout": "Log out"
+      }
+    },
+    "transactions": {
+      "clearFilters": "Clear filters",
+      "ipfsHash": "IPFS proof hash",
+      "filters": "Filters",
+      "from": "From",
+      "quantity": "Quantity",
+      "proofURL": "External proof URL",
+      "receiver": "Receiver",
+      "sender": "Sender",
+      "showFilters": "Show filters",
+      "to": "To",
+      "transactionHash": "Transaction hash"
+    }
+  }
+}

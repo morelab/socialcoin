@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { QRModal } from './QRModal';
 import { SearchBar } from '../../../../components/Form/SearchBar';
@@ -13,6 +14,7 @@ export const OffersTable = () => {
   const [openQR, setOpenQR] = React.useState(false);
   const [activeID, setActiveID] = React.useState('');
   const [slideOffer, setSlideOffer] = React.useState<Offer>({} as Offer);
+  const { t } = useTranslation();
   const { data } = useData();
 
   const handleQR = (id: string) => {
@@ -44,7 +46,7 @@ export const OffersTable = () => {
       <QRModal open={openQR} setOpen={setOpenQR} url={`${window.location.href}/redeem/${activeID}`} />
       <div className="shadow overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800 bg-white dark:bg-gray-800 divide-y divide-gray-500">
         <div className='m-2 px-2 sm:px-3.5 flex items-center justify-between'>
-          <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>Offers</h2>
+          <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>{t('common.offers')}</h2>
           <SearchBar value={searchValue} changeHandler={handleSearch} />
         </div>
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
@@ -54,19 +56,19 @@ export const OffersTable = () => {
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Name
+                {t('dashboard.tables.name')}
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Description
+                {t('dashboard.tables.description')}
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
               >
-                Price
+                {t('dashboard.tables.price')}
               </th>
               <th
                 scope="col"
@@ -75,7 +77,7 @@ export const OffersTable = () => {
                 QR
               </th>
               <th scope="col" className="relative px-6 py-3">
-                <span className="sr-only">Edit</span>
+                <span className="sr-only">{t('common.edit')}</span>
               </th>
             </tr>
           </thead>
@@ -98,12 +100,12 @@ export const OffersTable = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-normal">
                   <div onClick={() => handleQR(offer.id)} className="text-md cursor-pointer text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200">
-                    Download
+                    {t('dashboard.tables.download')}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-md font-medium">
                   <div onClick={() => handleEdit(offer)} className="cursor-pointer text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200">
-                    Edit
+                    {t('common.edit')}
                   </div>
                 </td>
               </tr>

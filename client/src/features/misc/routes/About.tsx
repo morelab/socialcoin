@@ -1,4 +1,5 @@
 import { ExternalLinkIcon } from '@heroicons/react/solid';
+import { useTranslation } from 'react-i18next';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 type AboutLinkProps = {
@@ -16,27 +17,20 @@ const AboutLink = ({ url, content }: AboutLinkProps) => {
 };
 
 export const About = () => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <MiniTopbar title='About' />
+      <MiniTopbar title={t('about.about')} />
       <div className='flex items-center flex-col m-8'>
         <div className='max-w-prose text-lg dark:text-gray-200'>
-          <h1 className='font-bold text-5xl mb-5'>Sobre Deustocoin</h1>
+          <h1 className='font-bold text-5xl mb-5'>{t('about.firstSection.title')}</h1>
 
-          <p className='mb-4'>
-            DeustoCoin es un proyecto que pretende fomentar el lema <b>“Blockchain for Good”</b> y contribuir a un
-            mundo mejor a través de una tecnología emergente como es el Blockchain.
-          </p>
-          <p className='mb-4'>
-            Dicho proyecto consta de una aplicación web en la que pueden operar tanto miembros de la universidad de Deusto como
-            promotores de campañas pertenecientes a empresas externas a la universidad (cafeterías, museos, transporte...).
-          </p>
-          <p className='mb-7'>
-            Mediante este proyecto, se pretende mejorar la imagen corporativa de la Universidad, cumpliendo con varios de los 17
-            ODS <b>(Objetivos de Desarrollo Sostenible)</b> establecidos por las Naciones Unidas.
-          </p>
+          <p className='mb-4'>{t('about.firstSection.p1')}</p>
+          <p className='mb-4'>{t('about.firstSection.p2')}</p>
+          <p className='mb-7'>{t('about.firstSection.p3')}</p>
 
-          <h2 className='font-semibold text-3xl mb-3'>Funcionamiento</h2>
+          <h2 className='font-semibold text-3xl mb-3'>{t('about.secondSection.title')}</h2>
           <p className='mb-4'>
             Hay varios roles que conforman la plataforma de DeustoCoin, además de una criptomoneda compatible
             con <AboutLink url={'https://ethereum.org/'} content={'Ethereum'} />&nbsp;y&nbsp;

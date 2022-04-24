@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '../../../../components/Elements/Button';
 import { InputField } from '../../../../components/Form/InputField';
@@ -46,6 +47,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
   });
   const [openDelete, setOpenDelete] = React.useState(false);
   const { data, dispatchData } = useData();
+  const { t } = useTranslation();
   const { user } = useUser();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -117,7 +119,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
       <form action="#" method="POST" onSubmit={handleActionSubmit} className='flex flex-col gap-4'>
         <div className="bg-white dark:bg-gray-800 flex flex-col gap-4">
           <InputField
-            label="Action name"
+            label={t('dashboard.menus.actionName')}
             name="name"
             type="text"
             value={formState.name}
@@ -125,7 +127,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
             required
           />
           <InputField
-            label="Description"
+            label={t('dashboard.tables.description')}
             name="description"
             type="text"
             value={formState.description}
@@ -143,7 +145,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
 
           <div className='flex items-center justify-between gap-2 col-span-6'>
             <InputField
-              label="Reward"
+              label={t('dashboard.tables.reward')}
               name="reward"
               type="number"
               value={formState.reward}
@@ -151,7 +153,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
               required
             />
             <InputField
-              label="Target"
+              label={t('dashboard.tables.target')}
               name="kpi_target"
               type="number"
               value={formState.kpi_target}
@@ -161,7 +163,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
           </div>
 
           <SelectField
-            label="Campaign"
+            label={t('main.campaign')}
             name="campaign_id"
             options={campaigns}
             value={formState.campaign_id}
@@ -170,16 +172,16 @@ const EditActionForm = ({ action, close }: FormProps) => {
           />
         </div>
         <div className="py-3 text-right">
-          <Button type='submit' variant='submit'>Save</Button>
-          <Button variant='delete' onClick={() => setOpenDelete(true)}>Delete action</Button>
+          <Button type='submit' variant='submit'>{t('common.save')}</Button>
+          <Button variant='delete' onClick={() => setOpenDelete(true)}>{t('dashboard.menus.deleteAction')}</Button>
         </div>
       </form>
       <DeletionModal
         open={openDelete}
         setOpen={setOpenDelete}
-        title="Delete action"
+        title={t('dashboard.menus.deleteAction')}
         content={`Are you sure you want to delete the action '${action.name}'? This action cannot be undone.`}
-        buttonValue="Delete"
+        buttonValue={t('common.delete')}
         confirmHandler={handleDelete}
       />
     </div>

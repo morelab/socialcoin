@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '../../../../components/Elements/Button';
 import { InputField } from '../../../../components/Form/InputField';
@@ -26,6 +27,7 @@ export type NewCampaignFormContent = {
 
 const NewCampaignForm = ({ close }: FormProps) => {
   const [formState, setFormState] = React.useState<NewCampaignFormContent>({ name: '', description: '' });
+  const { t } = useTranslation();
   const { dispatchData } = useData();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,7 +61,7 @@ const NewCampaignForm = ({ close }: FormProps) => {
     <div className="md:grid md:grid-cols-3 md:gap-6 mt-8">
       <div className="md:col-span-1 shadow rounded-lg bg-sky-100 dark:bg-gray-900 p-4 mb-10">
         <div className="px-4 sm:px-0">
-          <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Create campaign</h3>
+          <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">{t('dashboard.menus.createCampaign')}</h3>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-200">
             Campaigns are groups of good deeds with the objective of fulfilling the UN&apos;s Sustainable Development Goals.
           </p>
@@ -69,7 +71,7 @@ const NewCampaignForm = ({ close }: FormProps) => {
         <form action="#" method="POST" onSubmit={handleSubmit}>
           <div className="bg-white dark:bg-gray-800 flex flex-col gap-6">
             <InputField
-              label="Campaign name"
+              label={t('dashboard.menus.campaignName')}
               name="name"
               type="text"
               value={formState.name}
@@ -77,7 +79,7 @@ const NewCampaignForm = ({ close }: FormProps) => {
               required
             />
             <TextareaField
-              label="Description"
+              label={t('dashboard.tables.description')}
               name="description"
               value={formState.description}
               onChange={handleInputChange}
@@ -86,7 +88,7 @@ const NewCampaignForm = ({ close }: FormProps) => {
           </div>
           <div className="py-3 text-right">
             <Button type='submit' variant='submit'>
-              Create
+              {t('common.create')}
             </Button>
           </div>
         </form>

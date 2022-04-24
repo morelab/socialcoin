@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlagIcon, ShoppingBagIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
+import { useTranslation } from 'react-i18next';
 
 import { Spinner } from '../../../components/Elements/Spinner';
 import { ContentModal } from '../../../components/Overlay/ContentModal';
@@ -24,6 +25,8 @@ type TransactionProps = {
 
 
 const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps) => {
+  const { t } = useTranslation();
+
   if (!transaction) {
     return null;
   }
@@ -38,7 +41,7 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
         <div className="border-t border-gray-200">
           <dl>
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">Sender</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">{t('transactions.sender')}</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2 flex flex-col gap-1">
                 <span>{transaction.sender_name}</span>
                 <span>{transaction.sender_email}</span>
@@ -46,7 +49,7 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
               </dd>
             </div>
             <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">Receiver</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">{t('transactions.receiver')}</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2 flex flex-col gap-1">
                 <span>{transaction.receiver_name}</span>
                 <span>{transaction.receiver_email}</span>
@@ -54,25 +57,25 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
               </dd>
             </div>
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">Quantity</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">{t('transactions.quantity')}</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2">{transaction.quantity / 100} UDC</dd>
             </div>
             <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">Transaction hash</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">{t('transactions.transactionHash')}</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2">
-                {transaction.transaction_hash && transaction.transaction_hash.length > 5 ? transaction.transaction_hash : 'None'}
+                {transaction.transaction_hash && transaction.transaction_hash.length > 5 ? transaction.transaction_hash : t('common.none')}
               </dd>
             </div>
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">IPFS proof hash</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">{t('transactions.ipfsHash')}</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2">
                 {transaction.img_ipfs_hash ? transaction.img_ipfs_hash : 'None'}
               </dd>
             </div>
             <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">External proof URL</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">{t('transactions.proofURL')}</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2">
-                {transaction.external_proof_url && transaction.external_proof_url !== 'undefined' ? transaction.external_proof_url : 'None'}
+                {transaction.external_proof_url && transaction.external_proof_url !== 'undefined' ? transaction.external_proof_url : t('common.none')}
               </dd>
             </div>
           </dl>
@@ -88,7 +91,7 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
               setOpen(false);
             }}
           >
-            Close
+            {t('common.close')}
           </button>
         </div>
       </div>
@@ -97,6 +100,8 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
 };
 
 const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
+  const { t } = useTranslation();
+
   const getTransactionType = () => transaction.transaction_info.split(' ')[0];
 
   const getTransactionTitle = () => {
@@ -144,8 +149,8 @@ const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
           <span>{transaction.quantity / 100} UDC</span>
         </div>
         <div className="flex flex-col sender-to-receiver p-1.5 sm:p-2.5 w-full">
-          <span>From: {transaction.sender_name}</span>
-          <span>To: {transaction.receiver_name}</span>
+          <span>{t('transactions.from')}: {transaction.sender_name}</span>
+          <span>{t('transactions.to')}: {transaction.receiver_name}</span>
         </div>
       </div>
     </div>
@@ -156,6 +161,7 @@ export const Transactions = () => {
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
   const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction>({} as Transaction);
   const [openModal, setOpenModal] = React.useState(false);
+  const { t } = useTranslation();
   const { filters } = useFilters();
 
   React.useEffect(() => {
@@ -196,7 +202,7 @@ export const Transactions = () => {
           || transaction.receiver_address.toLowerCase().includes(receiver.toLowerCase());
       });
 
-    if (date && date !== '')
+    if (date && date !== '')  // TODO use includes()
       filteredTransactions = filteredTransactions.filter(transaction => transaction.date.split(' ')[0] === date);
 
     return filteredTransactions;
@@ -204,10 +210,10 @@ export const Transactions = () => {
 
   return (
     <div>
-      <MiniTopbar title='Transactions' />
+      <MiniTopbar title={t('main.transactions')} />
       <div className='flex flex-col-reverse gap-2 lg:grid lg:grid-cols-3 2xl:grid-cols-4 lg:gap-4 h-full w-full'>
         <div className='lg:col-span-2 2xl:col-span-3'>
-          {transactions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No transactions recorded.</h2>}
+          {transactions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noTransactions')}</h2>}
           <div className='flex flex-col gap-3 items-center'>
             {getFilteredTransactions().map(transaction =>
               <TransactionCard key={transaction.id} transaction={transaction} clickHandler={() => handleOpenTransaction(transaction)} />

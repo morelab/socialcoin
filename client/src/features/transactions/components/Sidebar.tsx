@@ -1,6 +1,7 @@
 import React from 'react';
 import { Disclosure } from '@headlessui/react';
 import { ChevronUpIcon } from '@heroicons/react/outline';
+import { useTranslation } from 'react-i18next';
 
 import { InputField } from '../../../components/Form';
 import { ButtonSec } from '../../../components/Elements/Button';
@@ -18,6 +19,7 @@ const FilterDisclosure = () => {
     filterHandler,
     clearFilters,
   } = useFilters();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -27,17 +29,17 @@ const FilterDisclosure = () => {
             <Disclosure.Button
               className={`${open ? 'rounded-t-lg' : 'rounded-lg'} flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75 transition-colors shadow`}
             >
-              <span>Advanced filters</span>
+              <span>{t('transactions.showFilters')}</span>
               <ChevronUpIcon
                 className={`${open ? 'transform rotate-180' : ''} w-5 h-5 text-gray-200 transition-transform`}
               />
             </Disclosure.Button>
             <Disclosure.Panel className="px-3 py-2 text-sm text-gray-700 bg-gray-100 dark:bg-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 rounded-b-lg">
               <ButtonSec variant='inverse' size='sm' className='w-full mb-2' onClick={clearFilters}>
-                Clear filters
+                {t('transactions.clearFilters')}
               </ButtonSec>
               <InputField
-                label='Sender'
+                label={t('transactions.sender')}
                 name='sender'
                 value={filters.sender}
                 required
@@ -45,7 +47,7 @@ const FilterDisclosure = () => {
                 className='mb-4'
               />
               <InputField
-                label='Receiver'
+                label={t('transactions.receiver')}
                 name='receiver'
                 value={filters.receiver}
                 required
@@ -53,7 +55,7 @@ const FilterDisclosure = () => {
                 className='mb-4'
               />
               <InputField
-                label='Date'
+                label={t('common.date')}
                 type='date'
                 name='date'
                 value={filters.date}
@@ -70,14 +72,13 @@ const FilterDisclosure = () => {
 };
 
 export const Sidebar = ({ className }: SidebarProps) => {
-  // const { searchValue, handleSearchChange } = useFilters();
+  const { t } = useTranslation();
 
   return (
     <div className={`w-full lg:col-span-2 sm:rounded-lg p-3 shadow ${className}`}>
       <div className='flex items-center justify-between mb-3.5'>
-        <h1 className='text-2xl font-medium text-gray-900 dark:text-gray-200'>Filters</h1>
+        <h1 className='text-2xl font-medium text-gray-900 dark:text-gray-200'>{t('transactions.filters')}</h1>
       </div>
-      {/* <SearchBar value={searchValue} changeHandler={handleSearchChange} className='mb-3' /> */}
       <FilterDisclosure />
     </div>
   );

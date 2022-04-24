@@ -1,0 +1,20 @@
+{
+  "translation": {
+    "sidebar": {
+      "title": "Socialcoin",
+      "links": {
+        "dashboard": "Dashboard",
+        "campaigns": "Campañas",
+        "actions": "Acciones",
+        "offers": "Recompensas",
+        "transactions": "Transacciones",
+        "about": "Sobre"
+      },
+      "viewProfile": "Ver perfil",
+      "footerMenu": {
+        "theme": "Cambiar tema",
+        "logout": "Cerrar sesión"
+      }
+    }
+  }
+}

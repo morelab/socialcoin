@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CreditCardIcon } from '@heroicons/react/solid';
+import { useTranslation } from 'react-i18next';
 
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 import { useUser } from '../../../context/UserContext';
@@ -14,6 +15,8 @@ type OfferProps = {
 };
 
 const OfferCard = ({ offer }: OfferProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className='flex flex-col rounded-lg shadow-md w-96 h-36 overflow-hidden'>
       <div className='flex-grow divide-x-2 divide-gray-200 grid grid-cols-5 bg-white dark:bg-gray-800'>
@@ -29,7 +32,7 @@ const OfferCard = ({ offer }: OfferProps) => {
       </div>
       <Link to={`/offers/redeem/${offer.id}`} className='flex items-center justify-center h-12 w-full text-xl transition-colors text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400'>
         <CreditCardIcon className='h-7 w-7 mr-3' />
-        <span>Redeem offer</span>
+        <span>{t('offers.redeemOffer')}</span>
       </Link>
     </div>
   );
@@ -37,6 +40,7 @@ const OfferCard = ({ offer }: OfferProps) => {
 
 export const Offers = () => {
   const { user, setUser } = useUser();
+  const { t } = useTranslation();
   const { data } = useData();
 
   React.useEffect(() => {
@@ -48,7 +52,7 @@ export const Offers = () => {
   return (
     <>
       <MiniTopbar title={`Offers - ${user && user.balance / 100} UDC`} />
-      {data.offers.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>No offers available.</h2>}
+      {data.offers.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noOffers')}</h2>}
       <div className='flex flex-wrap gap-6'>
         {data.offers.map(offer =>
           <OfferCard key={offer.id} offer={offer} />

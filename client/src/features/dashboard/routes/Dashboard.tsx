@@ -19,6 +19,7 @@ import { UsersTable } from '../components/Tables/UsersTable';
 import { useUser } from '../../../context/UserContext';
 import { Tab } from '@headlessui/react';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
+import { useTranslation } from 'react-i18next';
 
 
 type HeaderProps = {
@@ -68,6 +69,7 @@ const DashboardTab = ({ content, active }: TabProps) => {
 
 const CreateButton = ({ index }: HeaderProps) => {
   const [open, setOpen] = React.useState(false);
+  const { t } = useTranslation();
 
   let type: 'campaign' | 'action' | 'reward' | 'user';
   if (index === 0) type = 'campaign';
@@ -95,7 +97,7 @@ const CreateButton = ({ index }: HeaderProps) => {
       >
         <span className="sr-only">{`Create new ${type}`}</span>
         <PlusIcon className="w-6 h-6 md:mr-2" aria-hidden="true" />
-        <span className="font-semibold text-lg hidden md:inline">Create new</span>
+        <span className="font-semibold text-lg hidden md:inline">{t('dashboard.menus.createNew')}</span>
       </button>
       {menu}
     </>
@@ -104,6 +106,7 @@ const CreateButton = ({ index }: HeaderProps) => {
 
 export const Dashboard = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const { t } = useTranslation();
   const { user } = useUser();
 
   if (!user) return null;
@@ -112,10 +115,10 @@ export const Dashboard = () => {
     <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
       <Tab.List as={MiniTopbar}>
         <div>
-          <Tab>{({ selected }) => <DashboardTab content='Campaigns' active={selected} />}</Tab>
-          <Tab>{({ selected }) => <DashboardTab content='Actions' active={selected} />}</Tab>
-          <Tab>{({ selected }) => <DashboardTab content='Offers' active={selected} />}</Tab>
-          {user.role === 'AD' && <Tab>{({ selected }) => <DashboardTab content='Users' active={selected} />}</Tab>}
+          <Tab>{({ selected }) => <DashboardTab content={t('main.campaigns')} active={selected} />}</Tab>
+          <Tab>{({ selected }) => <DashboardTab content={t('main.actions')} active={selected} />}</Tab>
+          <Tab>{({ selected }) => <DashboardTab content={t('main.offers')} active={selected} />}</Tab>
+          {user.role === 'AD' && <Tab>{({ selected }) => <DashboardTab content={t('main.users')} active={selected} />}</Tab>}
         </div>
         <CreateButton index={selectedIndex} />
       </Tab.List>

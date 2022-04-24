@@ -1,5 +1,6 @@
 import React from 'react';
 import { RadioGroup } from '@headlessui/react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '../../../../components/Elements/Button';
 
@@ -77,6 +78,7 @@ const RoleListbox = ({ baseRole, selected, setSelected }: RoleGroupProps) => {
 
 const TableRow = ({ user, allUsers, setAllUsers }: TableRowProps) => {
   const [selectedRole, setSelectedRole] = React.useState<RoleValue>(roles.find(r => r.key === user.role) ?? roles[0]);
+  const { t } = useTranslation();
 
   const updateHandler = async () => {
     const updatedUser = await updateUserRole(user.id, { new_role: selectedRole.key });
@@ -102,7 +104,7 @@ const TableRow = ({ user, allUsers, setAllUsers }: TableRowProps) => {
         </div>
       </td>
       <td className="px-2 py-2 whitespace-normal min-w-max">
-        <Button onClick={updateHandler}>Save changes</Button>
+        <Button onClick={updateHandler}>{t('dashboard.tables.saveChanges')}</Button>
       </td>
     </tr>
   );
@@ -111,6 +113,7 @@ const TableRow = ({ user, allUsers, setAllUsers }: TableRowProps) => {
 export const UsersTable = () => {
   const [searchValue, setSearchValue] = React.useState('');
   const [users, setUsers] = React.useState<User[]>([]);
+  const { t } = useTranslation();
   const { user } = useUser();
 
   if (!user) return null;
@@ -136,7 +139,7 @@ export const UsersTable = () => {
   return (
     <div className="shadow overflow-x-auto lg:border-b lg:border-gray-200 lg:rounded-lg dark:border-gray-800 bg-white dark:bg-gray-800 divide-y divide-gray-500">
       <div className='m-2 px-2 sm:px-3.5 flex items-center justify-between'>
-        <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>Users</h2>
+        <h2 className='text-xl sm:text-2xl font-bold mr-5 text-gray-900 dark:text-gray-50'>{t('main.users')}</h2>
         <SearchBar value={searchValue} changeHandler={handleSearch} />
       </div>
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
@@ -146,16 +149,16 @@ export const UsersTable = () => {
               scope="col"
               className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
             >
-              User
+              {t('dashboard.tables.user')}
             </th>
             <th
               scope="col"
               className="px-6 py-3 text-left text-md font-bold text-gray-500 uppercase tracking-wider dark:text-gray-200"
             >
-              Role
+              {t('dashboard.tables.role')}
             </th>
             <th scope="col" className="relative px-6 py-3">
-              <span className="sr-only">Save role change</span>
+              <span className="sr-only">{t('dashboard.tables.saveRoleChange')}</span>
             </th>
           </tr>
         </thead>
