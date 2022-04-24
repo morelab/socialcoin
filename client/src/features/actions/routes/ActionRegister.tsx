@@ -67,12 +67,12 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
     if (!files) return;
 
     if (kpi_value <= 0) {
-      notifyWarning('Please enter a KPI greater than 0.');
+      notifyWarning(t('notifications.positiveKPI'));
       return;
     }
     if (files.length == 0 && verificationURL.length < 3) {
       // TODO: improve URL validation
-      notifyWarning('Please introduce a file or a valid verification url.');
+      notifyWarning(t('notifications.introduceFileOrUrl'));
       return;
     }
 

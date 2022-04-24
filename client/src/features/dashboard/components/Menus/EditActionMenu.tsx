@@ -74,11 +74,11 @@ const EditActionForm = ({ action, close }: FormProps) => {
     };
 
     if (formAction.reward <= 0) {
-      notifyWarning('The action reward must be greater than zero.');
+      notifyWarning(t('notifications.positiveReward'));
       return;
     }
     if (formAction.kpi_target <= 0) {
-      notifyWarning('The action target must be greater than zero.');
+      notifyWarning(t('notifications.positiveTarget'));
       return;
     }
 

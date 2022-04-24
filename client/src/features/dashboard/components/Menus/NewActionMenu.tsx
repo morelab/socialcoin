@@ -59,7 +59,7 @@ const NewActionForm = ({ close }: FormProps) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (getOwnCampaigns().length === 0) {
-      notifyError('You must create a campaign before creating an action.');
+      notifyError(t('notifications.noCampaign'));
       return;
     }
 
@@ -73,11 +73,11 @@ const NewActionForm = ({ close }: FormProps) => {
     };
 
     if (newAction.reward <= 0 || !newAction.reward) {
-      notifyWarning('The reward must be greater than zero.');
+      notifyWarning(t('notifications.positiveReward'));
       return;
     }
     if (newAction.kpi_target <= 0 || !newAction.kpi_target) {
-      notifyWarning('The KPI target must be greater than zero.');
+      notifyWarning(t('notifications.positiveKPI'));
       return;
     }
 

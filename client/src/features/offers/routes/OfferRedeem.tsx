@@ -39,7 +39,7 @@ export const OfferRedeem = () => {
 
   const handleOpenModal = async () => {
     if (user && user.balance < offer.price) {
-      notifyError('Not enough balance in your account.');
+      notifyError(t('notifications.noBalance'));
     } else {
       setOpenModal(true);
     }

@@ -57,7 +57,7 @@ const NewOfferForm = ({ close }: FormProps) => {
     };
 
     if (newOffer.price <= 0 || !newOffer.price) {
-      notifyWarning('The price must be greater than zero.');
+      notifyWarning(t('notifications.positivePrice'));
       return;
     }
 

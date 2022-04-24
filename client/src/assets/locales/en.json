@@ -89,6 +89,15 @@
       "users": "Users",
       "profile": "Profile"
     },
+    "notifications": {
+      "introduceFileOrUrl": "Please introduce a file or a valid verification url.",
+      "noBalance": "Not enough balance in your account.",
+      "noCampaign": "You must create a campaign before creating an action.",
+      "positiveKPI": "Please enter a KPI greater than 0.",
+      "positivePrice": "The offer price must be greater than zero.",
+      "positiveReward": "The action reward must be greater than zero.",
+      "positiveTarget": "The action target must be greater than zero."
+    },
     "offers": {
       "backToOffers": "Go back to rewards",
       "confirmRedemption": "Confirm redemption",

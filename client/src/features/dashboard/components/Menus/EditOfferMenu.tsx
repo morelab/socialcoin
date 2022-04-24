@@ -63,7 +63,7 @@ const EditOfferForm = ({ offer, close }: FormProps) => {
     };
 
     if (formOffer.price <= 0) {
-      notifyWarning('The offer price must be greater than zero.');
+      notifyWarning(t('notifications.positivePrice'));
       return;
     }
 
