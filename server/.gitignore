@@ -145,4 +145,4 @@ node_modules
 package-lock.json
 
 # kubernetes
-/k8s
+*.env
