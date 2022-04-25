@@ -14,3 +14,8 @@ RUN pip install -r requirements.txt
 
 # copy project
 COPY . /usr/src/app/
+
+# run
+EXPOSE 5000
+
+CMD [ "./entrypoint.sh" ]

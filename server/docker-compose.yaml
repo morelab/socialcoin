@@ -3,10 +3,10 @@ version: '3.8'
 services:
   web:
     build: .
-    command: python src/app.py -h 0.0.0.0
+    command: ./entrypoint.sh
     container_name: socialcoin-api
     volumes:
-      - ./:/usr/src/app/
+      - ./:/app/
     ports:
       - 5000:5000
     env_file:
