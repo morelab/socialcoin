@@ -1,0 +1,92 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: socialcoin-api-app
+  namespace: socialcoin
+  labels:
+    run: socialcoin-api-app
+spec:
+  selector:
+    name: socialcoin-api-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  # type: LoadBalancer
+  # loadBalancerIP: ""
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: socialcoin-api-packages
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: longhorn
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socialcoin-api-app
+  namespace: socialcoin
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: socialcoin-api-app
+  template:
+    metadata:
+      labels:
+        app: socialcoin-api-app
+    spec:
+      hostname: api
+      subdomain: socialcoin-api-app
+
+      # volumes:
+      #   - name: config
+      #     configMap:
+      #       name: socialcoin-api-config
+      #       items:
+      #         - key: config.yaml
+      #           path: config.yaml
+      #           mode: 0777
+        
+      #   - name: packages
+      #     persistentVolumeClaim: socialcoin-api-packages
+
+      containers:
+      - name: socialcoin-api-app
+        image: registry.apps.deustotech.eu/socialcoin/socialcoin-api:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5000 # TODO revise if this works properly
+        
+        # volumeMounts:
+        #   - name: config
+        #     mountPath: /app/config/config.yaml
+        #     subPath: config.yaml
+          
+        #   - name: packages
+        #     mountPath: /app/tmp
+
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        
+        envFrom:
+          - secretRef:
+              name: socialcoin-api-properties
+      
+      # imagePullSecrets:
+      #   - name: 

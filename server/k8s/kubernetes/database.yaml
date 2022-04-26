@@ -1,0 +1,90 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: socialcoin-api-database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: longhorn
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: socialcoin-api-database
+  labels:
+    run: socialcoin-api-database
+spec:
+  selector:
+    app: socialcoin-api-database
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socialcoin-api-database
+  namespace: socialcoin
+  labels:
+    app: socialcoin-api-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: socialcoin-api-database
+  template:
+    metadata:
+      labels:
+        name: socialcoin-api-database
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: socialcoin-api-database
+
+      containers:
+        - name: socialcoin-api-database
+          image: postgres:13-alpine
+          ports:
+            - containerPort: 5432
+              name: postgres
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/db-data
+
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+
+          # env:
+          #   - name: POSTGRES_DB
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         key: POSTGRES_DB
+          #         name: postgres-config
+          #   - name: POSTGRES_USER
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         key: POSTGRES_USER
+          #         name: postgres-config
+          #   - name: POSTGRES_PASSWORD
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         key: POSTGRES_PASSWORD
+          #         name: postgres-config
+
+          envFrom:
+            - secretRef:
+                name: socialcoin-api-properties

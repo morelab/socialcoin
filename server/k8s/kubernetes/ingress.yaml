@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsecrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "900"
+  name: socialcoin-api
+spec:
+  rules:
+  - host: api.socialcoin.${subdomain}.deusto.apps.deustotech.eu
+    http:
+      paths:
+      - backend:
+          service:
+            name: socialcoin-api-app
+            port:
+              number: 5000  # TODO revise and check with api.yaml
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - api.socialcoin.${subdomain}.deusto.apps.deustotech.eu
+    secretName: socialcoin-api-app-cert
