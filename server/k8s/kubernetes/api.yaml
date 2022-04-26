@@ -88,5 +88,5 @@ spec:
           - secretRef:
               name: socialcoin-api-properties
       
-      # imagePullSecrets:
-      #   - name: 
+      imagePullSecrets:
+        - name: socialcoin-registry

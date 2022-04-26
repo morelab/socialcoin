@@ -11,6 +11,13 @@ function createConfigMaps() {
   
   # create config map with config file for api
   # TODO
+
+  # login to private registry
+  kubectl delete secret socialcoin-registry --namespace ${NS}
+  kubectl create secret generic socialcoin-registry \
+    --from-file=.dockerconfigjson=/home/dani/.docker/config.json \
+    --type=kubernetes.io/dockerconfigjson \
+    --namespace=socialcoin
 }
 
 function main() {
