@@ -5,7 +5,7 @@ metadata:
   name: socialcoin-api-app
   namespace: socialcoin
   labels:
-    run: socialcoin-api-app
+    name: socialcoin-api-app
 spec:
   selector:
     name: socialcoin-api-app
@@ -40,11 +40,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: socialcoin-api-app
+      name: socialcoin-api-app
   template:
     metadata:
       labels:
-        app: socialcoin-api-app
+        name: socialcoin-api-app
     spec:
       hostname: api
       subdomain: socialcoin-api-app

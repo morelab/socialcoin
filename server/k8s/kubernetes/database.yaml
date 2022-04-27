@@ -17,10 +17,10 @@ kind: Service
 metadata:
   name: socialcoin-api-database
   labels:
-    run: socialcoin-api-database
+    name: socialcoin-api-database
 spec:
   selector:
-    app: socialcoin-api-database
+    name: socialcoin-api-database
   ports:
     - port: 5432
       targetPort: 5432
@@ -33,7 +33,7 @@ metadata:
   name: socialcoin-api-database
   namespace: socialcoin
   labels:
-    app: socialcoin-api-database
+    name: socialcoin-api-database
 spec:
   replicas: 1
   selector:
