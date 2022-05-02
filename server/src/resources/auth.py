@@ -4,7 +4,7 @@ from xml.dom import ValidationErr
 from urllib.parse import urlencode
 from typing import Dict, Any
 from common.blockchain import generate_keys
-from config import APP_SECRET, BASE_BACKEND_URL, BASE_FRONTEND_URL, BLOCKCHAIN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NETWORK
+from config import ADMIN_EMAIL, APP_SECRET, BASE_BACKEND_URL, BASE_FRONTEND_URL, BLOCKCHAIN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NETWORK
 from database.models import User
 import jwt
 import requests
@@ -27,11 +27,14 @@ def get_access_token(*, code: str, redirect_uri: str) -> str:
         'redirect_uri': redirect_uri,
         'grant_type': 'authorization_code'
     }
+    print(data)
     
     response = requests.post(GOOGLE_ACCESS_TOKEN_OBTAIN_URL, data=data)
     
     if not response.ok:
         # TODO: check best error type to use
+        print(response)
+        print(response.text)
         raise ValidationErr('Failed to obtain access token from Google')
     
     access_token = response.json()['access_token']
@@ -64,7 +67,7 @@ def retrieve_or_create_user(**profile_data) -> User:
     
     try:
         # add the new created account to the Besu allowlist, only when using ethereum
-        if NETWORK == 'fabric':
+        if NETWORK == 'ethereum':
             add_account_to_allowlist(keys.get('address'))
     except:
         print('Error adding an account to the Besu allowlist')
@@ -104,7 +107,7 @@ class GoogleLogin(Resource):
             'email': user_data['email'],
             'name': user_data.get('name', ''),
             'picture_url': user_data.get('picture', ''),
-            'role': 'CB'    # TODO
+            'role': 'AD' if user_data['email'] == ADMIN_EMAIL else 'CB'
         }
         
         user = retrieve_or_create_user(**profile_data)

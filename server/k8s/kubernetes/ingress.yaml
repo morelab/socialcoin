@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/cluster-issuer: letsecrypt
+    cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
     nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "900"
@@ -16,7 +16,7 @@ spec:
           service:
             name: socialcoin-api-app
             port:
-              number: 5000  # TODO revise and check with api.yaml
+              number: 5000
         path: /
         pathType: Prefix
   tls:

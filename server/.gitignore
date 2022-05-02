@@ -130,6 +130,7 @@ dmypy.json
 
 # configuration
 config.py
+config_dev.py
 
 # openssl certificates
 *.pem

@@ -163,7 +163,7 @@ export const UsersTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-600 dark:bg-gray-800">
-          {userList.map(user => <TableRow key={user.id} user={user} allUsers={users} setAllUsers={setUsers} />)}
+          {userList.filter(u => u.id !== user.id).map(user => <TableRow key={user.id} user={user} allUsers={users} setAllUsers={setUsers} />)}
         </tbody>
       </table>
     </div>
