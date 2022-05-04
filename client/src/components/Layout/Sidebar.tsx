@@ -161,11 +161,12 @@ const FooterMenu = () => {
                     <span>{t('sidebar.footerMenu.logout')}</span>
                   </button>
                   <div className='flex items-center justify-around w-full'>
-                    {Object.keys(lngs).map(lng => (
+                    {Object.keys(lngs).map((lng, index) => (
                       <button
                         key={lng}
-                        className={`rounded hover:bg-indigo-400 hover:text-indigo-50 dark:hover:bg-indigo-700 px-1.5 py-0.5 ${i18n.resolvedLanguage === lng ? 'bg-indigo-400 text-indigo-50 dark:bg-indigo-900' : 'bg-indigo-300 dark:bg-indigo-600'}`}
+                        className={`rounded hover:bg-indigo-400 hover:text-indigo-50 dark:hover:bg-indigo-700 px-1.5 py-0.5 ${i18n.resolvedLanguage === lng ? 'bg-indigo-400 text-indigo-50 dark:bg-indigo-900' : 'bg-indigo-300 dark:bg-indigo-600'} disabled:bg-indigo-100 disabled:dark:bg-indigo-400 disabled:hover:text-gray-600 disabled:dark:hover:text-indigo-200 disabled:cursor-not-allowed`}
                         onClick={() => i18n.changeLanguage(lng)}
+                        disabled={index === Object.keys(lngs).length - 1} // TODO translate and enable language
                       >
                         {lngs[lng]}
                       </button>

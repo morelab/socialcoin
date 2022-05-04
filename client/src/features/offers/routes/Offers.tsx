@@ -8,6 +8,7 @@ import { useUser } from '../../../context/UserContext';
 import { useData } from '../../../context/DataContext';
 import { getSelfUserBalance } from '../api/getSelfUserBalance';
 import { Offer } from '../../../types';
+import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
 
 
 type OfferProps = {
@@ -52,8 +53,8 @@ export const Offers = () => {
   return (
     <>
       <MiniTopbar title={`Offers - ${user && user.balance / 100} UDC`} />
-      {data.offers.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noOffers')}</h2>}
-      <div className='flex flex-wrap gap-6'>
+      {data.offers.length === 0 && <EmptyTableNotice title={t('errors.noOffers')} />}
+      <div className='flex flex-wrap gap-6 mx-w'>
         {data.offers.map(offer =>
           <OfferCard key={offer.id} offer={offer} />
         )}

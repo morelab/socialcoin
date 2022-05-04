@@ -12,18 +12,21 @@ import { NewCampaignMenu } from '../components/Menus/NewCampaignMenu';
 import { NewActionMenu } from '../components/Menus/NewActionMenu';
 import { NewOfferMenu } from '../components/Menus/NewOfferMenu';
 
+import { EmptyTableNotice } from '../components/EmptyTableNotice';
 import { CampaignsTable } from '../components/Tables/CampaignsTable';
 import { ActionsTable } from '../components/Tables/ActionsTable';
 import { OffersTable } from '../components/Tables/OffersTable';
 import { UsersTable } from '../components/Tables/UsersTable';
+import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
 import { useUser } from '../../../context/UserContext';
 import { Tab } from '@headlessui/react';
-import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
+import { useData } from '../../../context/DataContext';
 
 
-type HeaderProps = {
+type CreateButtonProps = {
   index: number;
+  showAll?: boolean;
 };
 
 type TabProps = {
@@ -69,7 +72,7 @@ const DashboardTab = ({ content, active }: TabProps) => {
   );
 };
 
-const CreateButton = ({ index }: HeaderProps) => {
+const CreateButton = ({ index, showAll }: CreateButtonProps) => {
   const [open, setOpen] = React.useState(false);
   const { t } = useTranslation();
 
@@ -99,7 +102,7 @@ const CreateButton = ({ index }: HeaderProps) => {
       >
         <span className="sr-only">{`Create new ${type}`}</span>
         <PlusIcon className="w-6 h-6 md:mr-2" aria-hidden="true" />
-        <span className="font-semibold text-lg hidden md:inline">{t('dashboard.menus.createNew')}</span>
+        <span className={`font-semibold text-lg ${showAll ? '' : 'hidden md:inline' }`}>{t('dashboard.menus.createNew')}</span>
       </button>
       {menu}
     </>
@@ -108,6 +111,7 @@ const CreateButton = ({ index }: HeaderProps) => {
 
 export const Dashboard = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const { data } = useData();
   const { user } = useUser();
 
   if (!user) return null;
@@ -125,13 +129,34 @@ export const Dashboard = () => {
       </Tab.List>
       <Tab.Panels>
         <Tab.Panel>
-          <CampaignsTable />
+          {data.campaigns.length > 0
+            ? <CampaignsTable />
+            : (
+              <EmptyTableNotice title='No campaigns created yet'>
+                <CreateButton index={0} showAll />
+              </EmptyTableNotice>
+            )
+          }
         </Tab.Panel>
         <Tab.Panel>
-          <ActionsTable />
+          {data.actions.length > 0
+            ? <ActionsTable />
+            : (
+              <EmptyTableNotice title='No actions created yet'>
+                <CreateButton index={1} showAll />
+              </EmptyTableNotice>
+            )
+          }
         </Tab.Panel>
         <Tab.Panel>
-          <OffersTable />
+          {data.offers.length > 0
+            ? <OffersTable />
+            : (
+              <EmptyTableNotice title='No rewards created yet'>
+                <CreateButton index={2} showAll />
+              </EmptyTableNotice>
+            )
+          }
         </Tab.Panel>
         {user.role === 'AD' && (
           <Tab.Panel>

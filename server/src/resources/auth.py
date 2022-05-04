@@ -119,7 +119,7 @@ class GoogleLogin(Resource):
         
         # redirect the user
         response = make_response(redirect(f'{BASE_FRONTEND_URL}/#/dashboard'))
-        response.set_cookie('jwt_token', token)
+        response.set_cookie('jwt_token', token, samesite='None', secure=True, httponly=True)
 
         return response
 

@@ -16,7 +16,7 @@ export const Profile = () => {
   const { t } = useTranslation();
 
   const handleFormChange = (e: React.FormEvent<HTMLInputElement>) => setFormName(e.currentTarget.value);
-  const reduceAddress = (address: string | undefined) => address && address.slice(0, 7) + '...' + address.slice(address.length - 5);
+  const reduceAddress = (address: string | undefined) => address && address.slice(0, 20) + '...' + address.slice(address.length - 5);
 
   const handleOpenModal = (e: React.FormEvent) => {
     e.preventDefault();

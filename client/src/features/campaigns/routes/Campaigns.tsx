@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { CompanyCampaigns, getCampaignsByCompany } from '../api/getCampaignsByCompany';
 import { ContentModal } from '../../../components/Overlay/ContentModal';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
+import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
 
 
 type CampaignModalProps = {
@@ -107,8 +108,8 @@ export const Campaigns = () => {
   return (
     <>
       <MiniTopbar title={t('main.campaigns')} />
-      {companies.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noCompanies')}</h2>}
-      <div className='flex flex-wrap gap-6'>
+      {companies.length === 0 && <EmptyTableNotice title={t('errors.noCompanies')} />}
+      <div className='flex flex-wrap gap-6 mx-2'>
         {companies.map(entry => <CompanySection key={`c-${entry.company.id}`} company={entry.company} campaigns={entry.campaigns} />)}
       </div>
     </>

@@ -6,6 +6,7 @@ import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 import { useData } from '../../../context/DataContext';
 
 import { Action } from '../../../types';
+import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
 
 type ActionProps = {
   action: Action;
@@ -41,7 +42,7 @@ export const Actions = () => {
   return (
     <>
       <MiniTopbar title={t('main.actions')} />
-      {actions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noActions')}</h2>}
+      {actions.length === 0 && <EmptyTableNotice title={t('errors.noActions')} />}
       <div className='flex flex-wrap gap-6 px-2 sm:px-0'>
         {actions.map(action =>
           <ActionCard key={action.id} action={action} />

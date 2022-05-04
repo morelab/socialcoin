@@ -10,6 +10,7 @@ import { getTransactions } from '../api/getTransactions';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 import { Sidebar } from '../components/Sidebar';
 import { FilterProvider, useFilters } from '../context/FilterContext';
+import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
 
 
 type TransactionModalProps = {
@@ -212,15 +213,15 @@ export const Transactions = () => {
     <div>
       <MiniTopbar title={t('main.transactions')} />
       <div className='flex flex-col-reverse gap-2 lg:grid lg:grid-cols-3 2xl:grid-cols-4 lg:gap-4 h-full w-full'>
-        <div className='lg:col-span-2 2xl:col-span-3'>
-          {transactions.length === 0 && <h2 className='text-xl font-medium text-gray-600 dark:text-gray-200'>{t('errors.noTransactions')}</h2>}
+        <div className={`${transactions.length > 0 ? 'lg:col-span-2 2xl:col-span-3' : 'lg:col-span-3 2xl:col-span-4'} `}>
+          {transactions.length === 0 && <EmptyTableNotice title={t('errors.noTransactions')} />}
           <div className='flex flex-col gap-3 items-center'>
             {getFilteredTransactions().map(transaction =>
               <TransactionCard key={transaction.id} transaction={transaction} clickHandler={() => handleOpenTransaction(transaction)} />
             )}
           </div>
         </div>
-        <Sidebar className='bg-white dark:bg-gray-800 lg:col-span-1 2xl:col-span-1' />
+        {transactions.length > 0 && <Sidebar className='bg-white dark:bg-gray-800 lg:col-span-1 2xl:col-span-1' />}
       </div>
       <TransactionModal open={openModal} setOpen={setOpenModal} transaction={selectedTransaction} />
     </div>
