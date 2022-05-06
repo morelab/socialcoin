@@ -45,7 +45,7 @@ spec:
         name: socialcoin-api-database
     spec:
       volumes:
-        - name: data
+        - name: postgresdb
           persistentVolumeClaim:
             claimName: socialcoin-api-database
 
@@ -57,8 +57,9 @@ spec:
               name: postgres
 
           volumeMounts:
-            - name: data
-              mountPath: /var/lib/postgresql/db-data
+            - name: postgresdb
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
 
           resources:
             requests:

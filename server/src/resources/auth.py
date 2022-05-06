@@ -127,5 +127,5 @@ class GoogleLogin(Resource):
 class Logout(Resource):
     def post(self):
         response = make_response({'result': 'logged out'}, 202)
-        response.delete_cookie('jwt_token')
+        response.delete_cookie('jwt_token', samesite='None', secure=True, httponly=True)
         return response

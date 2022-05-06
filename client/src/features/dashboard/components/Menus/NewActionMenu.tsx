@@ -164,7 +164,7 @@ const NewActionForm = ({ close }: FormProps) => {
               />
             </div>
             <SelectField
-              label={t('dashboard.main.campaign')}
+              label={t('main.campaign')}
               name="campaign_id"
               options={campaigns}
               value={formState.campaign_id}
