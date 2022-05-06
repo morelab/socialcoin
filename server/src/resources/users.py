@@ -1,9 +1,9 @@
 from flask import request
 from flask_restful import Resource
 from marshmallow import fields, Schema, ValidationError
-from common.blockchain import blockchain_manager
-from common.utils import get_user_from_token, is_valid_uuid
-from database.models import User
+from src.common.blockchain import blockchain_manager
+from src.common.utils import get_user_from_token, is_valid_uuid
+from src.database.models import User
 
 
 

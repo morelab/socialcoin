@@ -1,11 +1,12 @@
+from importlib.metadata import metadata
 from flask import request
 from flask_restful import Resource
 from datetime import datetime
 from marshmallow import fields, Schema, ValidationError
-from common.blockchain import blockchain_manager
-from common.utils import get_user_from_token, is_valid_uuid, not_none
-from config import ADMIN_ADDRESS, IPFS_ON, IPFS_URL, PRIVATE_KEY
-from database.models import Action, Campaign, User, Transaction
+from src.common.blockchain import blockchain_manager
+from src.common.utils import get_user_from_token, is_valid_uuid, not_none
+from src.config import ADMIN_ADDRESS, IPFS_ON, IPFS_URL, PRIVATE_KEY
+from src.database.models import Action, Campaign, User, Transaction
 import base58
 import requests
 import time
@@ -85,9 +86,9 @@ class OptionalActionSchema(Schema):
     campaign_id = fields.Str()
     
 class ActionRegisterSchema(Schema):
-    kpi = fields.Int(required=True, type=float)
+    kpi = fields.Int(required=True, metadata={type: float}) # TODO test
     verification_url = fields.Str()
-    image_proof = fields.Raw(type='file')   # TODO test if this works
+    image_proof = fields.Raw(metadata={type: 'file'})   # TODO test if this works
 
 action_schema = ActionSchema()
 optional_action_schema = OptionalActionSchema()

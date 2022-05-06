@@ -1,5 +1,5 @@
-from config import APP_SECRET
-from database.models import User
+from src.config import APP_SECRET
+from src.database.models import User
 from uuid import UUID
 import jwt
 

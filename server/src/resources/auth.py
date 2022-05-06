@@ -3,9 +3,9 @@ from flask_restful import Resource
 from xml.dom import ValidationErr
 from urllib.parse import urlencode
 from typing import Dict, Any
-from common.blockchain import generate_keys
-from config import ADMIN_EMAIL, APP_SECRET, BASE_BACKEND_URL, BASE_FRONTEND_URL, BLOCKCHAIN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NETWORK
-from database.models import User
+from src.common.blockchain import generate_keys
+from src.config import ADMIN_EMAIL, APP_SECRET, BASE_BACKEND_URL, BASE_FRONTEND_URL, BLOCKCHAIN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NETWORK
+from src.database.models import User
 import jwt
 import requests
 

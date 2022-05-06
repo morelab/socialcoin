@@ -1,7 +1,7 @@
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from database.db import db_session
-from database.models import User, Campaign, Action, Offer, Transaction
+from src.database.db import db_session
+from src.database.models import User, Campaign, Action, Offer, Transaction
 
 
 def create_admin(app):

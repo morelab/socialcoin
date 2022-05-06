@@ -4,7 +4,7 @@ from secrets import token_bytes
 from pathlib import Path
 from sha3 import keccak_256
 from web3 import Web3
-from config import BLOCKCHAIN_URL, CONTRACT_ADDRESS, FABRIC_ADMIN_PWD, FABRIC_ADMIN_USER, FABRIC_LOGIN_URL, FABRIC_TRANSACTION_URL, NETWORK
+from src.config import BLOCKCHAIN_URL, CONTRACT_ADDRESS, FABRIC_ADMIN_PWD, FABRIC_ADMIN_USER, FABRIC_LOGIN_URL, FABRIC_TRANSACTION_URL, NETWORK
 import requests
 
 

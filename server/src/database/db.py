@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from config import DATABASE_URL
+from src.config import DATABASE_URL
 
 # https://flask.palletsprojects.com/en/2.0.x/patterns/sqlalchemy/
 
@@ -12,5 +12,5 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 
 def init_db():
-    import database.models
+    # import src.database.models
     Base.metadata.create_all(bind=engine)

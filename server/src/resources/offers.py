@@ -2,10 +2,10 @@ from flask import request
 from flask_restful import Resource
 from datetime import datetime
 from marshmallow import fields, Schema, ValidationError
-from common.blockchain import blockchain_manager
-from common.utils import get_user_from_token, is_valid_uuid, not_none
-from config import ADMIN_ADDRESS, PRIVATE_KEY
-from database.models import Offer, Transaction, User
+from src.common.blockchain import blockchain_manager
+from src.common.utils import get_user_from_token, is_valid_uuid, not_none
+from src.config import ADMIN_ADDRESS, PRIVATE_KEY
+from src.database.models import Offer, Transaction, User
 
 
 def offer_redeem(*, buyer_address: str, offer_id: int):

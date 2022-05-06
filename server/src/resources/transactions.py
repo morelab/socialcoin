@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
-from common.utils import get_user_from_token
-from database.models import Transaction, User
+from src.common.utils import get_user_from_token
+from src.database.models import Transaction, User
 
 class TransactionsAll(Resource):
     def get(self):

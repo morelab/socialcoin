@@ -1,10 +1,15 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api, Resource
-from common.admin import create_admin
-from config import APP_SECRET
-from database.db import init_db, db_session
-from resources import *
+from src.common.admin import create_admin
+from src.config import APP_SECRET
+from src.database.db import init_db, db_session
+from src.resources.actions import *
+from src.resources.auth import *
+from src.resources.campaigns import *
+from src.resources.offers import *
+from src.resources.transactions import *
+from src.resources.users import *
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)

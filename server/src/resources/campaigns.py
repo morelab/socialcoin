@@ -1,8 +1,8 @@
 from flask import request
 from flask_restful import Resource
 from marshmallow import fields, Schema, ValidationError
-from common.utils import get_user_from_token, is_valid_uuid, not_none
-from database.models import Campaign, User
+from src.common.utils import get_user_from_token, is_valid_uuid, not_none
+from src.database.models import Campaign, User
 
 
 class CampaignSchema(Schema):
