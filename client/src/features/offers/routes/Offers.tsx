@@ -46,15 +46,15 @@ export const Offers = () => {
 
   React.useEffect(() => {
     getSelfUserBalance().then(balance => {
-      if (user) setUser({ ...user, balance: balance });
+      if (user && balance !== user.balance) setUser({ ...user, balance: balance });
     });
   }, []);
 
   return (
     <>
-      <MiniTopbar title={`Offers - ${user && user.balance / 100} UDC`} />
+      <MiniTopbar title={`${t('main.offers')} - ${user && user.balance / 100} UDC`} />
       {data.offers.length === 0 && <EmptyTableNotice title={t('errors.noOffers')} />}
-      <div className='flex flex-wrap gap-6 mx-w'>
+      <div className='flex flex-wrap gap-6 px-2 sm:px-0'>
         {data.offers.map(offer =>
           <OfferCard key={offer.id} offer={offer} />
         )}

@@ -195,6 +195,7 @@ const SidebarFooter = ({ closeMenu }: FooterProps) => {
         <div className='flex flex-col items-start justify-center'>
           {/* TODO revise font size on mobile */}
           <span className='text-sm font-bold'>{reduceName(user?.name)}</span>
+          <span className='text-sm font-medium opacity-90'>{user && user.balance / 100} UDC</span>
           <Link
             to='/profile'
             className='text-sm text-indigo-400 hover:underline'

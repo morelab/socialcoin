@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Campaign, Action, Offer } from '../types';
+import { Campaign, Action, Offer, Transaction } from '../types';
 
 type ProviderProps = {
   children: React.ReactNode;
@@ -13,10 +13,11 @@ type DataState = {
   campaigns: Campaign[];
   actions: Action[];
   offers: Offer[];
+  transactions: Transaction[];
 };
 
 export type DataAction =
-  | { type: 'loadData', payload: { campaigns: Campaign[], actions: Action[], offers: Offer[] } }
+  | { type: 'loadData', payload: { campaigns: Campaign[], actions: Action[], offers: Offer[], transactions: Transaction[] } }
   | { type: 'loadError', payload: Record<string, never> } // Record<string, never> indicates an empty object
   | { type: 'addCampaign', payload: Campaign }
   | { type: 'editCampaign', payload: Campaign }
@@ -40,13 +41,14 @@ const dashboardReducer = (state: DataState, action: DataAction): DataState => {
 
   switch (type) {
     case 'loadData': {
-      const { campaigns, actions, offers } = payload;
+      const { campaigns, actions, offers, transactions } = payload;
       return {
         ...state,
         loadState: 'ALL_LOADED',
         campaigns,
         actions,
-        offers
+        offers,
+        transactions
       };
     }
     case 'loadError': {
@@ -135,7 +137,8 @@ const DataProvider = ({ children }: ProviderProps) => {
     loadState: 'NOT_LOADED',
     campaigns: [],
     actions: [],
-    offers: []
+    offers: [],
+    transactions: [],
   });
   const value = { data, dispatchData };
 

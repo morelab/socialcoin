@@ -16,6 +16,7 @@ import { getActions } from '../api/getActions';
 import { getOffers } from '../api/getOffers';
 import { useUser } from '../context/UserContext';
 import { getSelfUserBalance } from '../features/dashboard/api/getSelfUserBalance';
+import { getTransactions } from '../features/transactions/api/getTransactions';
 
 
 type UserRole = 'CB' | 'PM' | 'AD';
@@ -31,16 +32,18 @@ const App = () => {
     const campaigns = getCampaigns();
     const actions = getActions();
     const offers = getOffers();
+    const transactions = getTransactions();
 
-    Promise.all([campaigns, actions, offers])
+    Promise.all([campaigns, actions, offers, transactions])
       .then(result => {
-        const [campaigns, actions, offers] = result;
+        const [campaigns, actions, offers, transactions] = result;
         dispatchData({
           type: 'loadData',
           payload: {
             campaigns,
             actions,
-            offers
+            offers,
+            transactions
           }
         });
       })

@@ -1,9 +1,9 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 import { useData } from '../../../context/DataContext';
+import { useUser } from '../../../context/UserContext';
 
 import { Action } from '../../../types';
 import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
@@ -34,6 +34,7 @@ const ActionCard = ({ action }: ActionProps) => {
 };
 
 export const Actions = () => {
+  const { user } = useUser();
   const { t } = useTranslation();
   const { data } = useData();
 
@@ -41,7 +42,7 @@ export const Actions = () => {
 
   return (
     <>
-      <MiniTopbar title={t('main.actions')} />
+      <MiniTopbar title={`${t('main.actions')} - ${user && user.balance / 100} UDC`} />
       {actions.length === 0 && <EmptyTableNotice title={t('errors.noActions')} />}
       <div className='flex flex-wrap gap-6 px-2 sm:px-0'>
         {actions.map(action =>

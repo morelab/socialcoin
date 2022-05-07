@@ -4,9 +4,9 @@
       "about": "About",
       "firstSection": {
         "title": "About Deustocoin",
-        "p1": "DeustoCoin es un proyecto que pretende fomentar el lema <strong>“Blockchain for Good”</strong> y contribuir a un mundo mejor a través de una tecnología emergente como es el Blockchain.",
-        "p2": "Dicho proyecto consta de una aplicación web en la que pueden operar tanto miembros de la universidad de Deusto como promotores de campañas pertenecientes a empresas externas a la universidad (cafeterías, museos, transporte...).",
-        "p3": "Mediante este proyecto, se pretende mejorar la imagen corporativa de la Universidad, cumpliendo con varios de los 17 ODS <strong>(Objetivos de Desarrollo Sostenible)</strong> establecidos por las Naciones Unidas."
+        "p1": "DeustoCoin is a project that aims to promote the motto <strong>“Blockchain for Good”</strong> and contribute to a better world through the emerging technology that Blockchain is.",
+        "p2": "This project consists of a web application in which both members of the University of Deusto and campaign promoters belonging to companies outside the university (cafeterias, museums, transport...) can operate.",
+        "p3": "Through this project, it is intended to improve the corporate image of the University, complying with several of the 17 SDGs <strong>(Sustainable Development Goals)</strong> established by the United Nations."
       },
       "secondSection": {
         "title": "How it works",

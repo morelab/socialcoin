@@ -2,15 +2,14 @@ import React from 'react';
 import { FlagIcon, ShoppingBagIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
 import { useTranslation } from 'react-i18next';
 
-import { Spinner } from '../../../components/Elements/Spinner';
 import { ContentModal } from '../../../components/Overlay/ContentModal';
 
 import { Transaction } from '../../../types';
-import { getTransactions } from '../api/getTransactions';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 import { Sidebar } from '../components/Sidebar';
 import { FilterProvider, useFilters } from '../context/FilterContext';
 import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
+import { useData } from '../../../context/DataContext';
 
 
 type TransactionModalProps = {
@@ -159,26 +158,11 @@ const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
 };
 
 export const Transactions = () => {
-  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
   const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction>({} as Transaction);
   const [openModal, setOpenModal] = React.useState(false);
+  const { data } = useData();
   const { t } = useTranslation();
   const { filters } = useFilters();
-
-  React.useEffect(() => {
-    getTransactions().then(result => {
-      setTransactions(result);
-      console.log(result);
-    });
-  }, []);
-
-  if (!transactions) {
-    return (
-      <div className='px-5 flex items-center justify-center'>
-        <Spinner />
-      </div>
-    );
-  }
 
   const handleOpenTransaction = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
@@ -187,7 +171,7 @@ export const Transactions = () => {
 
   const getFilteredTransactions = () => {
     const { receiver, sender, date } = filters;
-    let filteredTransactions = transactions.slice();
+    let filteredTransactions = data.transactions.slice();
 
     if (sender && sender !== '')
       filteredTransactions = filteredTransactions.filter(transaction => {
@@ -213,15 +197,15 @@ export const Transactions = () => {
     <div>
       <MiniTopbar title={t('main.transactions')} />
       <div className='flex flex-col-reverse gap-2 lg:grid lg:grid-cols-3 2xl:grid-cols-4 lg:gap-4 h-full w-full'>
-        <div className={`${transactions.length > 0 ? 'lg:col-span-2 2xl:col-span-3' : 'lg:col-span-3 2xl:col-span-4'} `}>
-          {transactions.length === 0 && <EmptyTableNotice title={t('errors.noTransactions')} />}
-          <div className='flex flex-col gap-3 items-center'>
+        <div className={`${data.transactions.length > 0 ? 'lg:col-span-2 2xl:col-span-3' : 'lg:col-span-3 2xl:col-span-4'} `}>
+          {data.transactions.length === 0 && <EmptyTableNotice title={t('errors.noTransactions')} />}
+          <div className='flex flex-col gap-3 items-center px-2 sm:px-0'>
             {getFilteredTransactions().map(transaction =>
               <TransactionCard key={transaction.id} transaction={transaction} clickHandler={() => handleOpenTransaction(transaction)} />
             )}
           </div>
         </div>
-        {transactions.length > 0 && <Sidebar className='bg-white dark:bg-gray-800 lg:col-span-1 2xl:col-span-1' />}
+        {data.transactions.length > 0 && <Sidebar className='bg-white dark:bg-gray-800 lg:col-span-1 2xl:col-span-1' />}
       </div>
       <TransactionModal open={openModal} setOpen={setOpenModal} transaction={selectedTransaction} />
     </div>
