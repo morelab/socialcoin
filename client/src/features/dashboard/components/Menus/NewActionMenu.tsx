@@ -163,6 +163,9 @@ const NewActionForm = ({ close }: FormProps) => {
                 isHalf={true}
               />
             </div>
+            <div className='flex items-center justify-center border border-gray-300 dark:border-gray-400 bg-white dark:bg-gray-900 dark:text-white p-2 rounded-lg'>
+              Action cost: {(formState.kpi_target * formState.reward).toFixed(2)} €
+            </div>
             <SelectField
               label={t('main.campaign')}
               name="campaign_id"

@@ -5,11 +5,36 @@ from datetime import datetime
 from marshmallow import fields, Schema, ValidationError
 from src.common.blockchain import blockchain_manager
 from src.common.utils import get_user_from_token, is_valid_uuid, not_none
-from src.config import ADMIN_ADDRESS, IPFS_ON, IPFS_URL, PRIVATE_KEY
+from src.config import ADMIN_ADDRESS, ADMIN_EMAIL, IPFS_ON, IPFS_URL, PRIVATE_KEY
 from src.database.models import Action, Campaign, User, Transaction
 import base58
 import requests
 import time
+
+
+def action_creation(*, to_address: str, action_id: int, investment: int):
+    tx_hash = blockchain_manager.mint(
+        caller=ADMIN_ADDRESS,
+        caller_key=PRIVATE_KEY,
+        to=to_address,
+        value=investment
+    )
+    
+    if tx_hash is None:
+        tx_hash = ''
+    
+    transaction = Transaction(
+        date=datetime.now(),
+        transaction_hash=tx_hash,
+        sender_address=ADMIN_ADDRESS,   # TODO test if this breaks anything
+        receiver_address=to_address,
+        quantity=investment,
+        transaction_info=f'Action id-{action_id} creation',
+        img_ipfs_hash='',
+        external_proof_url=''
+    )
+    transaction.save()
+
 
 def action_reward(*, from_address: str, to_address: str, from_balance: int, action_id: int, reward: int, img_hash: str, url_proof: str):
     admin_address = ADMIN_ADDRESS
@@ -68,10 +93,8 @@ class ActionSchema(Schema):
     name = fields.Str(required=True)
     description = fields.Str(required=True)
     reward = fields.Int(required=True)
-    kpi = fields.Int()
     kpi_target = fields.Int(required=True)
     kpi_indicator = fields.Str(required=True)
-    company_id = fields.Str()
     campaign_id = fields.Str(required=True)
 
 class OptionalActionSchema(Schema):
@@ -79,14 +102,12 @@ class OptionalActionSchema(Schema):
     name = fields.Str()
     description = fields.Str()
     reward = fields.Int()
-    kpi = fields.Int()
     kpi_target = fields.Int()
     kpi_indicator = fields.Str()
-    company_id = fields.Str()
     campaign_id = fields.Str()
     
 class ActionRegisterSchema(Schema):
-    kpi = fields.Int(required=True, metadata={type: float}) # TODO test
+    kpi = fields.Float(required=True)
     verification_url = fields.Str()
     image_proof = fields.Raw(metadata={type: 'file'})   # TODO test if this works
 
@@ -122,12 +143,20 @@ class ActionsAll(Resource):
             return {'error': 'collaborators cannot create actions'}, 403
         
         json_data = request.get_json()
+
+        if not json_data:
+            return {"error": "no input data provided"}, 400
+
         try:
             data = action_schema.load(json_data)
         except ValidationError as err:
             return err.messages, 400
 
         campaign_id = data.get('campaign_id')
+        
+        if not is_valid_uuid(campaign_id):
+            return {'message': f'no campaign with id {campaign_id} found'}, 404
+        
         if not Campaign.exists(campaign_id):
             return {'error': f'no campaign with id {campaign_id} exists'}, 404
 
@@ -141,6 +170,13 @@ class ActionsAll(Resource):
             campaign_id=data.get('campaign_id')
         )
         new_action.save()
+        
+        total_investment = int(data.get('reward')) * int(data.get('kpi_target'))
+        action_creation(
+            to_address=user.blockchain_public,
+            action_id=new_action.id,
+            investment=total_investment
+        )
         
         return new_action.as_dict(), 201
 
@@ -185,9 +221,40 @@ class ActionsDetail(Resource):
 
         action.name = not_none(data.get('name'), action.name)
         action.description = not_none(data.get('description'), action.description)
-        action.reward = not_none(data.get('reward'), action.reward)
-        action.kpi_target = not_none(data.get('kpi_target'), action.kpi_target)
         action.kpi_indicator = not_none(data.get('kpi_indicator'), action.kpi_indicator)
+
+        old_reward = action.reward
+        old_target = action.kpi_target
+        
+        new_reward = not_none(data.get('reward'), action.reward)
+        new_target = not_none(data.get('kpi_target'), action.kpi_target)
+        
+        if new_target <= action.kpi:
+            return {'error': 'new KPI target must be bigger than the current KPI value'}, 400
+        
+        old_remaining_action_reward = (old_target - action.kpi) * old_reward
+        new_remaining_action_reward = (new_target - action.kpi) * new_reward
+        
+        balance_change = new_remaining_action_reward - old_remaining_action_reward
+        
+        if balance_change > 0:
+            blockchain_manager.mint(
+                caller=ADMIN_ADDRESS,
+                caller_key=PRIVATE_KEY,
+                to=user.blockchain_public,
+                value=balance_change
+            )
+        elif balance_change < 0:
+            blockchain_manager.burn(
+                caller=ADMIN_ADDRESS,
+                caller_key=PRIVATE_KEY,
+                from_acc=user.blockchain_public,
+                value=abs(balance_change)
+            )
+        
+        action.reward = new_reward
+        action.kpi_target = new_target
+        
         action.save()
         
         return action.as_dict(), 200
@@ -212,7 +279,16 @@ class ActionsDetail(Resource):
         if action.company_id != user.id and user.role == 'PM':
             return {'error': 'promoters cannot delete another promoter\'s actions'}, 403
 
+        # remaining KPI to reward must get deleted
+        balance_to_burn = (action.kpi_target - action.kpi) * action.reward
+        
         Action.delete_one(action.id)
+        blockchain_manager.burn(
+            caller=ADMIN_ADDRESS,
+            caller_key=PRIVATE_KEY,
+            from_acc=user.blockchain_public,
+            value=balance_to_burn
+        )
 
         return {'result': 'success'}, 204
 
