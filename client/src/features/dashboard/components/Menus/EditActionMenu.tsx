@@ -7,7 +7,7 @@ import { SelectField } from '../../../../components/Form/SelectField';
 import { SlideOver } from '../../../../components/Overlay/SlideOver';
 import { DeletionModal } from '../DeletionModal';
 
-import { Action } from '../../../../types';
+import { Action, User } from '../../../../types';
 import { useUser } from '../../../../context/UserContext';
 import { useData } from '../../../../context/DataContext';
 import { notifyWarning } from '../../../../utils/notifications';
@@ -48,7 +48,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
   const [openDelete, setOpenDelete] = React.useState(false);
   const { data, dispatchData } = useData();
   const { t } = useTranslation();
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = event.currentTarget;
@@ -96,6 +96,13 @@ const EditActionForm = ({ action, close }: FormProps) => {
       type: 'removeAction',
       payload: action.id
     });
+    if (user) {
+      const newUser: User = {
+        ...user,
+        balance: user.balance - ((action.kpi_target - action.kpi) * action.reward)
+      };
+      setUser(newUser);
+    }
     close();
   };
 
@@ -171,7 +178,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
             required
           />
         </div>
-        <div className="py-3 text-right">
+        <div className="py-3 text-right flex flex-col sm:flex-row items-center justify-center gap-2">
           <Button type='submit' variant='submit'>{t('common.save')}</Button>
           <Button variant='delete' onClick={() => setOpenDelete(true)}>{t('dashboard.menus.deleteAction')}</Button>
         </div>
@@ -180,7 +187,7 @@ const EditActionForm = ({ action, close }: FormProps) => {
         open={openDelete}
         setOpen={setOpenDelete}
         title={t('dashboard.menus.deleteAction')}
-        content={`Are you sure you want to delete the action '${action.name}'? This action cannot be undone.`}
+        content={`${t('dashboard.menus.deleteActionMsg')} '${action.name}'? ${t('common.cannotBeUndone')}. ${((action.kpi_target - action.kpi) * action.reward) / 100} UDC ${t('dashboard.menus.removedFromBalance')}.`}
         buttonValue={t('common.delete')}
         confirmHandler={handleDelete}
       />

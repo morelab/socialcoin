@@ -171,6 +171,9 @@ class ActionsAll(Resource):
         )
         new_action.save()
         
+        action = new_action.as_dict()
+        action['company_name'] = User.get(action['company_id']).name
+        
         total_investment = int(data.get('reward')) * int(data.get('kpi_target'))
         action_creation(
             to_address=user.blockchain_public,
@@ -178,7 +181,7 @@ class ActionsAll(Resource):
             investment=total_investment
         )
         
-        return new_action.as_dict(), 201
+        return action, 201
 
 
 class ActionsDetail(Resource):
@@ -190,8 +193,11 @@ class ActionsDetail(Resource):
 
         if not action:
             return {'message': f'no action with id {action_id} found'}, 404
+        
+        action = action.as_dict()
+        action['company_name'] = User.get(action['company_id']).name
 
-        return action.as_dict()
+        return action
 
     def put(self, action_id):
         user = get_user_from_token(request)
@@ -257,7 +263,10 @@ class ActionsDetail(Resource):
         
         action.save()
         
-        return action.as_dict(), 200
+        action = action.as_dict()
+        action['company_name'] = User.get(action['company_id']).name
+        
+        return action, 200
 
     def delete(self, action_id):
         user = get_user_from_token(request)

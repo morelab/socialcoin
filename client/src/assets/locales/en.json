@@ -19,6 +19,7 @@
       }
     },
     "actions": {
+      "actionCost": "Action cost",
       "backToActions": "Go back to actions",
       "photoProof": "Photo proof",
       "noFile": "No file selected",
@@ -33,6 +34,7 @@
       "and": "and",
       "by": "By",
       "cancel": "Cancel",
+      "cannotBeUndone": "This action cannot be undone",
       "close": "Close",
       "confirm": "Confirm",
       "create": "Create",
@@ -58,8 +60,12 @@
         "actionName": "Action name",
         "offerName": "Reward name",
         "deleteCampaign": "Delete campaign",
+        "deleteCampaignMsg": "Are you sure you want to delete the campaign",
         "deleteAction": "Delete action",
-        "deleteOffer": "Delete reward"
+        "deleteActionMsg": "Are you sure you want to delete the action",
+        "deleteOffer": "Delete reward",
+        "deleteOfferMsg": "Are you sure you want to delete the reward",
+        "removedFromBalance": "will be removed from your balance"
       },
       "tables": {
         "description": "Description",
@@ -99,6 +105,7 @@
       "profile": "Profile"
     },
     "notifications": {
+      "balanceIncrease": "Your balance has been increased in",
       "introduceFileOrUrl": "Please introduce a file or a valid verification url.",
       "noBalance": "Not enough balance in your account.",
       "noCampaign": "You must create a campaign before creating an action.",

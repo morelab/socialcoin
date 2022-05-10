@@ -93,7 +93,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
           onChange={handleInputChange}
           required
         />
-        <div className="py-3 text-right">
+        <div className="py-3 text-right flex flex-col sm:flex-row items-center justify-center gap-2">
           <Button type='submit' variant='submit'>{t('common.save')}</Button>
           <Button variant='delete' onClick={() => setOpenDelete(true)}>{t('dashboard.menus.deleteCampaign')}</Button>
         </div>
@@ -102,7 +102,7 @@ const EditCampaignForm = ({ campaign, close }: FormProps) => {
         open={openDelete}
         setOpen={setOpenDelete}
         title={t('dashboard.menus.deleteCampaign')}
-        content={`Are you sure you want to delete the campaign '${campaign.name}'? This action cannot be undone.`}
+        content={`${t('dashboard.menus.deleteCampaignMsg')} '${campaign.name}'? ${t('common.cannotBeUndone')}.`}
         buttonValue={t('common.delete')}
         confirmHandler={handleDelete}
       />

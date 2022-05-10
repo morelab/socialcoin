@@ -12,13 +12,14 @@
         "title": "Funcionamiento",
         "p1": {
           "beforeLinks": "Hay varios roles que conforman la plataforma de DeustoCoin, además de una criptomoneda compatible con ",
-          "afterLinks": "<strong>(UDCoin)</strong>, que será la moneda a canjear para las diferentes ofertas. Los roles en cuestión varían en función del usuario, y hay tres: <strong>colaborador</strong>, <strong>promotor</strong>, y un <strong>administrador</strong> que podrá realizar lastareas de los dos tipos de usuario anteriores."
+          "afterLinks": "<strong>(UDCoin)</strong>, que será la moneda a canjear para las diferentes recompensas. Los roles en cuestión varían en función del usuario, y hay tres: <strong>colaborador</strong>, <strong>promotor</strong>, y un <strong>administrador</strong> que podrá realizar lastareas de los dos tipos de usuario anteriores."
         },
-        "p2": "El <strong>colaborador</strong> podrá realizar una serie de tareas como el envío de monedas a compañeros, consulta de campañas, canjeo de UDCoins en ofertas y registro y confirmación de una buena acción para así obtener su respectiva recompensa.",
+        "p2": "El <strong>colaborador</strong> podrá realizar una serie de tareas como el envío de monedas a compañeros, consulta de campañas, canjeo de UDCoins en recompensas y registro y confirmación de una buena acción para así obtener su respectiva recompensa.",
         "p3": "Los <strong>promotores</strong> podrán lanzar campañas, recompensas y acciones, monitorizar los KPIs de las mismas, y observar en gráficas el progreso de las acciones correspondientes a las campañas."
       }
     },
     "actions": {
+      "actionCost": "Coste de la acción",
       "backToActions": "Volver a acciones",
       "photoProof": "Foto de prueba",
       "noFile": "Ningún archivo seleccionado",
@@ -33,6 +34,7 @@
       "and": "y",
       "by": "Por",
       "cancel": "Cancelar",
+      "cannotBeUndone": "Esta acción no se puede deshacer",
       "close": "Cerrar",
       "confirm": "Confirmar",
       "create": "Crear",
@@ -58,8 +60,12 @@
         "actionName": "Nombre de acción",
         "offerName": "Nombre de recompensa",
         "deleteCampaign": "Eliminar campaña",
+        "deleteCampaignMsg": "¿Estás segur@ de que quieres eliminar la campaña",
         "deleteAction": "Eliminar acción",
-        "deleteOffer": "Eliminar recompensa"
+        "deleteActionMsg": "¿Estás segur@ de que quieres eliminar la acción",
+        "deleteOffer": "Eliminar recompensa",
+        "deleteOfferMsg": "¿Estás segur@ de que quieres eliminar la recompensa",
+        "removedFromBalance": "serán retiradas de tu saldo"
       },
       "tables": {
         "description": "Descripción",
@@ -99,11 +105,12 @@
       "profile": "Perfil"
     },
     "notifications": {
+      "balanceIncrease": "Tu saldo se ha incrementado en",
       "introduceFileOrUrl": "Introduce un fichero o una URL de verificación válida.",
       "noBalance": "Balance insuficiente en tu cuenta.",
       "noCampaign": "Debes crear una campaña antes de crear una acción.",
       "positiveKPI": "Introduce un KPI mayor que cero.",
-      "positivePrice": "El precio de la oferta debe ser mayor que cero.",
+      "positivePrice": "El precio de la recompensa debe ser mayor que cero.",
       "positiveReward": "La recompensa de la acción debe ser mayor que cero.",
       "positiveTarget": "El objetivo de la acción debe ser mayor que cero."
     },
@@ -116,7 +123,7 @@
       "confirmRedemption": "Confirmar canjeo",
       "offerRedemption": "Canjeo de recompensa",
       "redeemOffer": "Canjear recompensa",
-      "referToCreator": "Consulta al creador de la oferta para reclamar tu recompensa."
+      "referToCreator": "Consulta al creador de la recompensa para reclamar tu recompensa."
     },
     "other": {
       "blockchainAddress": "Dirección blockchain"

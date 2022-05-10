@@ -63,6 +63,9 @@ class CampaignsAll(Resource):
         )
         new_campaign.save()
         
+        campaign = new_campaign.as_dict()
+        campaign['company_name'] = User.get(campaign['company_id']).name
+        
         return new_campaign.as_dict(), 201
 
 
@@ -95,8 +98,11 @@ class CampaignsDetail(Resource):
 
         if not campaign:
             return {'message': f'no campaign with id {campaign_id} found'}, 404
+        
+        campaign_dict = campaign.as_dict()
+        campaign_dict['company_name'] = User.get(campaign_dict['company_id']).name
 
-        return campaign.as_dict()
+        return campaign_dict, 200
 
     def put(self, campaign_id):
         user = get_user_from_token(request)
@@ -129,7 +135,10 @@ class CampaignsDetail(Resource):
         campaign.description = not_none(data.get('description'), campaign.description)
         campaign.save()
         
-        return campaign.as_dict(), 200
+        campaign_dict = campaign.as_dict()
+        campaign_dict['company_name'] = User.get(campaign_dict['company_id']).name
+
+        return campaign_dict, 200
 
     def delete(self, campaign_id):
         user = get_user_from_token(request)

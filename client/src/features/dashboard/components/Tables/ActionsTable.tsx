@@ -101,7 +101,8 @@ export const ActionsTable = () => {
                   <div className="flex items-center">
                     <div className="ml-4">
                       <div className="text-md font-semibold text-gray-900 dark:text-gray-50">{action.name}</div>
-                      <div className="text-md text-gray-500 dark:text-gray-300">{action.company_name}</div>
+                      <div className="text-md text-gray-500 dark:text-gray-300">{data.campaigns.find(c => c.id === action.campaign_id)?.name}</div>
+                      <div className="text-md opacity-80 text-gray-500 dark:text-gray-300">{action.company_name}</div>
                     </div>
                   </div>
                 </td>

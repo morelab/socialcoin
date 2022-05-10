@@ -93,7 +93,10 @@ class OffersAll(Resource):
         )
         new_offer.save()
         
-        return new_offer.as_dict(), 201
+        offer = new_offer.as_dict()
+        offer['company_name'] = User.get(offer['company_id']).name
+        
+        return offer, 201
 
 
 class OffersDetail(Resource):
@@ -140,7 +143,10 @@ class OffersDetail(Resource):
         offer.price = not_none(data.get('price'), offer.price)
         offer.save()
         
-        return offer.as_dict(), 200
+        offer = offer.as_dict()
+        offer['company_name'] = User.get(offer['company_id']).name
+        
+        return offer, 200
 
     def delete(self, offer_id):
         user = get_user_from_token(request)

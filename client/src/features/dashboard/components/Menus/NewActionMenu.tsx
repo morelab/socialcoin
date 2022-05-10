@@ -7,7 +7,7 @@ import { SelectField } from '../../../../components/Form/SelectField';
 import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
 import { useData } from '../../../../context/DataContext';
-import { notifyError, notifyWarning } from '../../../../utils/notifications';
+import { notifyError, notifyInfo, notifyWarning } from '../../../../utils/notifications';
 import { useUser } from '../../../../context/UserContext';
 import { createAction } from '../../api/createAction';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +43,7 @@ const NewActionForm = ({ close }: FormProps) => {
     campaign_id: data.campaigns[0].id
   });
   const { t } = useTranslation();
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = event.currentTarget;
@@ -86,6 +86,15 @@ const NewActionForm = ({ close }: FormProps) => {
       type: 'addAction',
       payload: createdAction
     });
+    if (user) {
+      const actionCost = newAction.reward * newAction.kpi_target;
+      const newUser = {
+        ...user,
+        balance: user.balance + actionCost
+      };
+      setUser(newUser);
+      notifyInfo(`${t('notifications.balanceIncrease')} ${actionCost/100} UDC.`);
+    }
     close();
   };
 
@@ -164,7 +173,7 @@ const NewActionForm = ({ close }: FormProps) => {
               />
             </div>
             <div className='flex items-center justify-center border border-gray-300 dark:border-gray-400 bg-white dark:bg-gray-900 dark:text-white p-2 rounded-lg'>
-              Action cost: {(formState.kpi_target * formState.reward).toFixed(2)} €
+              {t('actions.actionCost')}: {(formState.kpi_target * formState.reward).toFixed(2)} €
             </div>
             <SelectField
               label={t('main.campaign')}
