@@ -49,6 +49,13 @@ def fabric_send_transaction(method, *params):
             headers=headers,
             json=data
         )
+        if response.status_code == 400 or response.status_code == 510:
+            fabric_login()
+            response = s.post(
+                f'{FABRIC_TRANSACTION_URL}/evaluate',
+                headers=headers,
+                json=data
+            )
         return int(response.content.decode("utf-8"))
     else:
         response = s.post(
@@ -56,6 +63,13 @@ def fabric_send_transaction(method, *params):
             headers=headers,
             json=data
         )
+        if response.status_code == 400 or response.status_code == 510:
+            fabric_login()
+            response = s.post(
+                f'{FABRIC_TRANSACTION_URL}/submit',
+                headers=headers,
+                json=data
+            )
         return response.content.decode("utf-8")
 
 
