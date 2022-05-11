@@ -13,13 +13,14 @@ const variants = {
 type SpinnerProps = {
   size?: keyof typeof sizes;
   variant?: keyof typeof variants;
+  className?: string;
 };
 
-export const Spinner = ({ size = 'md', variant = 'primary' }: SpinnerProps) => {
+export const Spinner = ({ size = 'md', variant = 'primary', className }: SpinnerProps) => {
   return (
     <>
       <svg
-        className={`animate-spin ${sizes[size]} ${variants[variant]}`}
+        className={`animate-spin ${sizes[size]} ${variants[variant]} ${className}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

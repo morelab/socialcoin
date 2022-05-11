@@ -56,3 +56,5 @@ export type Transaction = {
   img_ipfs_hash: string;
   external_proof_url: string;
 };
+
+export type RequestLoadState = 'unloaded' | 'loading' | 'success' | 'failure';

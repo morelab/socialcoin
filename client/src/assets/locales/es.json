@@ -20,6 +20,10 @@
     },
     "actions": {
       "actionCost": "Coste de la acción",
+      "actionCreated": "Acción creada",
+      "actionCreatedErr": "Error creando la acción",
+      "actionCreatedMsg": "Tu acción ha sido creada con éxito",
+      "actionCreatedMsgErr": "Ha habido un error al crear tu acción. Por favor, inténtalo de nuevo más tarde",
       "backToActions": "Volver a acciones",
       "photoProof": "Foto de prueba",
       "noFile": "Ningún archivo seleccionado",
@@ -126,7 +130,8 @@
       "referToCreator": "Consulta al creador de la recompensa para reclamar tu recompensa."
     },
     "other": {
-      "blockchainAddress": "Dirección blockchain"
+      "blockchainAddress": "Dirección blockchain",
+      "processingRequest": "Tu petición está siendo procesada"
     },
     "roles": {
       "cb": "Colaborador",

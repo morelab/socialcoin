@@ -20,6 +20,10 @@
     },
     "actions": {
       "actionCost": "Action cost",
+      "actionCreated": "Action created",
+      "actionCreatedErr": "Error creating action",
+      "actionCreatedMsg": "Your action has been created succesfully",
+      "actionCreatedMsgErr": "There has been an error creating your action. Please try again later",
       "backToActions": "Go back to actions",
       "photoProof": "Photo proof",
       "noFile": "No file selected",
@@ -126,7 +130,8 @@
       "referToCreator": "Please refer to the reward creator to claim your reward."
     },
     "other": {
-      "blockchainAddress": "Blockchain address"
+      "blockchainAddress": "Blockchain address",
+      "processingRequest": "Your request is being processed"
     },
     "roles": {
       "cb": "Collaborator",
