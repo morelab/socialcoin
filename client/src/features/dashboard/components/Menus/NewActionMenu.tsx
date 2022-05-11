@@ -263,6 +263,7 @@ export const NewActionMenu = ({ open, setOpen }: MenuProps) => {
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
                 onClick={() => {
                   setOpen(false);
+                  setTimeout(() => setLoadState('unloaded'), 1000);
                 }}
               >
                 {t('common.accept')}
@@ -288,6 +289,7 @@ export const NewActionMenu = ({ open, setOpen }: MenuProps) => {
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-gray-200 bg-red-600 hover:bg-red-500 dark:bg-red-500 dark:hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm transition-colors"
                 onClick={() => {
                   setOpen(false);
+                  setTimeout(() => setLoadState('unloaded'), 1000);
                 }}
               >
                 {t('common.accept')}

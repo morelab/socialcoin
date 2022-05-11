@@ -1,13 +1,15 @@
 import React from 'react';
+import { CheckIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '../../../../components/Elements/Button';
+import { Spinner } from '../../../../components/Elements/Spinner';
 import { InputField } from '../../../../components/Form/InputField';
 import { SelectField } from '../../../../components/Form/SelectField';
 import { SlideOver } from '../../../../components/Overlay/SlideOver';
 import { DeletionModal } from '../DeletionModal';
 
-import { Action, User } from '../../../../types';
+import { Action, RequestLoadState, User } from '../../../../types';
 import { useUser } from '../../../../context/UserContext';
 import { useData } from '../../../../context/DataContext';
 import { notifyWarning } from '../../../../utils/notifications';
@@ -18,6 +20,7 @@ import { deleteAction } from '../../api/deleteAction';
 type FormProps = {
   action: Action;
   close: () => void;
+  setLoadState: (state: RequestLoadState) => void;
 };
 
 type MenuProps = {
@@ -36,7 +39,7 @@ export type FormContent = {
 };
 
 
-const EditActionForm = ({ action, close }: FormProps) => {
+const EditActionForm = ({ action, close, setLoadState }: FormProps) => {
   const [formState, setFormState] = React.useState<FormContent>({
     name: action.name,
     description: action.description,
@@ -91,19 +94,25 @@ const EditActionForm = ({ action, close }: FormProps) => {
   };
 
   const handleDelete = async () => {
-    await deleteAction(action.id);
-    dispatchData({
-      type: 'removeAction',
-      payload: action.id
-    });
-    if (user) {
-      const newUser: User = {
-        ...user,
-        balance: user.balance - ((action.kpi_target - action.kpi) * action.reward)
-      };
-      setUser(newUser);
-    }
-    close();
+    setLoadState('loading');
+    await deleteAction(action.id)
+      .then(() => {
+        dispatchData({
+          type: 'removeAction',
+          payload: action.id
+        });
+        if (user) {
+          const newUser: User = {
+            ...user,
+            balance: user.balance - ((action.kpi_target - action.kpi) * action.reward)
+          };
+          setUser(newUser);
+        }
+        setLoadState('success');
+      }).catch(error => {
+        console.error(error);
+        setLoadState('failure');
+      });
   };
 
   if (!user) return null;
@@ -196,9 +205,78 @@ const EditActionForm = ({ action, close }: FormProps) => {
 };
 
 export const EditActionMenu = ({ action, open, setOpen }: MenuProps) => {
+  const [deletionLoadState, setDeletionLoadState] = React.useState<RequestLoadState>('unloaded');
+  const { t } = useTranslation();
+
+  const getContent = () => {
+    switch (deletionLoadState) {
+      case 'unloaded':
+        return <EditActionForm action={action} close={() => setOpen(false)} setLoadState={setDeletionLoadState} />;
+      case 'loading':
+        return (
+          <div className='h-full flex flex-col items-center justify-center'>
+            <Spinner size='xl' className='mb-6' />
+            <h2 className='text-xl text-gray-100'>{t('other.processingRequest')}...</h2>
+          </div>
+        );
+      case 'success':
+        return (
+          <>
+            <div className="p-4 mb-3 flex flex-col items-center justify-center gap-4">
+              <div className="mx-auto flex-shrink-0 flex items-center justify-center h-14 w-14 rounded-full bg-indigo-200 dark:bg-indigo-100 sm:mx-0 sm:h-16 sm:w-16">
+                <CheckIcon className="h-10 w-10 text-indigo-600" aria-hidden="true" />
+              </div>
+              <h1 className='text-xl font-bold dark:text-gray-100'>{t('actions.actionDeleted')}</h1>
+              <p className='text-md text-center dark:text-gray-200'>
+                {t('actions.actionDeletedMsg')}.
+              </p>
+            </div>
+            <div className="px-4 py-3 flex sm:px-6 flex-col sm:flex-row gap-4">
+              <button
+                type="button"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                onClick={() => {
+                  setOpen(false);
+                  setTimeout(() => setDeletionLoadState('unloaded'), 1000);
+                }}
+              >
+                {t('common.accept')}
+              </button>
+            </div>
+          </>
+        );
+      case 'failure':
+        return (
+          <>
+            <div className="p-4 mb-3 flex flex-col items-center justify-center gap-4">
+              <div className="mx-auto flex-shrink-0 flex items-center justify-center h-14 w-14 rounded-full bg-red-200 dark:bg-red-100 sm:mx-0 sm:h-16 sm:w-16">
+                <ExclamationIcon className="h-10 w-10 text-red-600" aria-hidden="true" />
+              </div>
+              <h1 className='text-xl font-bold dark:text-gray-100'>{t('actions.actionDeletedErr')}</h1>
+              <p className='text-md text-center dark:text-gray-200'>
+                {t('actions.actionDeletedMsgErr')}.
+              </p>
+            </div>
+            <div className="px-4 py-3 flex sm:px-6 flex-col sm:flex-row gap-4">
+              <button
+                type="button"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-gray-200 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                onClick={() => {
+                  setOpen(false);
+                  setTimeout(() => setDeletionLoadState('unloaded'), 1000);
+                }}
+              >
+                {t('common.accept')}
+              </button>
+            </div>
+          </>
+        );
+    }
+  };
+
   return (
     <SlideOver open={open} setOpen={setOpen} >
-      <EditActionForm action={action} close={() => setOpen(false)} />
+      {getContent()}
     </SlideOver>
   );
 };
