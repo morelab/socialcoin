@@ -9,7 +9,7 @@ import { SelectField } from '../../../../components/Form/SelectField';
 import { ContentModal } from '../../../../components/Overlay/ContentModal';
 
 import { useData } from '../../../../context/DataContext';
-import { notifyError, notifyInfo, notifyWarning } from '../../../../utils/notifications';
+import { notifyError, notifySuccess, notifyWarning } from '../../../../utils/notifications';
 import { useUser } from '../../../../context/UserContext';
 import { createAction } from '../../api/createAction';
 import { RequestLoadState } from '../../../../types';
@@ -97,7 +97,7 @@ const NewActionForm = ({ setLoadState }: FormProps) => {
             balance: user.balance + actionCost
           };
           setUser(newUser);
-          notifyInfo(`${t('notifications.balanceIncrease')} ${actionCost / 100} UDC.`);
+          notifySuccess(`${t('notifications.balanceIncrease')} ${actionCost / 100} UDC.`);
         }
         setLoadState('success');
       }).catch(error => {

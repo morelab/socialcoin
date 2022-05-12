@@ -7,16 +7,16 @@ import { Button } from '../../../components/Elements/Button';
 import { InputField } from '../../../components/Form/InputField';
 import { MiniTopbar } from '../../../components/Layout/MiniTopbar';
 
-import { Action } from '../../../types';
-import { notifyWarning } from '../../../utils/notifications';
+import { Action, RequestLoadState, User } from '../../../types';
+import { notifySuccess, notifyWarning } from '../../../utils/notifications';
 import { getAction } from '../api/getAction';
 import { registerAction } from '../api/registerAction';
+import { useUser } from '../../../context/UserContext';
 
-type RegisterStates = 'initial' | 'registering' | 'registered';
 
 type RegisterFormProps = {
   action: Action;
-  setState: (state: 'initial' | 'registering' | 'registered') => void;
+  setState: (state: RequestLoadState) => void;
 };
 
 type FormState = {
@@ -32,6 +32,7 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
     files: []
   });
   const [fileName, setFileName] = React.useState('');
+  const { user, setUser } = useUser();
   const { t } = useTranslation();
   const fileInputRef = React.createRef<HTMLInputElement>();
 
@@ -80,9 +81,23 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
     formData.append('kpi', kpi_value.toString());
     formData.append('verification_url', verificationURL);
     formData.append('image_proof', files[0]);
-    setState('registering');
-    await registerAction(action.id, formData);
-    setState('registered');
+    setState('loading');
+    registerAction(action.id, formData)
+      .then(() => {
+        setState('success');
+        if (user) {
+          const addedBalance = formState.kpi_value * action.reward;
+          const newUser: User = {
+            ...user,
+            balance: user.balance + addedBalance
+          };
+          setUser(newUser);
+          notifySuccess(`${t('notifications.balanceIncrease')} ${addedBalance / 100} UDC.`);
+        }
+      }).catch(error => {
+        console.error(error);
+        setState('failure');
+      });
   };
 
   return (
@@ -97,6 +112,9 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
             onChange={handleInputChange}
             required
           />
+          <div className='flex items-center justify-center border border-gray-300 dark:border-gray-400 bg-white dark:bg-gray-900 dark:text-white p-2 rounded-lg'>
+            {t('main.offer')}: {(formState.kpi_value * action.reward / 100).toFixed(2)} UDC
+          </div>
           <div className='col-span-6'>
             <label htmlFor='photo-proof' className="block text-md font-medium text-gray-700 dark:text-gray-100">
               {t('actions.photoProof')}
@@ -149,7 +167,7 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
 export const ActionRegister = () => {
   const actionID = useParams<{ id: string }>().id;
   const [action, setAction] = React.useState<Action>({} as Action);
-  const [registerState, setRegisterState] = React.useState<RegisterStates>('initial');
+  const [registerState, setRegisterState] = React.useState<RequestLoadState>('unloaded');
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -172,33 +190,49 @@ export const ActionRegister = () => {
   }
 
   const getSideSection = () => {
-    if (registerState === 'registering') {
-      return (
-        <div className='flex flex-col items-center justify-center py-16'>
-          <h2 className='text-xl dark:text-gray-200'>{t('common.pleaseWait')}...</h2>
-          <Spinner />
-        </div>
-      );
-    } else if (registerState === 'registered') {
-      return (
-        <div className='flex flex-col items-center justify-center py-16'>
-          <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-4'>{t('actions.successfulPayment')}!</h3>
-          <p className='text-center dark:text-gray-300 mb-5'>
-            {t('actions.rewarded')} {action.reward / 100} UDC.
-          </p>
-          <button
-            type="button"
-            onClick={() => navigate('/actions')}
-            className="inline-flex justify-center py-2 px-4 border border-gray-400 w-full shadow-sm text-md font-medium
-                rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
-                focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
-          >
-            {t('actions.backToActions')}
-          </button>
-        </div>
-      );
-    } else {
-      return <RegisterForm action={action} setState={setRegisterState} />;
+    switch (registerState) {
+      case 'unloaded':
+        return <RegisterForm action={action} setState={setRegisterState} />;
+      case 'loading':
+        return (
+          <div className='flex flex-col items-center justify-center py-16'>
+            <Spinner size='lg' />
+            <h2 className='text-xl dark:text-gray-200 mt-5'>{t('common.pleaseWait')}...</h2>
+          </div>
+        );
+      case 'success':
+        return (
+          <div className='flex flex-col items-center justify-center py-16'>
+            <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-4'>{t('actions.successfulPayment')}!</h3>
+            <p className='text-center dark:text-gray-300 mb-5'>
+              {t('actions.rewarded')} {action.reward / 100} UDC.
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate('/actions')}
+              className="inline-flex justify-center py-2 px-4 border border-gray-400 w-full shadow-sm text-md font-medium
+                  rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
+                  focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
+            >
+              {t('actions.backToActions')}
+            </button>
+          </div>
+        );
+      case 'failure':
+        return (
+          <div className='flex flex-col items-center justify-center py-16'>
+            <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-8'>{t('actions.paymentError')}.</h3>
+            <button
+              type="button"
+              onClick={() => navigate('/actions')}
+              className="inline-flex justify-center py-2 px-4 border border-gray-400 w-full shadow-sm text-md font-medium
+                  rounded-md text-gray-800 dark:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 mb-3
+                  focus:ring-offset-2 focus:ring-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition"
+            >
+              {t('actions.backToActions')}
+            </button>
+          </div>
+        );
     }
   };
 
@@ -206,7 +240,7 @@ export const ActionRegister = () => {
     <>
       <MiniTopbar title='Action registration' />
       <div className='flex items-center justify-center'>
-        <div className='shadow-lg max-w-3xl divide-y-2 sm:divide-x-2 sm:divide-y-0 divide-gray-300 flex flex-col sm:grid sm:grid-cols-5 m-5 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden'>
+        <div className='shadow-lg max-w-2xl w-full divide-y-2 sm:divide-x-2 sm:divide-y-0 divide-gray-300 flex flex-col sm:grid sm:grid-cols-5 m-5 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden'>
           <div className='col-span-2'>
             <div className='p-3 flex flex-col bg-indigo-600 dark:bg-indigo-500 text-gray-200'>
               <span className='font-semibold text-xl mb-1'>{action.name}</span>

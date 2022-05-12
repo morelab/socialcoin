@@ -29,6 +29,7 @@
       "actionDeletedMsg": "Your action has been deleted succesfully",
       "actionDeletedMsgErr": "There has been an error deleting your action. Please try again later",
       "backToActions": "Go back to actions",
+      "paymentError": "There was an error processing your reward. Please try again later",
       "photoProof": "Photo proof",
       "noFile": "No file selected",
       "registerAction": "Register action",

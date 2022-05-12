@@ -29,6 +29,7 @@
       "actionDeletedMsg": "Tu acción ha sido eliminada con éxito",
       "actionDeletedMsgErr": "Ha habido un error al eliminar tu acción. Por favor, inténtalo de nuevo más tarde",
       "backToActions": "Volver a acciones",
+      "paymentError": "Ha habido un error al procesar tu recompensa. Por favor, inténtalo de nuevo más tarde",
       "photoProof": "Foto de prueba",
       "noFile": "Ningún archivo seleccionado",
       "registerAction": "Registrar acción",
