@@ -14,23 +14,20 @@ import { registerAction } from '../api/registerAction';
 import { useUser } from '../../../context/UserContext';
 
 
-type RegisterFormProps = {
-  action: Action;
-  setState: (state: RequestLoadState) => void;
-};
-
 type FormState = {
   kpi_value: number;
   verificationUrl: string;
   files: File[];
 };
 
-const RegisterForm = ({ action, setState }: RegisterFormProps) => {
-  const [formState, setFormState] = React.useState<FormState>({
-    kpi_value: 0,
-    verificationUrl: '',
-    files: []
-  });
+type RegisterFormProps = {
+  action: Action;
+  setState: (state: RequestLoadState) => void;
+  formState: FormState;
+  setFormState: (state: FormState) => void;
+};
+
+const RegisterForm = ({ action, setState, formState, setFormState }: RegisterFormProps) => {
   const [fileName, setFileName] = React.useState('');
   const { user, setUser } = useUser();
   const { t } = useTranslation();
@@ -167,6 +164,11 @@ const RegisterForm = ({ action, setState }: RegisterFormProps) => {
 export const ActionRegister = () => {
   const actionID = useParams<{ id: string }>().id;
   const [action, setAction] = React.useState<Action>({} as Action);
+  const [formState, setFormState] = React.useState<FormState>({
+    kpi_value: 0,
+    verificationUrl: '',
+    files: []
+  });
   const [registerState, setRegisterState] = React.useState<RequestLoadState>('unloaded');
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -192,7 +194,7 @@ export const ActionRegister = () => {
   const getSideSection = () => {
     switch (registerState) {
       case 'unloaded':
-        return <RegisterForm action={action} setState={setRegisterState} />;
+        return <RegisterForm action={action} setState={setRegisterState} formState={formState} setFormState={setFormState} />;
       case 'loading':
         return (
           <div className='flex flex-col items-center justify-center py-16'>
@@ -205,7 +207,7 @@ export const ActionRegister = () => {
           <div className='flex flex-col items-center justify-center py-16'>
             <h3 className='text-xl text-center font-semibold dark:text-gray-100 mb-4'>{t('actions.successfulPayment')}!</h3>
             <p className='text-center dark:text-gray-300 mb-5'>
-              {t('actions.rewarded')} {action.reward / 100} UDC.
+              {t('actions.rewarded')} {(action.reward * formState.kpi_value) / 100} UDC.
             </p>
             <button
               type="button"

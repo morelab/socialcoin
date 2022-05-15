@@ -295,7 +295,7 @@ class ActionsDetail(Resource):
         blockchain_manager.burn(
             caller=ADMIN_ADDRESS,
             caller_key=PRIVATE_KEY,
-            from_acc=user.blockchain_public,
+            from_acc=User.get(action.company_id).blockchain_public, # remove balance from action owner, not request user
             value=balance_to_burn
         )
 

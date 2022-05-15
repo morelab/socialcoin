@@ -24,6 +24,24 @@ class SocialcoinContract extends Contract {
     }
 
     /**
+     * Create an account
+     * 
+     * @param {Context} ctx the transaction context
+     * @param {*} account account to be created
+     * @returns {boolean} whether the account was created or not
+     */
+    async createAccount(ctx, account) {
+        const balanceKey = ctx.stub.createCompositeKey(balancePrefix, [account]);
+        const balanceBytes = await ctx.stub.getState(balanceKey);
+
+        if (!balanceBytes || balanceBytes.length === 0) {
+            await ctx.stub.putState(balanceKey, Buffer.from('0'));
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * BalanceOf returns the balance of the given account.
      *
      * @param {Context} ctx the transaction context
@@ -50,7 +68,7 @@ class SocialcoinContract extends Contract {
      * @param {String} from the sender
      * @param {String} to the recipient
      * @param {Integer} value the amount of token to be transferred
-     * @returns {Boolean} Return wheter the transfer was succesful or not
+     * @returns {Boolean} Return whether the transfer was succesful or not
      */
     async _transfer(ctx, from, to, value) {
         if (from === to) {
@@ -106,6 +124,7 @@ class SocialcoinContract extends Contract {
      * Mint creates new tokens and adds them to minter's account balance
      *
      * @param {Context} ctx the transaction context
+     * @param {String} to who receives the tokens
      * @param {Integer} amount amount of tokens to be minted
      * @returns {Object} The balance
      */
@@ -163,7 +182,7 @@ class SocialcoinContract extends Contract {
      * @param {Integer} amount amount of tokens to be burned
      * @returns {Object} The balance
      */
-    async Burn(ctx, from, amount) {
+    async burn(ctx, from, amount) {
         // Check minter authorization - this sample assumes 'ud'' is the central banker with privilege to burn tokens
         const clientMSPID = ctx.clientIdentity.getMSPID();
         if (clientMSPID !== adminMSP) {

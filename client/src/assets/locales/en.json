@@ -130,6 +130,7 @@
     "offers": {
       "backToOffers": "Go back to rewards",
       "confirmRedemption": "Confirm redemption",
+      "currentBalance": "Your current balance is",
       "offerRedemption": "Reard redemption",
       "redeemOffer": "Redeem reward",
       "referToCreator": "Please refer to the reward creator to claim your reward."
@@ -170,7 +171,12 @@
       "sender": "Sender",
       "showFilters": "Show filters",
       "to": "To",
-      "transactionHash": "Transaction hash"
+      "transactionHash": "Transaction hash",
+      "types": {
+        "registration": "Action registration",
+        "creation": "Action creation",
+        "payment": "Reward payment"
+      }
     }
   }
 }

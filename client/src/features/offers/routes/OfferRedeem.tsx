@@ -128,13 +128,16 @@ export const OfferRedeem = () => {
       />
       <MiniTopbar title={`${t('offers.offerRedemption')} - ${user && user.balance / 100} UDC`} />
       <div className='flex items-center justify-center transition'>
-        <div className='shadow-lg max-w-3xl m-5 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden divide-y divide-gray-200 dark:divide-gray-700'>
+        <div className='shadow-lg max-w-2xl w-full m-5 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden divide-y divide-gray-200 dark:divide-gray-700'>
           <div className='bg-gray-50 dark:bg-gray-900 h-full w-full px-7 sm:px-10 lg:px-20 py-7 flex flex-col items-center gap-4'>
             <div className="mx-auto flex-shrink-0 flex items-center justify-center h-14 w-14 rounded-full bg-indigo-200 dark:bg-indigo-100 sm:mx-0 sm:h-16 sm:w-16">
               <ShoppingBagIcon className="h-10 w-10 text-indigo-600 dark:text-indigo-500" aria-hidden="true" />
             </div>
             <span className='text-2xl text-center font-bold text-gray-800 dark:text-gray-100'>
               {offer.name} - {offer.price / 100} UDC
+            </span>
+            <span className='text-center font-bold text-gray-600 dark:text-gray-300 dark:opacity-80'>
+              {t('offers.currentBalance')} {user && user.balance / 100} UDC
             </span>
           </div>
           <div className='h-full w-full px-7 sm:px-10 lg:px-20 py-5 flex flex-col items-center gap-6'>

@@ -27,7 +27,8 @@ export type DataAction =
   | { type: 'removeAction', payload: string }
   | { type: 'addOffer', payload: Offer }
   | { type: 'editOffer', payload: Offer }
-  | { type: 'removeOffer', payload: string };
+  | { type: 'removeOffer', payload: string }
+  | { type: 'loadTransactions', payload: Transaction[] };
 
 type ContextValue = {
   data: DataState;
@@ -127,6 +128,12 @@ const dashboardReducer = (state: DataState, action: DataAction): DataState => {
       return {
         ...state,
         offers: state.offers.filter(offer => offer.id !== payload)
+      };
+    }
+    case 'loadTransactions': {
+      return {
+        ...state,
+        transactions: payload
       };
     }
   }

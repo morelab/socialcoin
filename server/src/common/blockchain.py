@@ -149,7 +149,6 @@ class EthereumManager(BlockchainManager):
 
 class FabricManager(BlockchainManager):
     def __init__(self):
-        # self.connect_sid = fabric_login()
         fabric_login()
 
     def balance_of(self, address):
@@ -168,7 +167,7 @@ class FabricManager(BlockchainManager):
 
     def burn(self, caller, caller_key, from_acc, value):
         try:
-            fabric_send_transaction('Burn', from_acc, value)
+            fabric_send_transaction('burn', from_acc, value)
             return ''
         except:
             return 0

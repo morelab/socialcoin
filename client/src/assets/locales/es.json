@@ -130,6 +130,7 @@
     "offers": {
       "backToOffers": "Volver a recompensas",
       "confirmRedemption": "Confirmar canjeo",
+      "currentBalance": "Tu balance actual es",
       "offerRedemption": "Canjeo de recompensa",
       "redeemOffer": "Canjear recompensa",
       "referToCreator": "Consulta al creador de la recompensa para reclamar tu recompensa."
@@ -170,7 +171,12 @@
       "sender": "Remitente",
       "showFilters": "Mostrar filtros",
       "to": "A",
-      "transactionHash": "Hash de transaction"
+      "transactionHash": "Hash de transaction",
+      "types": {
+        "registration": "Registro de acción",
+        "creation": "Creación de acción",
+        "payment": "Pago por recompensa"
+      }
     }
   }
 }

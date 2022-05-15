@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlagIcon, ShoppingBagIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
+import { FlagIcon, ShoppingBagIcon, PlusCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
 import { useTranslation } from 'react-i18next';
 
 import { ContentModal } from '../../../components/Overlay/ContentModal';
@@ -10,6 +10,7 @@ import { Sidebar } from '../components/Sidebar';
 import { FilterProvider, useFilters } from '../context/FilterContext';
 import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
 import { useData } from '../../../context/DataContext';
+import { getTransactions } from '../api/getTransactions';
 
 
 type TransactionModalProps = {
@@ -102,28 +103,38 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
 const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
   const { t } = useTranslation();
 
-  const getTransactionType = () => transaction.transaction_info.split(' ')[0];
+  const getTransactionType = () => {
+    const splitInfo = transaction.transaction_info.split(' ');
+    return splitInfo[splitInfo.length - 1].toLowerCase();
+  };
 
   const getTransactionTitle = () => {
     const type = getTransactionType();
 
-    if (type === 'Action') return 'Action registration';
-    else if (type === 'Offer') return 'Offer payment';
+    if (type === 'registration') return t('transactions.types.registration');
+    else if (type === 'creation') return t('transactions.types.creation');
+    else if (type === 'payment') return t('transactions.types.payment');
     else return transaction.transaction_info;
   };
 
   const getTransactionIcon = () => {
     const type = getTransactionType();
-    if (type === 'Action') {
+    if (type === 'registration') {
       return (
         <div className='bg-pink-200 dark:bg-pink-300 p-2 rounded-2xl'>
           <FlagIcon className="w-10 sm:w-14 text-pink-600 dark:text-pink-800" />
         </div>
       );
-    } else if (type === 'Offer') {
+    } else if (type === 'payment') {
       return (
         <div className='bg-indigo-200 dark:bg-indigo-300 p-2 rounded-2xl'>
           <ShoppingBagIcon className="w-10 sm:w-14 text-indigo-600 dark:text-indigo-800" />
+        </div>
+      );
+    } else if (type === 'creation') {
+      return (
+        <div className='bg-emerald-200 dark:bg-emerald-300 p-2 rounded-2xl'>
+          <PlusCircleIcon className="w-10 sm:w-14 text-emerald-600 dark:text-emerald-800" />
         </div>
       );
     } else {
@@ -160,9 +171,20 @@ const TransactionCard = ({ transaction, clickHandler }: TransactionProps) => {
 export const Transactions = () => {
   const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction>({} as Transaction);
   const [openModal, setOpenModal] = React.useState(false);
-  const { data } = useData();
+  const { data, dispatchData } = useData();
   const { t } = useTranslation();
   const { filters } = useFilters();
+
+  // reload transactions each time the page is visited
+  React.useEffect(() => {
+    getTransactions()
+      .then(transactions => {
+        dispatchData({
+          type: 'loadTransactions',
+          payload: transactions
+        });
+      });
+  }, []);
 
   const handleOpenTransaction = (transaction: Transaction) => {
     setSelectedTransaction(transaction);

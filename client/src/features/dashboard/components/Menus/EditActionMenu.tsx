@@ -101,7 +101,7 @@ const EditActionForm = ({ action, close, setLoadState }: FormProps) => {
           type: 'removeAction',
           payload: action.id
         });
-        if (user) {
+        if (user && action.company_id === user.id) {
           const newUser: User = {
             ...user,
             balance: user.balance - ((action.kpi_target - action.kpi) * action.reward)
