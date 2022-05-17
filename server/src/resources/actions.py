@@ -1,9 +1,9 @@
-from importlib.metadata import metadata
 from flask import request
 from flask_restful import Resource
 from datetime import datetime
 from marshmallow import fields, Schema, ValidationError
 from src.common.blockchain import blockchain_manager
+from src.common.ipfs import upload_file
 from src.common.utils import get_user_from_token, is_valid_uuid, not_none
 from src.config import ADMIN_ADDRESS, ADMIN_EMAIL, IPFS_ON, IPFS_URL, PRIVATE_KEY
 from src.database.models import Action, Campaign, User, Transaction
@@ -343,8 +343,13 @@ class ActionRegister(Resource):
             return {'error': 'required at least one of the fields verification_url or image_proof' }, 400
         
         if IPFS_ON:
-            ipfs_response = ipfs_add_file(image_proof)
-            decoded_hash = '0x' + decode_hash(ipfs_response.json()['Hash'])
+            # ipfs_response = ipfs_add_file(image_proof)
+            # decoded_hash = '0x' + decode_hash(ipfs_response.json()['Hash'])
+            ipfs_response = upload_file(image_proof.read())
+            if ipfs_response.status_code == 200:
+                decoded_hash = ipfs_response.json().get('IpfsHash')
+            else:
+                decoded_hash = ''
         else:
             decoded_hash = ''
         

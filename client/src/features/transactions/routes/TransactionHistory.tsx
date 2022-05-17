@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlagIcon, ShoppingBagIcon, PlusCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
+import { ClipboardCopyIcon, FlagIcon, ShoppingBagIcon, PlusCircleIcon, QuestionMarkCircleIcon, ExternalLinkIcon } from '@heroicons/react/outline';
 import { useTranslation } from 'react-i18next';
 
 import { ContentModal } from '../../../components/Overlay/ContentModal';
@@ -11,6 +11,7 @@ import { FilterProvider, useFilters } from '../context/FilterContext';
 import { EmptyTableNotice } from '../../dashboard/components/EmptyTableNotice';
 import { useData } from '../../../context/DataContext';
 import { getTransactions } from '../api/getTransactions';
+import { notifyInfo } from '../../../utils/notifications';
 
 
 type TransactionModalProps = {
@@ -31,6 +32,11 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
   if (!transaction) {
     return null;
   }
+
+  const copyToClipboard = (text: string):void => {
+    navigator.clipboard.writeText(text);
+    notifyInfo(t('transactions.copiedToClipboard'));
+  };
 
   return (
     <ContentModal open={open} setOpen={setOpen}>
@@ -70,7 +76,27 @@ const TransactionModal = ({ transaction, open, setOpen }: TransactionModalProps)
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">{t('transactions.ipfsHash')}</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-gray-50 sm:mt-0 sm:col-span-2">
-                {transaction.img_ipfs_hash ? transaction.img_ipfs_hash : 'None'}
+                {transaction.img_ipfs_hash
+                  ?
+                  <div className='flex items-center justify-center sm:justify-start gap-5'>
+                    <div
+                      onClick={() => copyToClipboard(transaction.img_ipfs_hash)}
+                      className='flex items-center gap-1 cursor-pointer hover:text-indigo-200 hover:underline transition-colors'
+                    >
+                      {t('common.copy')} hash
+                      <ClipboardCopyIcon className='h-5 w-5 text-indigo-500' />
+                    </div>
+                    <a
+                      href={`https://ipfs.io/ipfs/${transaction.img_ipfs_hash}`}
+                      target='_blank'
+                      rel='noreferrer'
+                      className='flex items-center gap-1 hover:text-indigo-200 hover:underline transition-colors'
+                    >
+                      {t('common.goToFile')}
+                      <ExternalLinkIcon className='h-5 w-5 text-indigo-500' />
+                    </a>
+                  </div>
+                  : 'None'}
               </dd>
             </div>
             <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
