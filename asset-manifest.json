@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/socialcoin/static/css/main.08c058bc.css",
-    "main.js": "/socialcoin/static/js/main.d2626bf2.js",
+    "main.js": "/socialcoin/static/js/main.636d4f0b.js",
     "service-worker.js": "/socialcoin/service-worker.js",
     "static/media/logo.png": "/socialcoin/static/media/logo.86e06f46726158b657d9.png",
     "index.html": "/socialcoin/index.html",
     "main.08c058bc.css.map": "/socialcoin/static/css/main.08c058bc.css.map",
-    "main.d2626bf2.js.map": "/socialcoin/static/js/main.d2626bf2.js.map"
+    "main.636d4f0b.js.map": "/socialcoin/static/js/main.636d4f0b.js.map"
   },
   "entrypoints": [
     "static/css/main.08c058bc.css",
-    "static/js/main.d2626bf2.js"
+    "static/js/main.636d4f0b.js"
   ]
 }
